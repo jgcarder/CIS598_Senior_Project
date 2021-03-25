@@ -8,6 +8,9 @@ using CIS598_Senior_Project.StateManagement;
 
 namespace CIS598_Senior_Project.Screens
 {
+    /// <summary>
+    /// A class for message box screens.
+    /// </summary>
     public class MessageBoxScreen : GameScreen
     {
 
