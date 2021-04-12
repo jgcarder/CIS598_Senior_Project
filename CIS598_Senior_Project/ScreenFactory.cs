@@ -5,7 +5,7 @@ using CIS598_Senior_Project.StateManagement;
 
 namespace CIS598_Senior_Project
 {
-    class ScreenFactory : IScreenFactory
+    public class ScreenFactory : IScreenFactory
     {
         public GameScreen CreateScreen(Type screenType)
         {

@@ -23,8 +23,7 @@ namespace CIS598_Senior_Project.Screens
         }
 
         // Activates the loading screen.
-        public static void Load(ScreenManager screenManager, bool loadingIsSlow,
-                                PlayerIndex? controllingPlayer, params GameScreen[] screensToLoad)
+        public static void Load(ScreenManager screenManager, bool loadingIsSlow, PlayerIndex? controllingPlayer, params GameScreen[] screensToLoad)
         {
             // Tell all the current screens to transition off.
             foreach (var screen in screenManager.GetScreens())

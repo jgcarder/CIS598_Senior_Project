@@ -13,7 +13,7 @@ namespace CIS598_Senior_Project.Screens
         public PlayerIndexEventArgs(PlayerIndex playerIndex)
         {
             PlayerIndex = playerIndex;
-        }
+        }                                   
 
     }
 }
