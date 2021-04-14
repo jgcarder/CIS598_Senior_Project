@@ -22,11 +22,15 @@ namespace CIS598_Senior_Project.Screens
             MenuEntries.Add(playGameMenuEntry);
             MenuEntries.Add(optionsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
+            Selected.Add(false);
+            Selected.Add(false);
+            Selected.Add(false);
         }
 
         private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
+            ScreenManager.AddScreen(new PlayMenuScreen(), e.PlayerIndex);
+            //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
         }
 
         private void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
@@ -36,7 +40,7 @@ namespace CIS598_Senior_Project.Screens
 
         protected override void OnCancel(PlayerIndex playerIndex)
         {
-            const string message = "Are you sure you want to exit this sample?";
+            const string message = "Are you sure you want to exit?";
             var confirmExitMessageBox = new MessageBoxScreen(message);
 
             confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;

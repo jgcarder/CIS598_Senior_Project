@@ -12,8 +12,6 @@ namespace CIS598_Senior_Project
         private SpriteBatch _spriteBatch;
         private readonly ScreenManager _screenManager;
 
-        private Viewport fullscreen = new Viewport(0, 0, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width, GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-
         public ArmadaGame()
         {
             _graphics = new GraphicsDeviceManager(this);

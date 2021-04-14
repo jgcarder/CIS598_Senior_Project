@@ -12,6 +12,7 @@ namespace CIS598_Senior_Project.Screens
     {
 
         private readonly List<MenuEntry> _menuEntries = new List<MenuEntry>();
+        private readonly List<bool> _selected = new List<bool>();
         private int _selectedEntry;
         private readonly string _menuTitle;
 
@@ -20,8 +21,13 @@ namespace CIS598_Senior_Project.Screens
         private readonly InputAction _menuSelect;
         private readonly InputAction _menuCancel;
 
+        private MouseState _currentMouse;
+        private MouseState _priorMouse;
+
         // Gets the list of menu entries, so derived classes can add or change the menu contents.
         protected IList<MenuEntry> MenuEntries => _menuEntries;
+
+        protected List<bool> Selected => _selected;
 
         protected MenuScreen(string menuTitle)
         {
@@ -107,6 +113,8 @@ namespace CIS598_Senior_Project.Screens
             // update each menu entry's location in turn
             foreach (var menuEntry in _menuEntries)
             {
+
+                
                 // each entry is to be centered horizontally
                 position.X = ScreenManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
 
@@ -127,10 +135,26 @@ namespace CIS598_Senior_Project.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
+            //_priorMouse = _currentMouse;
+            //_currentMouse = Mouse.GetState();
+
+            //for(int i = 0; i < _menuEntries.Count; i++)
+            //{
+            //    if(_currentMouse.X >= _menuEntries[i].Bounds.X && _currentMouse.X <= _menuEntries[i].Bounds.Width && _currentMouse.Y >= _menuEntries[i].Bounds.Y && _currentMouse.Y <= _menuEntries[i].Bounds.Height)
+            //    {
+            //        _selected[i] = true;
+            //    }
+            //    else
+            //    {
+            //        _selected[i] = false;
+            //    }
+            //}
+
             // Update each nested MenuEntry object.
             for (int i = 0; i < _menuEntries.Count; i++)
             {
                 bool isSelected = IsActive && i == _selectedEntry;
+                //bool isSelected = IsActive && _selected[i];
                 _menuEntries[i].Update(this, isSelected, gameTime);
             }
         }
@@ -150,6 +174,7 @@ namespace CIS598_Senior_Project.Screens
             {
                 var menuEntry = _menuEntries[i];
                 bool isSelected = IsActive && i == _selectedEntry;
+                //bool isSelected = IsActive && _selected[i];
                 menuEntry.Draw(this, isSelected, gameTime);
             }
 

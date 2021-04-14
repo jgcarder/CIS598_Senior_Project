@@ -12,6 +12,7 @@ namespace CIS598_Senior_Project.Screens
         private string _text;
         private float _selectionFade;    // Entries transition out of the selection effect when they are deselected
         private Vector2 _position;    // This is set by the MenuScreen each frame in Update
+        private Rectangle _bounds;
 
         public string Text
         {
@@ -25,6 +26,12 @@ namespace CIS598_Senior_Project.Screens
             set => _position = value;
         }
 
+        public Rectangle Bounds
+        {
+            get => _bounds;
+            set => _bounds = value;
+        }
+
         public event EventHandler<PlayerIndexEventArgs> Selected;
         protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
         {
@@ -34,6 +41,7 @@ namespace CIS598_Senior_Project.Screens
         public MenuEntry(string text)
         {
             _text = text;
+            _bounds = new Rectangle((int)_position.X - 5, (int)_position.Y - 5, 10 + (10 * _text.Length), 10 + 20);
         }
 
         public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
