@@ -29,8 +29,8 @@ namespace CIS598_Senior_Project.Screens
 
         private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new PlayMenuScreen(), e.PlayerIndex);
-            //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
+            //ScreenManager.AddScreen(new PlayMenuScreen(), e.PlayerIndex);
+            LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
         }
 
         private void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)

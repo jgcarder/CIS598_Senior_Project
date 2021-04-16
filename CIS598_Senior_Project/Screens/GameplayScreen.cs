@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CIS598_Senior_Project.StateManagement;
+using CIS598_Senior_Project.MenuObjects;
 
 namespace CIS598_Senior_Project.Screens
 {
@@ -16,6 +17,8 @@ namespace CIS598_Senior_Project.Screens
         private ContentManager _content;
         private SpriteFont _gameFont;
 
+        private Texture2D _texture;
+
         private Vector2 _playerPosition = new Vector2(100, 100);
         private Vector2 _enemyPosition = new Vector2(100, 100);
 
@@ -23,6 +26,11 @@ namespace CIS598_Senior_Project.Screens
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
+
+        Button _button;
+
+        private MouseState _previousMouseState;
+        private MouseState _currentMouseState;
 
         public GameplayScreen()
         {
@@ -41,6 +49,11 @@ namespace CIS598_Senior_Project.Screens
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             _gameFont = _content.Load<SpriteFont>("bangersMenuFont");
+            _texture = _content.Load<Texture2D>("colored_packed");
+
+            _button = new Button(1, new Vector2(100, 100));
+            _button.TouchArea = new Rectangle(100, 100, 50, 50);
+            _button.AnAction += ButtonCatcher;
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
@@ -70,6 +83,9 @@ namespace CIS598_Senior_Project.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, false);
 
+            _previousMouseState = _currentMouseState;
+            _currentMouseState = Mouse.GetState();
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
@@ -93,6 +109,16 @@ namespace CIS598_Senior_Project.Screens
 
                 // This game isn't very fun! You could probably improve
                 // it by inserting something more interesting in this space :-)
+                
+                if(_currentMouseState.X >= _button.Position.X && _currentMouseState.X <= _button.Position.X + _button.TouchArea.Width
+                    && _currentMouseState.Y >= _button.Position.Y && _currentMouseState.Y <= _button.Position.Y + _button.TouchArea.Height)
+                {
+                    if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button.AnAction(_button, new ButtonClickedEventArgs() { Id = _button.Id});
+                    }
+                }
+
             }
         }
 
@@ -153,6 +179,9 @@ namespace CIS598_Senior_Project.Screens
             // This game has a blue background. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
 
+            var source = new Rectangle(100, 100, 50, 50);
+            _button.TouchArea = source;
+
             // Our player and enemy are both actually just text strings.
             var spriteBatch = ScreenManager.SpriteBatch;
 
@@ -161,6 +190,8 @@ namespace CIS598_Senior_Project.Screens
             spriteBatch.DrawString(_gameFont, "// TODO", _playerPosition, Color.Green);
             spriteBatch.DrawString(_gameFont, "Insert Gameplay Here",
                                    _enemyPosition, Color.DarkRed);
+
+            spriteBatch.Draw(_texture, source, source, Color.White);
 
             spriteBatch.End();
 
@@ -171,6 +202,11 @@ namespace CIS598_Senior_Project.Screens
 
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
+        }
+
+        private void ButtonCatcher(object sender, ButtonClickedEventArgs e)
+        {
+            //shit to do here
         }
 
     }
