@@ -1,45 +1,80 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CIS598_Senior_Project.StateManagement;
+using CIS598_Senior_Project.MenuObjects;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using CIS598_Senior_Project.StateManagement;
-using CIS598_Senior_Project.MenuObjects;
+using CIS598_Senior_Project.FleetObjects;
 
 namespace CIS598_Senior_Project.Screens
 {
-    public class GameplayScreen : GameScreen
+    public class FleetCustomizationScreen : GameScreen
     {
-
         private ContentManager _content;
         private SpriteFont _gameFont;
 
         private Texture2D _texture;
 
-        private Vector2 _playerPosition = new Vector2(100, 100);
-        private Vector2 _enemyPosition = new Vector2(100, 100);
-
-        private readonly Random _random = new Random();
-
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
-
-        Button _button;
 
         private MouseState _previousMouseState;
         private MouseState _currentMouseState;
 
-        public GameplayScreen()
+        private List<Button> _buttons;
+
+        private Fleet _fleet;
+
+        public FleetCustomizationScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
-            _pauseAction = new InputAction(
-                new[] { Buttons.Start, Buttons.Back },
-                new[] { Keys.Back, Keys.Escape }, true);
+            _fleet = new Fleet("");
+
+            _buttons.Add(); //Save and quit
+            _buttons.Add(); //Clear fleet
+
+            _buttons.Add(); //Add button whose role changes 
+            _buttons.Add(); //Remove button whose role changes
+
+            _buttons.Add(); //Select upgrades(Officer, Weapons team, offensive retrofit, ordinance, turbolasers, ion cannon, defensive retrofit, support team)
+
+            _buttons.Add(); //Select rebel fleet
+            _buttons.Add();     //Select rebel commander
+            _buttons.Add();     //Select rebel ships
+            _buttons.Add();         //Select Assault Frigate Mark II
+            _buttons.Add();             //Select Mark II A
+            _buttons.Add();             //Select Mark II B
+            _buttons.Add();         //Select CR90 Corellian Corvette
+            _buttons.Add();             //Select version A
+            _buttons.Add();             //Select version B
+            _buttons.Add();         //Select Nebulon B Frigate
+            _buttons.Add();             //Select escort refit
+            _buttons.Add();             //Select support refit
+            _buttons.Add();     //Select rebel squadrons
+            _buttons.Add();         //Select A-wing squadron
+            _buttons.Add();         //Select B-wing squadron
+            _buttons.Add();         //Select X-wing squadron
+            _buttons.Add();         //Select Y-wing squadron
+            _buttons.Add(); //Select imperial fleet
+            _buttons.Add();     //Select imperial commander
+            _buttons.Add();     //Select imperial ships
+            _buttons.Add();         //Select Gladiator SD
+            _buttons.Add();             //Select class I
+            _buttons.Add();             //Select class II
+            _buttons.Add();         //Select Victory SD
+            _buttons.Add();             //Select class I
+            _buttons.Add();             //Select class II
+            _buttons.Add();     //Select imperial squadrons
+            _buttons.Add();         //Select tie fighter squadron
+            _buttons.Add();         //Select tie advanced squadron
+            _buttons.Add();         //Select tie interceptor squadron
+            _buttons.Add();         //Select tie bomber squadron
         }
 
         // Load graphics content for the game
@@ -51,9 +86,9 @@ namespace CIS598_Senior_Project.Screens
             _gameFont = _content.Load<SpriteFont>("bangersMenuFont");
             _texture = _content.Load<Texture2D>("colored_packed");
 
-            _button = new Button(1, new Vector2(100, 100), true);
-            _button.TouchArea = new Rectangle(100, 100, 50, 50);
-            _button.AnAction += ButtonCatcher;
+            //_button = new Button(1, new Vector2(100, 100));
+            //_button.TouchArea = new Rectangle(100, 100, 50, 50);
+            //_button.AnAction += ButtonCatcher;
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
@@ -65,7 +100,6 @@ namespace CIS598_Senior_Project.Screens
             // it should not try to catch up.
             ScreenManager.Game.ResetElapsedTime();
         }
-
 
         public override void Deactivate()
         {
@@ -94,31 +128,20 @@ namespace CIS598_Senior_Project.Screens
 
             if (IsActive)
             {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
-
-                _enemyPosition.X += (float)(_random.NextDouble() - 0.5) * randomization;
-                _enemyPosition.Y += (float)(_random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the screen.
-                var targetPosition = new Vector2(
-                    ScreenManager.GraphicsDevice.Viewport.Width / 2 - _gameFont.MeasureString("Insert Gameplay Here").X / 2,
-                    200);
-
-                _enemyPosition = Vector2.Lerp(_enemyPosition, targetPosition, 0.05f);
-
-                // This game isn't very fun! You could probably improve
-                // it by inserting something more interesting in this space :-)
-                
-                if(_currentMouseState.X >= _button.Position.X && _currentMouseState.X <= _button.Position.X + _button.TouchArea.Width
-                    && _currentMouseState.Y >= _button.Position.Y && _currentMouseState.Y <= _button.Position.Y + _button.TouchArea.Height)
+                foreach (var button in _buttons) 
                 {
-                    if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    if(button.IsActive)
                     {
-                        _button.AnAction(_button, new ButtonClickedEventArgs() { Id = _button.Id});
+                        if (_currentMouseState.X >= button.Position.X && _currentMouseState.X <= button.Position.X + button.TouchArea.Width
+                                            && _currentMouseState.Y >= button.Position.Y && _currentMouseState.Y <= button.Position.Y + button.TouchArea.Height)
+                        {
+                            if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                            {
+                                button.AnAction(button, new ButtonClickedEventArgs() { Id = button.Id });
+                            }
+                        }
                     }
                 }
-
             }
         }
 
@@ -170,7 +193,7 @@ namespace CIS598_Senior_Project.Screens
                 if (movement.Length() > 1)
                     movement.Normalize();
 
-                _playerPosition += movement * 8f;
+                //_playerPosition += movement * 8f;
             }
         }
 
@@ -180,18 +203,22 @@ namespace CIS598_Senior_Project.Screens
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
 
             var source = new Rectangle(100, 100, 50, 50);
-            _button.TouchArea = source;
+            //_button.TouchArea = source;
 
             // Our player and enemy are both actually just text strings.
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(_gameFont, "// TODO", _playerPosition, Color.Green);
-            spriteBatch.DrawString(_gameFont, "Insert Gameplay Here",
-                                   _enemyPosition, Color.DarkRed);
+            //spriteBatch.Draw(_texture, source, source, Color.White);
 
-            spriteBatch.Draw(_texture, source, source, Color.White);
+            foreach (var button in _buttons)
+            {
+                if (button.IsActive)
+                {
+                    spriteBatch.Draw(button.texture, button.TouchArea, button.Color);
+                }
+            }
 
             spriteBatch.End();
 
@@ -203,11 +230,5 @@ namespace CIS598_Senior_Project.Screens
                 ScreenManager.FadeBackBufferToBlack(alpha);
             }
         }
-
-        private void ButtonCatcher(object sender, ButtonClickedEventArgs e)
-        {
-            //shit to do here
-        }
-
     }
 }

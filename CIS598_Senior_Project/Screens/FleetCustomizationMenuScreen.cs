@@ -28,7 +28,7 @@ namespace CIS598_Senior_Project.Screens
 
         private void NewFleetMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-
+            ScreenManager.AddScreen(new FleetCustomizationScreen(), e.PlayerIndex);
         }
 
         private void EditFleetMenuEntrySelected(object sender, PlayerIndexEventArgs e)
@@ -40,5 +40,6 @@ namespace CIS598_Senior_Project.Screens
         {
             ScreenManager.AddScreen(new PlayMenuScreen(), e.PlayerIndex);
         }
+        
     }
 }
