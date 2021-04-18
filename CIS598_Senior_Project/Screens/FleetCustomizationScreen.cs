@@ -83,40 +83,30 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(20, new Rectangle(widthIncrement * 13, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select tie interceptor squadron
             _buttons.Add(new CustButton(21, new Rectangle(widthIncrement * 13, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select tie bomber squadron
 
+            _buttons.Add(new CustButton(22, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select Mark II A
+            _buttons.Add(new CustButton(23, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select Mark II B
+            _buttons.Add(new CustButton(24, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select version A
+            _buttons.Add(new CustButton(25, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select version B
+            _buttons.Add(new CustButton(26, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select escort refit
+            _buttons.Add(new CustButton(27, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select support refit
+            _buttons.Add(new CustButton(28, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select gladiator class I
+            _buttons.Add(new CustButton(29, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select gladiator class II
+            _buttons.Add(new CustButton(30, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select victory class I
+            _buttons.Add(new CustButton(31, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select victory class II
+
+            _buttons.Add(new CustButton(32, new Rectangle(widthIncrement * 25, heightIncrement * 35, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Title
+            _buttons.Add(new CustButton(33, new Rectangle(widthIncrement * 37, heightIncrement * 35, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Officer
+            _buttons.Add(new CustButton(34, new Rectangle(widthIncrement * 25, heightIncrement * 52, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Weapons Team
+            _buttons.Add(new CustButton(35, new Rectangle(widthIncrement * 37, heightIncrement * 52, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Support Team
+            _buttons.Add(new CustButton(36, new Rectangle(widthIncrement * 25, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Offencive Retrofit
+            _buttons.Add(new CustButton(37, new Rectangle(widthIncrement * 37, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Defencive Retrofit
+            _buttons.Add(new CustButton(38, new Rectangle(widthIncrement * 25, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Ion Cannon
+            _buttons.Add(new CustButton(39, new Rectangle(widthIncrement * 25, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Turbo Laser
+            _buttons.Add(new CustButton(40, new Rectangle(widthIncrement * 37, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Ordinance
+
             /*
             _buttons.Add(new CustButton(0, new Rectangle(), true));     //Select rebel commander
-
-            
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select Mark II A
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select Mark II B
-            
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select version A
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select version B
-            
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select escort refit
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select support refit
-            
-            
-
-
-
-            */
-
-
-            /*
             _buttons.Add(new CustButton(0, new Rectangle(), true));     //Select imperial commander
-
-            
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select class I
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select class II
-            
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select class I
-            _buttons.Add(new CustButton(0, new Rectangle(), true));             //Select class II
-
-
-
-
-
             */
 
         }
@@ -347,14 +337,29 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[21].IsActive = true;
                     break;
                 case 9:
+                    buttonSweeper(14);
+                    _buttons[22].IsActive = true;
+                    _buttons[23].IsActive = true;
                     break;
                 case 10:
+                    buttonSweeper(14);
+                    _buttons[24].IsActive = true;
+                    _buttons[25].IsActive = true;
                     break;
                 case 11:
+                    buttonSweeper(14);
+                    _buttons[26].IsActive = true;
+                    _buttons[27].IsActive = true;
                     break;
                 case 12:
+                    buttonSweeper(14);
+                    _buttons[28].IsActive = true;
+                    _buttons[29].IsActive = true;
                     break;
                 case 13:
+                    buttonSweeper(14);
+                    _buttons[30].IsActive = true;
+                    _buttons[31].IsActive = true;
                     break;
                 case 14:
                     break;
@@ -403,6 +408,30 @@ namespace CIS598_Senior_Project.Screens
                 case 36:
                     break;
                 case 37:
+                    break;
+                case 38:
+                    break;
+                case 39:
+                    break;
+                case 40:
+                    break;
+                case 41:
+                    break;
+                case 42:
+                    break;
+                case 43:
+                    break;
+                case 44:
+                    break;
+                case 45:
+                    break;
+                case 46:
+                    break;
+                case 47:
+                    break;
+                case 48:
+                    break;
+                case 49:
                     break;
             }
         }
