@@ -8,9 +8,11 @@ namespace CIS598_Senior_Project.Screens
 {
     public class MainMenuScreen : MenuScreen
     {
-
-        public MainMenuScreen() : base("Main Menu")
+        private Game _game;
+        public MainMenuScreen(Game game) : base("Main Menu")
         {
+            _game = game;
+
             var playGameMenuEntry = new MenuEntry("Play Game");
             var optionsMenuEntry = new MenuEntry("Options");
             var exitMenuEntry = new MenuEntry("Exit");
@@ -29,7 +31,7 @@ namespace CIS598_Senior_Project.Screens
 
         private void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new PlayMenuScreen(), e.PlayerIndex);
+            ScreenManager.AddScreen(new PlayMenuScreen(_game), e.PlayerIndex);
             //LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, new GameplayScreen());
         }
 

@@ -27,12 +27,14 @@ namespace CIS598_Senior_Project.Screens
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
-        Button _button;
+        CustButton _button;
 
         private MouseState _previousMouseState;
         private MouseState _currentMouseState;
 
-        public GameplayScreen()
+        private Game _game;
+
+        public GameplayScreen(Game game)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -51,8 +53,8 @@ namespace CIS598_Senior_Project.Screens
             _gameFont = _content.Load<SpriteFont>("bangersMenuFont");
             _texture = _content.Load<Texture2D>("colored_packed");
 
-            _button = new Button(1, new Vector2(100, 100), true);
-            _button.TouchArea = new Rectangle(100, 100, 50, 50);
+            //_button = new Button(1, new Vector2(100, 100), true);
+            //_button.TouchArea = new Rectangle(100, 100, 50, 50);
             _button.AnAction += ButtonCatcher;
 
             // A real game would probably have more content than this sample, so
@@ -110,6 +112,7 @@ namespace CIS598_Senior_Project.Screens
                 // This game isn't very fun! You could probably improve
                 // it by inserting something more interesting in this space :-)
                 
+                /*
                 if(_currentMouseState.X >= _button.Position.X && _currentMouseState.X <= _button.Position.X + _button.TouchArea.Width
                     && _currentMouseState.Y >= _button.Position.Y && _currentMouseState.Y <= _button.Position.Y + _button.TouchArea.Height)
                 {
@@ -118,6 +121,7 @@ namespace CIS598_Senior_Project.Screens
                         _button.AnAction(_button, new ButtonClickedEventArgs() { Id = _button.Id});
                     }
                 }
+                */
 
             }
         }
@@ -143,7 +147,7 @@ namespace CIS598_Senior_Project.Screens
             PlayerIndex player;
             if (_pauseAction.Occurred(input, ControllingPlayer, out player) || gamePadDisconnected)
             {
-                ScreenManager.AddScreen(new PauseMenuScreen(), ControllingPlayer);
+                ScreenManager.AddScreen(new PauseMenuScreen(_game), ControllingPlayer);
             }
             else
             {
@@ -180,7 +184,7 @@ namespace CIS598_Senior_Project.Screens
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
 
             var source = new Rectangle(100, 100, 50, 50);
-            _button.TouchArea = source;
+            _button.Area = source;
 
             // Our player and enemy are both actually just text strings.
             var spriteBatch = ScreenManager.SpriteBatch;

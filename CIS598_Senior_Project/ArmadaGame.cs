@@ -35,7 +35,7 @@ namespace CIS598_Senior_Project
         private void AddInitialScreens()
         {
             _screenManager.AddScreen(new BackgroundScreen(), null);
-            _screenManager.AddScreen(new MainMenuScreen(), null);
+            _screenManager.AddScreen(new MainMenuScreen(this), null);
         }
 
         protected override void Initialize()

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace CIS598_Senior_Project.MenuObjects
 {
-    public class Button
+    public class CustButton
     {
         public int Id { get; set; }
 
@@ -14,7 +14,7 @@ namespace CIS598_Senior_Project.MenuObjects
 
         public Color Color { get; set; }
 
-        public Rectangle TouchArea { get; set; }
+        public Rectangle Area { get; set; }
 
         public Vector2 Position { get; set; }
 
@@ -22,12 +22,12 @@ namespace CIS598_Senior_Project.MenuObjects
 
         public Action<object, ButtonClickedEventArgs> AnAction { get; set; } = null;
 
-        public Button(int id, Vector2 position, bool initialActivity)
+        public CustButton(int id, Rectangle area, bool initialActivity)
         {
             IsActive = initialActivity;
             Id = id;
-            Position = position;
-            TouchArea = new Rectangle((int)position.X, (int)position.Y, 0, 0);
+            Position = new Vector2(area.X, area.Y);
+            Area = area;
             Color = Color.White;
         }
     }

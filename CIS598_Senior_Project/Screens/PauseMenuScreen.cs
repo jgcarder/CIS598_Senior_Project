@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework;
 using CIS598_Senior_Project.StateManagement;
 
 namespace CIS598_Senior_Project.Screens
 {
     public class PauseMenuScreen : MenuScreen
     {
+        private Game _game;
 
-        public PauseMenuScreen() : base("Paused")
+        public PauseMenuScreen(Game game) : base("Paused")
         {
             var resumeGameMenuEntry = new MenuEntry("Resume Game");
             var quitGameMenuEntry = new MenuEntry("Quit Game");
@@ -33,7 +35,7 @@ namespace CIS598_Senior_Project.Screens
         // This uses the loading screen to transition from the game back to the main menu screen.
         private void ConfirmQuitMessageBoxAccepted(object sender, PlayerIndexEventArgs e)
         {
-            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen());
+            LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(), new MainMenuScreen(_game));
         }
 
     }

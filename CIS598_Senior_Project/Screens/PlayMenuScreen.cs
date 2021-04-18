@@ -8,8 +8,11 @@ namespace CIS598_Senior_Project.Screens
 {
     public class PlayMenuScreen : MenuScreen
     {
-        public PlayMenuScreen() : base("Play Options")
+        private Game _game;
+        public PlayMenuScreen(Game game) : base("Play Options")
         {
+            _game = game;
+
             var playDuelMenuEntry = new MenuEntry("Hotseat Duel");
             var playCampaignMenuEntry = new MenuEntry("Play Campaign");
             var fleetCreatorMenuEntry = new MenuEntry("Fleet Creator");
@@ -40,12 +43,12 @@ namespace CIS598_Senior_Project.Screens
 
         private void FleetCreatorMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new FleetCustomizationMenuScreen(), e.PlayerIndex);
+            ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), e.PlayerIndex);
         }
 
         private void BackMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new MainMenuScreen(), e.PlayerIndex);
+            ScreenManager.AddScreen(new MainMenuScreen(_game), e.PlayerIndex);
         }
     }
 }

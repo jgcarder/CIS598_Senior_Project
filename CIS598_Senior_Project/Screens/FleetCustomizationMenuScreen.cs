@@ -8,9 +8,11 @@ namespace CIS598_Senior_Project.Screens
 {
     public class FleetCustomizationMenuScreen : MenuScreen
     {
-
-        public FleetCustomizationMenuScreen() : base("Fleet Customization")
+        private Game _game;
+        public FleetCustomizationMenuScreen(Game game) : base("Fleet Customization")
         {
+            _game = game;
+
             var newFleetMenuEntry = new MenuEntry("New Fleet");
             var editFleetMenuEntry = new MenuEntry("Edit Fleet");
             var backMenuEntry = new MenuEntry("Back");
@@ -28,7 +30,7 @@ namespace CIS598_Senior_Project.Screens
 
         private void NewFleetMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new FleetCustomizationScreen(), e.PlayerIndex);
+            ScreenManager.AddScreen(new FleetCustomizationScreen(_game), e.PlayerIndex);
         }
 
         private void EditFleetMenuEntrySelected(object sender, PlayerIndexEventArgs e)
@@ -38,7 +40,7 @@ namespace CIS598_Senior_Project.Screens
 
         private void BackMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            ScreenManager.AddScreen(new PlayMenuScreen(), e.PlayerIndex);
+            ScreenManager.AddScreen(new PlayMenuScreen(_game), e.PlayerIndex);
         }
         
     }
