@@ -21,6 +21,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract int Engineering { get; }
 
+        public abstract int Speed { get; set; }
+
         public abstract int[,] Movement { get; }
 
         public abstract int[] UpgradeTypes { get; }
@@ -30,6 +32,10 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public abstract bool ShipTypeA { get; set; }
 
         public abstract string Name { get; }
+
+        public abstract UpgradeCard Title { get; set; }
+
+        public abstract UpgradeCard Commander { get; set; }
 
         public abstract FiringArc[] Arcs { get; }
 
@@ -44,5 +50,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public abstract List<BlackDie> BlackAS { get; }
 
         public abstract void setHullDice(bool shipA);
+
+        public abstract void RefreshDefense();
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 
-namespace CIS598_Senior_Project.FleetObjects
+namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 {
     public class FiringArc
     {
