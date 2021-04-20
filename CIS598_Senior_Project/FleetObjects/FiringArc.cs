@@ -19,7 +19,7 @@ namespace CIS598_Senior_Project.FleetObjects
             set { _shields = value; }
         }
 
-        public double Arc
+        public double ArcRadians
         {
             get { return _arc; }
             set { _arc = value; }
@@ -40,10 +40,10 @@ namespace CIS598_Senior_Project.FleetObjects
             get { return _blackDice; }
         }
 
-        public FiringArc(int shields, double angle)
+        public FiringArc(int shields, double rads)
         {
             _shields = shields;
-            _arc = angle;
+            _arc = rads;
         }
 
         public void AddDice(int numDice, DieTypeEnum dieType)
@@ -85,6 +85,13 @@ namespace CIS598_Senior_Project.FleetObjects
                     _blackDice.RemoveAt(0);
                     break;
             }
+        }
+
+        public void ClearDice()
+        {
+            _blackDice.Clear();
+            _blueDice.Clear();
+            _redDice.Clear();
         }
     }
 }

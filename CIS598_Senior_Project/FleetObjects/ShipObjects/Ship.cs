@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
+using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 
 namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 {
@@ -20,7 +21,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract int Engineering { get; }
 
-        public abstract int[][] Movement { get; }
+        public abstract int[,] Movement { get; }
 
         public abstract int[] UpgradeTypes { get; }
 
@@ -41,5 +42,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public abstract List<BlueDie> BlueAS { get; }
 
         public abstract List<BlackDie> BlackAS { get; }
+
+        public abstract void setHullDice(bool shipA);
     }
 }
