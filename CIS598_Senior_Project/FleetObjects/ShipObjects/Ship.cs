@@ -27,6 +27,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract int Speed { get; set; }
 
+        public abstract int TokenCount { get; }
+
         public abstract int[,] Movement { get; }
 
         public abstract int[] UpgradeTypes { get; }
@@ -34,6 +36,14 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public abstract bool HasCommander { get; set; }
 
         public abstract bool ShipTypeA { get; set; }
+
+        public abstract bool HasEngineeringToken { get; set; }
+
+        public abstract bool HasSquadronToken { get; set; }
+
+        public abstract bool HasNavigationToken { get; set; }
+
+        public abstract bool HasConcentrateFireToken { get; set; }
 
         public abstract string Name { get; }
 

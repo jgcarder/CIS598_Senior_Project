@@ -14,6 +14,10 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
     {
         private int _hull;
         private bool _shipTypeA;
+        private bool _engToken;
+        private bool _navToken;
+        private bool _sqdToken;
+        private bool _firToken;
         private List<DefenseToken> _defenseTokens;
 
         public override int Id { get; }
@@ -51,6 +55,20 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public override int Engineering { get { return 4; } }
 
         public override int Speed { get; set; } = 0;
+
+        public override int TokenCount
+        {
+            get
+            {
+                int x = 0;
+                if (HasConcentrateFireToken) x++;
+                if (HasEngineeringToken) x++;
+                if (HasNavigationToken) x++;
+                if (HasSquadronToken) x++;
+
+                return x;
+            }
+        }
 
         public override int[,] Movement
         {
@@ -91,6 +109,54 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             {
                 _shipTypeA = value;
                 setHullDice(_shipTypeA);
+            }
+        }
+
+        public override bool HasEngineeringToken
+        {
+            get
+            {
+                return _engToken;
+            }
+            set
+            {
+                if (TokenCount < Command) _engToken = value;
+            }
+        }
+
+        public override bool HasSquadronToken
+        {
+            get
+            {
+                return _sqdToken;
+            }
+            set
+            {
+                if (TokenCount < Command) _sqdToken = value;
+            }
+        }
+
+        public override bool HasNavigationToken
+        {
+            get
+            {
+                return _navToken;
+            }
+            set
+            {
+                if (TokenCount < Command) _navToken = value;
+            }
+        }
+
+        public override bool HasConcentrateFireToken
+        {
+            get
+            {
+                return _firToken;
+            }
+            set
+            {
+                if (TokenCount < Command) _firToken = value;
             }
         }
 
