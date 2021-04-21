@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 {
@@ -120,7 +121,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override List<BlackDie> BlackAS { get; }
 
-        public CR90Corvette(int id)
+        public CR90Corvette(int id, ContentManager content)
         {
             _hull = 4;
 

@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
+using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 {
@@ -47,7 +48,7 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 
         public override Vector2 Position { get; set; } = Vector2.Zero;
 
-        public TIEAdvancedSquadron(int id)
+        public TIEAdvancedSquadron(int id, ContentManager content)
         {
             _hull = 5;
 

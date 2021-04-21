@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using CIS598_Senior_Project.FleetObjects.SquadronObjects;
+using CIS598_Senior_Project.FleetObjects.ShipObjects;
 
 namespace CIS598_Senior_Project.FleetObjects
 {

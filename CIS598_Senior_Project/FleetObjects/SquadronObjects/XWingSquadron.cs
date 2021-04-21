@@ -4,6 +4,7 @@ using System.Text;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 {
@@ -47,7 +48,7 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 
         public override Vector2 Position { get; set; } = Vector2.Zero;
 
-        public XWingSquadron(int id)
+        public XWingSquadron(int id, ContentManager content)
         {
             _hull = 5;
 

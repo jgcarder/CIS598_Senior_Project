@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
+using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 {
