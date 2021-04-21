@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 
@@ -13,7 +15,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract int PointCost { get; }
 
-        public abstract int Hull { get; }
+        public abstract int Hull { get; set; }
 
         public abstract int Command { get; }
 
@@ -48,6 +50,14 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public abstract List<BlueDie> BlueAS { get; }
 
         public abstract List<BlackDie> BlackAS { get; }
+
+        public abstract Texture2D Image { get; }
+
+        public abstract Rectangle Source { get; }
+
+        public abstract double Rotation { get; set; }
+
+        public abstract Vector2 Position { get; set; }
 
         public abstract void setHullDice(bool shipA);
 

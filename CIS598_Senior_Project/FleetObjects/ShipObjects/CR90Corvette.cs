@@ -3,6 +3,8 @@ using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 {
@@ -39,7 +41,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
-        public override int Hull { get { return _hull; } }
+        public override int Hull { get { return _hull; } set { _hull = value; } }
 
         public override int Command { get { return 1; } }
 
@@ -96,6 +98,14 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public override UpgradeCard Title { get; set; }
 
         public override UpgradeCard Commander { get; set; }
+
+        public override Texture2D Image { get; } //to be set
+
+        public override Rectangle Source { get; } //to be set
+
+        public override double Rotation { get; set; } //to be set
+
+        public override Vector2 Position { get; set; } //to be set
 
         public override FiringArc[] Arcs { get; }
 
