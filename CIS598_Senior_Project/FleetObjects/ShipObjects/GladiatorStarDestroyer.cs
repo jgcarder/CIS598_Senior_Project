@@ -1,5 +1,6 @@
 ﻿using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
+using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
+using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
 
 namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 {

@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
-namespace CIS598_Senior_Project.FleetObjects
+namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 {
     public class UpgradeCard
     {
