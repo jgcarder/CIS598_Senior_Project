@@ -47,6 +47,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract string Name { get; }
 
+        public abstract Queue<CommandDialEnum> CommandDials { get; set; }
+
         public abstract UpgradeCard Title { get; set; }
 
         public abstract UpgradeCard Commander { get; set; }

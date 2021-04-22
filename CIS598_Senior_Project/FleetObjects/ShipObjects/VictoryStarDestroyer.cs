@@ -162,6 +162,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override string Name { get { return "Victory Star Destroyer"; } }
 
+        public override Queue<CommandDialEnum> CommandDials { get; set; }
+
         public override UpgradeCard Title { get; set; }
 
         public override UpgradeCard Commander { get; set; }
@@ -170,7 +172,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override Rectangle Source { get; } //to be set
 
-        public override double Rotation { get; set; } //to be set
+        public override double Rotation { get; set; } = 0; //to be set
 
         public override Vector2 Position { get; set; } //to be set
 
@@ -210,6 +212,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             _defenseTokens.Add(new RedirectDefenseToken(0));
             _defenseTokens.Add(new RedirectDefenseToken(1));
             _defenseTokens.Add(new BraceDefenseToken(0));
+
+            CommandDials = new Queue<CommandDialEnum>();
         }
 
         public override void RefreshDefense()

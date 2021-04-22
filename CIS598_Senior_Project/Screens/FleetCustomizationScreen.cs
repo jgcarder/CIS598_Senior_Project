@@ -9,8 +9,11 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CIS598_Senior_Project.FleetObjects;
- 
-//using System.Windows.Forms;
+using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
+using CIS598_Senior_Project.FleetObjects.DiceObjects;
+using CIS598_Senior_Project.FleetObjects.ShipObjects;
+using CIS598_Senior_Project.FleetObjects.SquadronObjects;
+using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
 
 namespace CIS598_Senior_Project.Screens
 {
@@ -30,6 +33,8 @@ namespace CIS598_Senior_Project.Screens
         private List<CustButton> _buttons;
 
         private Fleet _fleet;
+        private Ship _selectedShip;
+        private UpgradeCard _selectedUpgrade;
 
         private GraphicsDevice _graphics;
 
@@ -340,11 +345,15 @@ namespace CIS598_Senior_Project.Screens
                     buttonSweeper(14);
                     _buttons[22].IsActive = true;
                     _buttons[23].IsActive = true;
+
+                    _selectedShip = new AssaultFrigateMarkII(0, _content);
                     break;
                 case 10:
                     buttonSweeper(14);
                     _buttons[24].IsActive = true;
                     _buttons[25].IsActive = true;
+
+                    _selectedShip = new CR90Corvette(0, _content);
                     break;
                 case 11:
                     buttonSweeper(14);
@@ -377,13 +386,25 @@ namespace CIS598_Senior_Project.Screens
                     break;
                 case 21:
                     break;
-                case 22:
+                case 22: //Assault mark 2 A
+                    _selectedShip.ShipTypeA = true;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 23:
+                case 23: //Assault mark 2 B
+                    _selectedShip.ShipTypeA = false;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 24:
+                case 24: //Corellian corvette A
+                    _selectedShip.ShipTypeA = true;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 25:
+                case 25: //Corellian corvette B
+                    _selectedShip.ShipTypeA = false;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
                 case 26:
                     break;
@@ -446,6 +467,22 @@ namespace CIS598_Senior_Project.Screens
             {
                 _buttons[i].IsActive = false;
             }
+        }
+
+        /// <summary>
+        /// A helper method that automatically sets the buttons for the possible upgrades.
+        /// </summary>
+        private void upgradeButtonSet()
+        {
+            _buttons[32].IsActive = true;
+            _buttons[33].IsActive = true;
+            if (_selectedShip.UpgradeTypes[1] == 1) _buttons[35].IsActive = true;
+            if (_selectedShip.UpgradeTypes[2] == 1) _buttons[34].IsActive = true;
+            if (_selectedShip.UpgradeTypes[3] == 1) _buttons[40].IsActive = true;
+            if (_selectedShip.UpgradeTypes[4] == 1) _buttons[36].IsActive = true;
+            if (_selectedShip.UpgradeTypes[5] == 1) _buttons[39].IsActive = true;
+            if (_selectedShip.UpgradeTypes[6] == 1) _buttons[38].IsActive = true;
+            if (_selectedShip.UpgradeTypes[7] == 1) _buttons[37].IsActive = true;
         }
     }
 }

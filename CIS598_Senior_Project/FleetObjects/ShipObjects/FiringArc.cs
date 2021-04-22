@@ -44,6 +44,10 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         {
             _shields = shields;
             _arc = rads;
+
+            _blackDice = new List<BlackDie>();
+            _blueDice = new List<BlueDie>();
+            _redDice = new List<RedDie>();
         }
 
         public void AddDice(int numDice, DieTypeEnum dieType)
