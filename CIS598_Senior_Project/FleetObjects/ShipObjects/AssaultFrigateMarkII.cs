@@ -180,7 +180,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override FiringArc[] Arcs { get; }
 
-        public override List<UpgradeCard> Upgrades { get; }
+        public override List<UpgradeCard> Upgrades { get; set; }
 
         public override List<DefenseToken> DefenseTokens
         {

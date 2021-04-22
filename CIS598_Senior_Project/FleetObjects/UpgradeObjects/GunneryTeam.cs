@@ -36,9 +36,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 
         public override Rectangle Source { get; }
 
+        public override UpgradeTypeEnum CardType { get; }
+
         public GunneryTeam(ContentManager content)
         {
-
+            CardType = UpgradeTypeEnum.WeaponsTeam;
         }
     }
 }

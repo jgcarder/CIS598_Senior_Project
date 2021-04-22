@@ -34,9 +34,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 
         public override Rectangle Source { get; }
 
+        public override UpgradeTypeEnum CardType { get; }
+
         public ElectronicCountermeasures(ContentManager content)
         {
-
+            CardType = UpgradeTypeEnum.DefensiveRetrofit;
         }
     }
 }

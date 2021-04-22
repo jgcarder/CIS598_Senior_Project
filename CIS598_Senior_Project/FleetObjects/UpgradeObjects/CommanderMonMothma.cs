@@ -34,9 +34,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 
         public override Rectangle Source { get; }
 
+        public override UpgradeTypeEnum CardType { get; }
+
         public CommanderMonMothma(ContentManager content)
         {
-
+            CardType = UpgradeTypeEnum.Commander;
         }
     }
 }

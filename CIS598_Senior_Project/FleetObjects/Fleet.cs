@@ -12,12 +12,22 @@ namespace CIS598_Senior_Project.FleetObjects
         private List<Ship> _ships;
         private List<Squadron> _squadrons;
         private String _name;
+        private bool _isRebelFleet;
 
         public int TotalPoints
         {
             get
             {
-                return _totalPoints;
+                int x = 0;
+                foreach (var ship in _ships)
+                {
+                    x += ship.PointCost;
+                }
+                foreach (var squad in _squadrons)
+                {
+                    x += squad.PointCost;
+                }
+                return x;
             }
         }
 
@@ -26,6 +36,11 @@ namespace CIS598_Senior_Project.FleetObjects
             get
             {
                 return _ships;
+            }
+
+            set
+            {
+                _ships = value;
             }
         }
 
@@ -45,9 +60,19 @@ namespace CIS598_Senior_Project.FleetObjects
             }
         }
 
+        public bool IsRebelFleet
+        {
+            get { return _isRebelFleet; }
+            set { _isRebelFleet = value; }
+        }
+
         public Fleet(string name)
         {
-
+            _ships = new List<Ship>();
+            _name = "";
+            _squadrons = new List<Squadron>();
+            _totalPoints = 0;
+            _isRebelFleet = false;
         }
     }
 }

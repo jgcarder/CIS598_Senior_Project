@@ -25,5 +25,7 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         public abstract Texture2D Texture { get; }
 
         public abstract Rectangle Source { get; }
+
+        public abstract UpgradeTypeEnum CardType { get; }
     }
 }

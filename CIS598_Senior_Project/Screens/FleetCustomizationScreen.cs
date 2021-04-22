@@ -19,6 +19,21 @@ namespace CIS598_Senior_Project.Screens
 {
     public class FleetCustomizationScreen : GameScreen
     {
+        enum SelectedUpgradeType
+        {
+            Commander,
+            Title,
+            Officers,
+            SupportTeam,
+            WeaponsTeam,
+            OffensiveRetrofit,
+            DefensiveRetrofit,
+            IonCannon,
+            Ordinance,
+            Turbolasers,
+            None
+        }
+
         private ContentManager _content;
         private SpriteFont _gameFont;
 
@@ -35,6 +50,9 @@ namespace CIS598_Senior_Project.Screens
         private Fleet _fleet;
         private Ship _selectedShip;
         private UpgradeCard _selectedUpgrade;
+        private UpgradeCard _previousUpgrade;
+
+        private SelectedUpgradeType _selectedUpgradeType;
 
         private GraphicsDevice _graphics;
 
@@ -48,6 +66,8 @@ namespace CIS598_Senior_Project.Screens
             _game = game;
 
             _buttons = new List<CustButton>();
+
+            _selectedUpgradeType = SelectedUpgradeType.None;
 
             //_graphics = ScreenManager.GraphicsDevice;
 
@@ -106,9 +126,22 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(36, new Rectangle(widthIncrement * 25, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Offencive Retrofit
             _buttons.Add(new CustButton(37, new Rectangle(widthIncrement * 37, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Defencive Retrofit
             _buttons.Add(new CustButton(38, new Rectangle(widthIncrement * 25, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Ion Cannon
-            _buttons.Add(new CustButton(39, new Rectangle(widthIncrement * 25, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Turbo Laser
-            _buttons.Add(new CustButton(40, new Rectangle(widthIncrement * 37, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Ordinance
+            _buttons.Add(new CustButton(39, new Rectangle(widthIncrement * 37, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Turbo Laser
+            _buttons.Add(new CustButton(40, new Rectangle(widthIncrement * 49, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Ordinance
+            _buttons.Add(new CustButton(41, new Rectangle(widthIncrement * 49, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Commander
 
+            _buttons.Add(new CustButton(42, new Rectangle(widthIncrement * 61, heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));                                                             //Upgrade select
+            _buttons.Add(new CustButton(43, new Rectangle(widthIncrement * 61, 15 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(44, new Rectangle(widthIncrement * 61, 29 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(45, new Rectangle(widthIncrement * 61, 43 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(46, new Rectangle(widthIncrement * 61, 57 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(47, new Rectangle(widthIncrement * 61, 71 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(48, new Rectangle(widthIncrement * 61, 85 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+
+            _buttons.Add(new CustButton(60, new Rectangle(widthIncrement, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                        //Add ship/squadron to fleet
+            
+            
+            
             /*
             _buttons.Add(new CustButton(0, new Rectangle(), true));     //Select rebel commander
             _buttons.Add(new CustButton(0, new Rectangle(), true));     //Select imperial commander
@@ -295,80 +328,99 @@ namespace CIS598_Senior_Project.Screens
 
             switch(button.Id)
             {
-                case 0:
+                case 0: //save and exit
                     //Save fleet to .txt file
                     ScreenManager.AddScreen(new BackgroundScreen(), null);
                     ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
                     break;
-                case 1:
+                case 1: //clear fleet
                     buttonSweeper(5);
                     _fleet = new Fleet("");
+                    _selectedShip = null;
+                    _selectedUpgrade = null;
+                    _previousUpgrade = null;
+                    _selectedUpgradeType = SelectedUpgradeType.None;
+
+                    _buttons[2].IsActive = true;
+                    _buttons[3].IsActive = true;
                     break;
-                case 2:
-                    buttonSweeper(7);
+                case 2: //select rebel fleet
+                    buttonSweeper(5);
+                    _fleet.IsRebelFleet = true;
+
+                    _buttons[3].IsActive = false;
                     _buttons[5].IsActive = true;
                     _buttons[6].IsActive = true;
                     break;
-                case 3:
+                case 3: //select imp fleet
                     buttonSweeper(5);
+                    _fleet.IsRebelFleet = false;
+
+                    _buttons[2].IsActive = false;
                     _buttons[7].IsActive = true;
                     _buttons[8].IsActive = true;
                     break;
-                case 4:
+                case 4: //instructions
                     break;
-                case 5:
+                case 5: //rebel ships
                     buttonSweeper(7);
                     _buttons[9].IsActive = true;
                     _buttons[10].IsActive = true;
                     _buttons[11].IsActive = true;
                     break;
-                case 6:
+                case 6: //rebel squads
                     buttonSweeper(7);
                     _buttons[14].IsActive = true;
                     _buttons[15].IsActive = true;
                     _buttons[16].IsActive = true;
                     _buttons[17].IsActive = true;
                     break;
-                case 7:
+                case 7: //imp ships
                     buttonSweeper(9);
                     _buttons[12].IsActive = true;
                     _buttons[13].IsActive = true;
                     break;
-                case 8:
+                case 8: //imp squads
                     buttonSweeper(9);
                     _buttons[18].IsActive = true;
                     _buttons[19].IsActive = true;
                     _buttons[20].IsActive = true;
                     _buttons[21].IsActive = true;
                     break;
-                case 9:
+                case 9: //select Assault
                     buttonSweeper(14);
                     _buttons[22].IsActive = true;
                     _buttons[23].IsActive = true;
 
                     _selectedShip = new AssaultFrigateMarkII(0, _content);
                     break;
-                case 10:
+                case 10: //select cr90
                     buttonSweeper(14);
                     _buttons[24].IsActive = true;
                     _buttons[25].IsActive = true;
 
                     _selectedShip = new CR90Corvette(0, _content);
                     break;
-                case 11:
+                case 11: //select nebulon
                     buttonSweeper(14);
                     _buttons[26].IsActive = true;
                     _buttons[27].IsActive = true;
+
+                    _selectedShip = new NebulonBFrigate(0, _content);
                     break;
-                case 12:
+                case 12: //select gladiator
                     buttonSweeper(14);
                     _buttons[28].IsActive = true;
                     _buttons[29].IsActive = true;
+
+                    _selectedShip = new GladiatorStarDestroyer(0, _content);
                     break;
-                case 13:
+                case 13: //select victory
                     buttonSweeper(14);
                     _buttons[30].IsActive = true;
                     _buttons[31].IsActive = true;
+
+                    _selectedShip = new VictoryStarDestroyer(0, _content);
                     break;
                 case 14:
                     break;
@@ -406,37 +458,85 @@ namespace CIS598_Senior_Project.Screens
                     buttonSweeper(32);
                     upgradeButtonSet();
                     break;
-                case 26:
+                case 26: //Nebulon-B Escort Frigate
+                    _selectedShip.ShipTypeA = true;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 27:
+                case 27: //Nebulon-B Support Frigate
+                    _selectedShip.ShipTypeA = false;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 28:
+                case 28: //Gladiator I class SD
+                    _selectedShip.ShipTypeA = true;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 29:
+                case 29: //Gladiator II class SD
+                    _selectedShip.ShipTypeA = false;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 30:
+                case 30: //Victory I class SD
+                    _selectedShip.ShipTypeA = true;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 31:
+                case 31: //Victory II class SD
+                    _selectedShip.ShipTypeA = false;
+                    buttonSweeper(32);
+                    upgradeButtonSet();
                     break;
-                case 32:
+                case 32: //selecting title
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.Title;
+                    individualUpgradeSet();
                     break;
-                case 33:
+                case 33: //selecting officers
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.Officers;
+                    individualUpgradeSet();
                     break;
-                case 34:
+                case 34: //selecting weapons teams
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.WeaponsTeam;
+                    individualUpgradeSet();
                     break;
-                case 35:
+                case 35: //selecting support team
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.SupportTeam;
+                    individualUpgradeSet();
                     break;
-                case 36:
+                case 36: //selecting offensive retrofit
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.OffensiveRetrofit;
+                    individualUpgradeSet();
                     break;
-                case 37:
+                case 37: //selecting defensive retrofit
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.DefensiveRetrofit;
+                    individualUpgradeSet();
                     break;
-                case 38:
+                case 38: //selecting ion cannons
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.IonCannon;
+                    individualUpgradeSet();
                     break;
-                case 39:
+                case 39: //selecting turbolasers
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.Turbolasers;
+                    individualUpgradeSet();
                     break;
-                case 40:
+                case 40: //selecting ordinance
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.Ordinance;
+                    individualUpgradeSet();
                     break;
-                case 41:
+                case 41: //selecting commaders
+                    buttonSweeper(42);
+                    _selectedUpgradeType = SelectedUpgradeType.Commander;
+                    individualUpgradeSet();
                     break;
                 case 42:
                     break;
@@ -454,6 +554,28 @@ namespace CIS598_Senior_Project.Screens
                     break;
                 case 49:
                     break;
+                case 50:
+                    break;
+                case 51:
+                    break;
+                case 52:
+                    break;
+                case 53:
+                    break;
+                case 54:
+                    break;
+                case 60:
+                    break;
+            }
+        }
+
+        private void addUpgradeToShip()
+        {
+            if (_selectedUpgradeType == SelectedUpgradeType.Title) _selectedShip.Title = _selectedUpgrade;
+            else if(_selectedUpgradeType == SelectedUpgradeType.Commander) _selectedShip.Commander = _selectedUpgrade;
+            if (!_selectedShip.Upgrades.Contains(_previousUpgrade))
+            {
+                _selectedShip.Upgrades.Add(_selectedUpgrade);
             }
         }
 
@@ -465,7 +587,10 @@ namespace CIS598_Senior_Project.Screens
         {
             for(int i = index; i < _buttons.Count; i++)
             {
-                _buttons[i].IsActive = false;
+                if(_buttons[i].Id != 60)
+                {
+                    _buttons[i].IsActive = false;
+                }
             }
         }
 
@@ -476,6 +601,17 @@ namespace CIS598_Senior_Project.Screens
         {
             _buttons[32].IsActive = true;
             _buttons[33].IsActive = true;
+            _buttons[41].IsActive = true;
+
+            foreach (var ship in _fleet.Ships)
+            {
+                if(ship.HasCommander)
+                {
+                    _buttons[41].IsActive = false;
+                    break;
+                }
+            }
+
             if (_selectedShip.UpgradeTypes[1] == 1) _buttons[35].IsActive = true;
             if (_selectedShip.UpgradeTypes[2] == 1) _buttons[34].IsActive = true;
             if (_selectedShip.UpgradeTypes[3] == 1) _buttons[40].IsActive = true;
@@ -483,6 +619,213 @@ namespace CIS598_Senior_Project.Screens
             if (_selectedShip.UpgradeTypes[5] == 1) _buttons[39].IsActive = true;
             if (_selectedShip.UpgradeTypes[6] == 1) _buttons[38].IsActive = true;
             if (_selectedShip.UpgradeTypes[7] == 1) _buttons[37].IsActive = true;
+        }
+
+        private void individualUpgradeSet()
+        {
+            string shipType = getSelectedShip();
+            if(!shipType.Equals("null"))
+            {
+                switch (_selectedUpgradeType)
+                {
+                    case SelectedUpgradeType.Title:
+                        switch (shipType)
+                        {
+                            case "Assault":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                break;
+                            case "CR90":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                            case "Nebulon":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                            case "Gladiator":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                break;
+                            case "Victory":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                        }
+                        break;
+                    case SelectedUpgradeType.Officers:
+                        _buttons[42].IsActive = true;
+                        _buttons[43].IsActive = true;
+                        _buttons[44].IsActive = true;
+                        _buttons[45].IsActive = true;
+                        _buttons[46].IsActive = true;
+                        _buttons[47].IsActive = true;
+                        _buttons[48].IsActive = true;
+                        break;
+                    case SelectedUpgradeType.OffensiveRetrofit:
+                        switch (shipType)
+                        {
+                            case "Assault":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                break;
+                            case "Victory":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                break;
+                        }
+                        break;
+                    case SelectedUpgradeType.DefensiveRetrofit:
+                        switch (shipType)
+                        {
+                            case "Assault":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                break;
+                            case "CR90":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                break;
+                        }
+                        break;
+                    case SelectedUpgradeType.SupportTeam:
+                        switch (shipType)
+                        {
+                            case "Assault":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                            case "CR90":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                            case "Nebulon":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                            case "Gladiator":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                        }
+                        break;
+                    case SelectedUpgradeType.WeaponsTeam:
+                        switch (shipType)
+                        {
+                            case "CR90":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                            case "Nebulon":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                            case "Gladiator":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                        }
+                        break;
+                    case SelectedUpgradeType.Turbolasers:
+                        switch (shipType)
+                        {
+                            case "Assault":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                _buttons[45].IsActive = true;
+                                break;
+                            case "CR90":
+                                if(_selectedShip.ShipTypeA)
+                                {
+                                    _buttons[42].IsActive = true;
+                                    _buttons[43].IsActive = true;
+                                    _buttons[44].IsActive = true;
+                                    _buttons[45].IsActive = true;
+                                }
+                                break;
+                            case "Nebulon":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                _buttons[45].IsActive = true;
+                                break;
+                            case "Victory":
+                                if (!_selectedShip.ShipTypeA)
+                                {
+                                    _buttons[42].IsActive = true;
+                                    _buttons[43].IsActive = true;
+                                    _buttons[44].IsActive = true;
+                                    _buttons[45].IsActive = true;
+                                }
+                                break;
+                        }
+                        break;
+                    case SelectedUpgradeType.IonCannon:
+                        switch (shipType)
+                        {
+                            case "CR90":
+                                if (!_selectedShip.ShipTypeA)
+                                {
+                                    _buttons[42].IsActive = true;
+                                    _buttons[43].IsActive = true;
+                                    _buttons[44].IsActive = true;
+                                }
+                                break;
+                            case "Victory":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                        }
+                        break;
+                    case SelectedUpgradeType.Ordinance:
+                        switch (shipType)
+                        {
+                            case "Gladiator":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                break;
+                            case "Victory":
+                                if (_selectedShip.ShipTypeA)
+                                {
+                                    _buttons[42].IsActive = true;
+                                    _buttons[43].IsActive = true;
+                                }
+                                break;
+                        }
+                        break;
+                    case SelectedUpgradeType.Commander:
+                        _buttons[42].IsActive = true;
+                        _buttons[43].IsActive = true;
+                        _buttons[44].IsActive = true;
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return what the selected ship's type is
+        /// </summary>
+        /// <returns>The type as a string</returns>
+        private string getSelectedShip()
+        {
+            if (_selectedShip is AssaultFrigateMarkII) return "Assault";
+            else if (_selectedShip is CR90Corvette) return "CR90";
+            else if (_selectedShip is NebulonBFrigate) return "Nebulon";
+            else if (_selectedShip is GladiatorStarDestroyer) return "Gladiator";
+            else if (_selectedShip is VictoryStarDestroyer) return "Victory";
+            else return "null";
         }
     }
 }

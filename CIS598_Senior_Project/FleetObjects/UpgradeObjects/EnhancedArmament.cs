@@ -33,9 +33,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 
         public override Rectangle Source { get; }
 
+        public override UpgradeTypeEnum CardType { get; }
+
         public EnhancedArmament(ContentManager content)
         {
-
+            CardType = UpgradeTypeEnum.Turbolasers;
         }
     }
 }

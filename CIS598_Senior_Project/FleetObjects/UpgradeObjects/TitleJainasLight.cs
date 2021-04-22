@@ -32,9 +32,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 
         public override Rectangle Source { get; }
 
+        public override UpgradeTypeEnum CardType { get; }
+
         public TitleJainasLight(ContentManager content)
         {
-
+            CardType = UpgradeTypeEnum.Title;
         }
     }
 }
