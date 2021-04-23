@@ -539,18 +539,32 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 42:
+                    selectingUpgrade(42);
+                    upgradeShip();
                     break;
                 case 43:
+                    selectingUpgrade(43);
+                    upgradeShip();
                     break;
                 case 44:
+                    selectingUpgrade(44);
+                    upgradeShip();
                     break;
                 case 45:
+                    selectingUpgrade(45);
+                    upgradeShip();
                     break;
                 case 46:
+                    selectingUpgrade(46);
+                    upgradeShip();
                     break;
                 case 47:
+                    selectingUpgrade(47);
+                    upgradeShip();
                     break;
                 case 48:
+                    selectingUpgrade(48);
+                    upgradeShip();
                     break;
                 case 49:
                     break;
@@ -569,14 +583,255 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
-        private void addUpgradeToShip()
+        private void selectingUpgrade(int button)
+        {
+            string ship = getSelectedShip();
+
+            switch(_selectedUpgradeType)
+            {
+                case SelectedUpgradeType.Title:
+                    switch(ship)
+                    {
+                        case "Assault":
+                            if (button == 42) _selectedUpgrade = new TitleGallantHaven(_content);
+                            if (button == 43) _selectedUpgrade = new TitleParagon(_content);
+                            break;
+                        case "CR90":
+                            if (button == 42) _selectedUpgrade = new TitleDodonnasPride(_content);
+                            if (button == 43) _selectedUpgrade = new TitleJainasLight(_content);
+                            if (button == 44) _selectedUpgrade = new TitleTantiveIV(_content);
+                            break;
+                        case "Nebulon":
+                            if (button == 42) _selectedUpgrade = new TitleRedemption(_content);
+                            if (button == 43) _selectedUpgrade = new TitleSalvation(_content);
+                            if (button == 44) _selectedUpgrade = new TitleYavaris(_content);
+                            break;
+                        case "Gladiator":
+                            if (button == 42) _selectedUpgrade = new TitleDominator(_content);
+                            if (button == 43) _selectedUpgrade = new TitleInsidious(_content);
+                            break;
+                        case "Victory":
+                            if (button == 42) _selectedUpgrade = new TitleCorruptor(_content);
+                            if (button == 43) _selectedUpgrade = new TitleDominator(_content);
+                            if (button == 44) _selectedUpgrade = new TitleWarlord(_content);
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.WeaponsTeam:
+                    switch (ship)
+                    {
+                        case "Assault":
+                            if (button == 42) _selectedUpgrade = new FlightControllers(_content);
+                            if (button == 43) _selectedUpgrade = new GunneryTeam(_content);
+                            if (button == 44) _selectedUpgrade = new SensorTeam(_content);
+                            break;
+                        case "Gladiator":
+                            if (button == 42) _selectedUpgrade = new FlightControllers(_content);
+                            if (button == 43) _selectedUpgrade = new GunneryTeam(_content);
+                            if (button == 44) _selectedUpgrade = new SensorTeam(_content);
+                            break;
+                        case "Victory":
+                            if (button == 42) _selectedUpgrade = new FlightControllers(_content);
+                            if (button == 43) _selectedUpgrade = new GunneryTeam(_content);
+                            if (button == 44) _selectedUpgrade = new SensorTeam(_content);
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.SupportTeam:
+                    switch (ship)
+                    {
+                        case "CR90":
+                            if (button == 42) _selectedUpgrade = new EngineTechs(_content);
+                            if (button == 43) _selectedUpgrade = new EngineeringTeam(_content);
+                            if (button == 44) _selectedUpgrade = new NavTeam(_content);
+                            break;
+                        case "Nebulon":
+                            if (button == 42) _selectedUpgrade = new EngineTechs(_content);
+                            if (button == 43) _selectedUpgrade = new EngineeringTeam(_content);
+                            if (button == 44) _selectedUpgrade = new NavTeam(_content);
+                            break;
+                        case "Gladiator":
+                            if (button == 42) _selectedUpgrade = new EngineTechs(_content);
+                            if (button == 43) _selectedUpgrade = new EngineeringTeam(_content);
+                            if (button == 44) _selectedUpgrade = new NavTeam(_content);
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.OffensiveRetrofit:
+                    switch (ship)
+                    {
+                        case "Assault":
+                            if (button == 42) _selectedUpgrade = new ExpandedHangarBay(_content);
+                            if (button == 43) _selectedUpgrade = new PointDefenseReroute(_content);
+                            break;
+                        case "Victory":
+                            if (button == 42) _selectedUpgrade = new ExpandedHangarBay(_content);
+                            if (button == 43) _selectedUpgrade = new PointDefenseReroute(_content);
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.DefensiveRetrofit:
+                    switch (ship)
+                    {
+                        case "Assault":
+                            if (button == 42) _selectedUpgrade = new AdvancedProjectors(_content);
+                            if (button == 43) _selectedUpgrade = new ElectronicCountermeasures(_content);
+                            break;
+                        case "CR90":
+                            if (button == 42) _selectedUpgrade = new AdvancedProjectors(_content);
+                            if (button == 43) _selectedUpgrade = new ElectronicCountermeasures(_content);
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.Officers:
+                    switch (ship)
+                    {
+                        case "Assault":
+                            if (button == 42) _selectedUpgrade = new OfficerAdarTallon(_content);
+                            if (button == 43) _selectedUpgrade = new OfficerLeiaOrgana(_content);
+                            if (button == 44) _selectedUpgrade = new OfficerRaymusAntilles(_content);
+                            if (button == 45) _selectedUpgrade = new OfficerDefenseLiaison(_content);
+                            if (button == 46) _selectedUpgrade = new OfficerIntelOfficer(_content);
+                            if (button == 47) _selectedUpgrade = new OfficerVeteranCaptain(_content);
+                            if (button == 48) _selectedUpgrade = new OfficerWeaponsLiaison(_content);
+                            break;
+                        case "CR90":
+                            if (button == 42) _selectedUpgrade = new OfficerAdarTallon(_content);
+                            if (button == 43) _selectedUpgrade = new OfficerLeiaOrgana(_content);
+                            if (button == 44) _selectedUpgrade = new OfficerRaymusAntilles(_content);
+                            if (button == 45) _selectedUpgrade = new OfficerDefenseLiaison(_content);
+                            if (button == 46) _selectedUpgrade = new OfficerIntelOfficer(_content);
+                            if (button == 47) _selectedUpgrade = new OfficerVeteranCaptain(_content);
+                            if (button == 48) _selectedUpgrade = new OfficerWeaponsLiaison(_content);
+                            break;
+                        case "Nebulon":
+                            if (button == 42) _selectedUpgrade = new OfficerAdarTallon(_content);
+                            if (button == 43) _selectedUpgrade = new OfficerLeiaOrgana(_content);
+                            if (button == 44) _selectedUpgrade = new OfficerRaymusAntilles(_content);
+                            if (button == 45) _selectedUpgrade = new OfficerDefenseLiaison(_content);
+                            if (button == 46) _selectedUpgrade = new OfficerIntelOfficer(_content);
+                            if (button == 47) _selectedUpgrade = new OfficerVeteranCaptain(_content);
+                            if (button == 48) _selectedUpgrade = new OfficerWeaponsLiaison(_content);
+                            break;
+                        case "Gladiator":
+                            if (button == 42) _selectedUpgrade = new OfficerAdmiralChiraneau(_content);
+                            if (button == 43) _selectedUpgrade = new OfficerDirectorIsard(_content);
+                            if (button == 44) _selectedUpgrade = new OfficerWullfYularen(_content);
+                            if (button == 45) _selectedUpgrade = new OfficerDefenseLiaison(_content);
+                            if (button == 46) _selectedUpgrade = new OfficerIntelOfficer(_content);
+                            if (button == 47) _selectedUpgrade = new OfficerVeteranCaptain(_content);
+                            if (button == 48) _selectedUpgrade = new OfficerWeaponsLiaison(_content);
+                            break;
+                        case "Victory":
+                            if (button == 42) _selectedUpgrade = new OfficerAdarTallon(_content);
+                            if (button == 43) _selectedUpgrade = new OfficerLeiaOrgana(_content);
+                            if (button == 44) _selectedUpgrade = new OfficerRaymusAntilles(_content);
+                            if (button == 45) _selectedUpgrade = new OfficerDefenseLiaison(_content);
+                            if (button == 46) _selectedUpgrade = new OfficerIntelOfficer(_content);
+                            if (button == 47) _selectedUpgrade = new OfficerVeteranCaptain(_content);
+                            if (button == 48) _selectedUpgrade = new OfficerWeaponsLiaison(_content);
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.Turbolasers:
+                    switch (ship)
+                    {
+                        case "Assault":
+                            if (button == 42) _selectedUpgrade = new EnhancedArmament(_content);
+                            if (button == 43) _selectedUpgrade = new H9Turbolasers(_content);
+                            if (button == 44) _selectedUpgrade = new XI7Turbolasers(_content);
+                            if (button == 45) _selectedUpgrade = new XX9Turbolasers(_content);
+                            break;
+                        case "CR90":
+                            if(_selectedShip.ShipTypeA)
+                            {
+                                if (button == 42) _selectedUpgrade = new EnhancedArmament(_content);
+                                if (button == 43) _selectedUpgrade = new H9Turbolasers(_content);
+                                if (button == 44) _selectedUpgrade = new XI7Turbolasers(_content);
+                                if (button == 45) _selectedUpgrade = new XX9Turbolasers(_content);
+                            }
+                            break;
+                        case "Nebulon":
+                            if (button == 42) _selectedUpgrade = new EnhancedArmament(_content);
+                            if (button == 43) _selectedUpgrade = new H9Turbolasers(_content);
+                            if (button == 44) _selectedUpgrade = new XI7Turbolasers(_content);
+                            if (button == 45) _selectedUpgrade = new XX9Turbolasers(_content);
+                            break;
+                        case "Victory":
+                            if (!_selectedShip.ShipTypeA)
+                            {
+                                if (button == 42) _selectedUpgrade = new EnhancedArmament(_content);
+                                if (button == 43) _selectedUpgrade = new H9Turbolasers(_content);
+                                if (button == 44) _selectedUpgrade = new XI7Turbolasers(_content);
+                                if (button == 45) _selectedUpgrade = new XX9Turbolasers(_content);
+                            }
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.IonCannon:
+                    switch (ship)
+                    {
+                        case "CR90":
+                            if (!_selectedShip.ShipTypeA)
+                            {
+                                if (button == 42) _selectedUpgrade = new IonCannonBatteries(_content);
+                                if (button == 43) _selectedUpgrade = new LeadingShots(_content);
+                                if (button == 44) _selectedUpgrade = new OverloadPulse(_content);
+                            }
+                            break;
+                        case "Victory":
+                            if (button == 42) _selectedUpgrade = new IonCannonBatteries(_content);
+                            if (button == 43) _selectedUpgrade = new LeadingShots(_content);
+                            if (button == 44) _selectedUpgrade = new OverloadPulse(_content);
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.Ordinance:
+                    switch (ship)
+                    {
+                        case "Gladiator":
+                            if (button == 42) _selectedUpgrade = new AssaultConcussionMissiles(_content);
+                            if (button == 43) _selectedUpgrade = new ExpandedLaunchers(_content);
+                            break;
+                        case "Victory":
+                            if (_selectedShip.ShipTypeA)
+                            {
+                                if (button == 42) _selectedUpgrade = new AssaultConcussionMissiles(_content);
+                                if (button == 43) _selectedUpgrade = new ExpandedLaunchers(_content);
+                            }
+                            break;
+                    }
+                    break;
+                case SelectedUpgradeType.Commander:
+                    if(_fleet.IsRebelFleet)
+                    {
+                        if (button == 42) _selectedUpgrade = new CommanderGarmBelIblis(_content);
+                        if (button == 43) _selectedUpgrade = new CommanderGeneralDodonna(_content);
+                        if (button == 44) _selectedUpgrade = new CommanderMonMothma(_content);
+                    }
+                    else
+                    {
+                        if (button == 42) _selectedUpgrade = new CommanderAdmiralMotti(_content);
+                        if (button == 43) _selectedUpgrade = new CommanderAdmiralScreed(_content);
+                        if (button == 44) _selectedUpgrade = new CommanderGrandMoffTarkin(_content);
+                    }
+                    break;
+            }
+        }
+
+        private void upgradeShip()
         {
             if (_selectedUpgradeType == SelectedUpgradeType.Title) _selectedShip.Title = _selectedUpgrade;
             else if(_selectedUpgradeType == SelectedUpgradeType.Commander) _selectedShip.Commander = _selectedUpgrade;
-            if (!_selectedShip.Upgrades.Contains(_previousUpgrade))
-            {
-                _selectedShip.Upgrades.Add(_selectedUpgrade);
-            }
+
+            if (_selectedShip.UpgradeTypes[0] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.Officers) _selectedShip.Upgrades[0] = _selectedUpgrade;
+            if (_selectedShip.UpgradeTypes[1] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.SupportTeam) _selectedShip.Upgrades[1] = _selectedUpgrade;
+            if (_selectedShip.UpgradeTypes[2] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.WeaponsTeam) _selectedShip.Upgrades[2] = _selectedUpgrade;
+            if (_selectedShip.UpgradeTypes[3] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.Ordinance) _selectedShip.Upgrades[3] = _selectedUpgrade;
+            if (_selectedShip.UpgradeTypes[4] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.OffensiveRetrofit) _selectedShip.Upgrades[4] = _selectedUpgrade;
+            if (_selectedShip.UpgradeTypes[5] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.Turbolasers) _selectedShip.Upgrades[5] = _selectedUpgrade;
+            if (_selectedShip.UpgradeTypes[6] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.IonCannon) _selectedShip.Upgrades[6] = _selectedUpgrade;
+            if (_selectedShip.UpgradeTypes[7] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.DefensiveRetrofit) _selectedShip.Upgrades[7] = _selectedUpgrade;
         }
 
         /// <summary>
@@ -694,11 +949,6 @@ namespace CIS598_Senior_Project.Screens
                     case SelectedUpgradeType.SupportTeam:
                         switch (shipType)
                         {
-                            case "Assault":
-                                _buttons[42].IsActive = true;
-                                _buttons[43].IsActive = true;
-                                _buttons[44].IsActive = true;
-                                break;
                             case "CR90":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
@@ -719,17 +969,17 @@ namespace CIS598_Senior_Project.Screens
                     case SelectedUpgradeType.WeaponsTeam:
                         switch (shipType)
                         {
-                            case "CR90":
-                                _buttons[42].IsActive = true;
-                                _buttons[43].IsActive = true;
-                                _buttons[44].IsActive = true;
-                                break;
-                            case "Nebulon":
+                            case "Assault":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
                                 break;
                             case "Gladiator":
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                break;
+                            case "Victory":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;

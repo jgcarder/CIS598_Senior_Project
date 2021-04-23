@@ -55,7 +55,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract FiringArc[] Arcs { get; }
 
-        public abstract List<UpgradeCard> Upgrades { get; set; }
+        public abstract UpgradeCard[] Upgrades { get; set; }
 
         public abstract List<DefenseToken> DefenseTokens { get; }
 

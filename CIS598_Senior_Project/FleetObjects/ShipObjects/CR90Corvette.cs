@@ -29,18 +29,18 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
                 if (ShipTypeA)
                 {
                     int x = 44;
-                    foreach (var upgd in Upgrades)
+                    for (int i = 0; i < Upgrades.Length; i++)
                     {
-                        x += upgd.PointCost;
+                        if (Upgrades[i] != null) x += Upgrades[i].PointCost;
                     }
                     return x;
                 }
                 else
                 {
                     int x = 39;
-                    foreach (var upgd in Upgrades)
+                    for (int i = 0; i < Upgrades.Length; i++)
                     {
-                        x += upgd.PointCost;
+                        if (Upgrades[i] != null) x += Upgrades[i].PointCost;
                     }
                     return x;
                 }
@@ -179,7 +179,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override FiringArc[] Arcs { get; }
 
-        public override List<UpgradeCard> Upgrades { get; set; }
+        public override UpgradeCard[] Upgrades { get; set; }
 
         public override List<DefenseToken> DefenseTokens { get { return _defenseTokens; } }
 
@@ -191,6 +191,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public CR90Corvette(int id, ContentManager content)
         {
+            Upgrades = new UpgradeCard[8];
+
             _hull = 4;
 
             _navToken = false;
