@@ -76,5 +76,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public abstract void setHullDice(bool shipA);
 
         public abstract void RefreshDefense();
+
+        public abstract void refreshShip();
     }
 }

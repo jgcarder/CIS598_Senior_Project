@@ -13,11 +13,18 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
     public class NebulonBFrigate : Ship
     {
         private int _hull;
+        private int _command;
+        private int _squadron;
+        private int _engineering;
+        private int _points;
         private bool _shipTypeA;
         private bool _engToken;
         private bool _navToken;
         private bool _sqdToken;
         private bool _firToken;
+        private List<RedDie> _redAS;
+        private List<BlueDie> _blueAS;
+        private List<BlackDie> _blackAS;
         private List<DefenseToken> _defenseTokens;
 
         public override int Id { get; }
@@ -26,41 +33,19 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         {
             get
             {
-                if (ShipTypeA)
-                {
-                    int x = 57;
-                    for (int i = 0; i < Upgrades.Length; i++)
-                    {
-                        if (Upgrades[i] != null) x += Upgrades[i].PointCost;
-                    }
-                    return x;
-                }
-                else
-                {
-                    int x = 51;
-                    for (int i = 0; i < Upgrades.Length; i++)
-                    {
-                        if (Upgrades[i] != null) x += Upgrades[i].PointCost;
-                    }
-                    return x;
-                }
+                int x = _points;
+                foreach (var upgd in Upgrades) x += upgd.PointCost;
+                return x;
             }
         }
 
         public override int Hull { get { return _hull; } set { _hull = value; } }
 
-        public override int Command { get { return 2; } }
+        public override int Command { get { return _command; } }
 
-        public override int Squadron
-        {
-            get
-            {
-                if (ShipTypeA) return 2;
-                else return 1;
-            }
-        }
+        public override int Squadron { get { return _squadron; } }
 
-        public override int Engineering { get { return 3; } }
+        public override int Engineering { get { return _engineering; } }
 
         public override int Speed { get; set; } = 0;
 
@@ -103,6 +88,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             set
             {
                 _shipTypeA = value;
+                if (_shipTypeA) _points = 57;
+                else _points = 51;
                 setHullDice(_shipTypeA);
             }
         }
@@ -177,27 +164,24 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override List<DefenseToken> DefenseTokens { get { return _defenseTokens; } }
 
-        public override List<RedDie> RedAS { get; }
+        public override List<RedDie> RedAS
+        {
+            get { return _redAS; }
+        }
 
-        public override List<BlueDie> BlueAS { get; }
+        public override List<BlueDie> BlueAS
+        {
+            get { return _blueAS; }
+        }
 
-        public override List<BlackDie> BlackAS { get; }
+        public override List<BlackDie> BlackAS
+        {
+            get { return _blackAS; }
+        }
 
         public NebulonBFrigate(int id, ContentManager content)
         {
             Upgrades = new UpgradeCard[8];
-
-            _hull = 5;
-
-            Id = id;
-            RedAS = new List<RedDie>();
-            BlueAS = new List<BlueDie>();
-            BlackAS = new List<BlackDie>();
-
-            _defenseTokens = new List<DefenseToken>();
-
-            BlueAS.Add(new BlueDie(DieTypeEnum.Blue));
-            BlueAS.Add(new BlueDie(DieTypeEnum.Blue));
 
             Arcs = new FiringArc[4];
             Arcs[0] = new FiringArc(3, (Math.PI / 180) * 55);
@@ -205,7 +189,29 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             Arcs[2] = new FiringArc(1, (Math.PI / 180) * 125);
             Arcs[3] = new FiringArc(2, (Math.PI / 180) * 55);
 
+            _redAS = new List<RedDie>();
+            _blueAS = new List<BlueDie>();
+            _blackAS = new List<BlackDie>();
+
             ShipTypeA = true;
+
+            _hull = 5;
+            _command = 2;
+            if (ShipTypeA) _squadron = 2;
+            else _squadron = 1;
+            _engineering = 3;
+
+            _navToken = false;
+            _engToken = false;
+            _firToken = false;
+            _sqdToken = false;
+
+            Id = id;
+
+            _defenseTokens = new List<DefenseToken>();
+
+            _blueAS.Add(new BlueDie(DieTypeEnum.Blue));
+            _blueAS.Add(new BlueDie(DieTypeEnum.Blue));
 
             _defenseTokens.Add(new BraceDefenseToken(0));
             _defenseTokens.Add(new BraceDefenseToken(1));
@@ -223,9 +229,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         {
             foreach (var arc in Arcs) arc.ClearDice();
 
-            RedAS.Clear();
-            BlueAS.Clear();
-            BlackAS.Clear();
+            _redAS.Clear();
+            _blueAS.Clear();
+            _blackAS.Clear();
 
             Arcs[0].AddDice(3, DieTypeEnum.Red);
             Arcs[1].AddDice(1, DieTypeEnum.Red);
@@ -236,12 +242,38 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
             if (ShipTypeA)
             {
-                BlueAS.Add(new BlueDie(DieTypeEnum.Blue));
-                BlueAS.Add(new BlueDie(DieTypeEnum.Blue));
+                _blueAS.Add(new BlueDie(DieTypeEnum.Blue));
+                _blueAS.Add(new BlueDie(DieTypeEnum.Blue));
             }
             else
             {
-                BlueAS.Add(new BlueDie(DieTypeEnum.Blue));
+                _blueAS.Add(new BlueDie(DieTypeEnum.Blue));
+            }
+        }
+
+        public override void refreshShip()
+        {
+            foreach (var upgrade in Upgrades)
+            {
+                if (upgrade != null)
+                {
+                    switch (upgrade.Name)
+                    {
+                        case "Enhanced Armament":
+                            Arcs[1].AddDice(1, DieTypeEnum.Red);
+                            Arcs[2].AddDice(1, DieTypeEnum.Red);
+                            break;
+                        case "Expanded Launchers":
+                            Arcs[0].AddDice(2, DieTypeEnum.Black);
+                            break;
+                        case "Expanded Hangar Bay":
+                            _squadron += 1;
+                            break;
+                        case "Engineering Team":
+                            _engineering += 1;
+                            break;
+                    }
+                }
             }
         }
     }

@@ -13,11 +13,18 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
     public class VictoryStarDestroyer : Ship
     {
         private int _hull;
+        private int _command;
+        private int _squadron;
+        private int _engineering;
+        private int _points;
         private bool _shipTypeA;
         private bool _engToken;
         private bool _navToken;
         private bool _sqdToken;
         private bool _firToken;
+        private List<RedDie> _redAS;
+        private List<BlueDie> _blueAS;
+        private List<BlackDie> _blackAS;
         private List<DefenseToken> _defenseTokens;
 
         public override int Id { get; }
@@ -26,33 +33,18 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         {
             get
             {
-                if (ShipTypeA)
-                {
-                    int x = 73;
-                    for (int i = 0; i < Upgrades.Length; i++)
-                    {
-                        if (Upgrades[i] != null) x += Upgrades[i].PointCost;
-                    }
-                    return x;
-                }
-                else
-                {
-                    int x = 85;
-                    for (int i = 0; i < Upgrades.Length; i++)
-                    {
-                        if (Upgrades[i] != null) x += Upgrades[i].PointCost;
-                    }
-                    return x;
-                }
+                int x = _points;
+                foreach (var upgd in Upgrades) x += upgd.PointCost;
+                return x;
             }
         }
         public override int Hull { get { return _hull; } set { _hull = value; } }
 
-        public override int Command { get { return 3; } }
+        public override int Command { get { return _command; } }
 
-        public override int Squadron { get { return 3; } }
+        public override int Squadron { get { return _squadron; } }
 
-        public override int Engineering { get { return 4; } }
+        public override int Engineering { get { return _engineering; } }
 
         public override int Speed { get; set; } = 0;
 
@@ -108,6 +100,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             set
             {
                 _shipTypeA = value;
+                if (_shipTypeA) _points = 73;
+                else _points = 85;
                 setHullDice(_shipTypeA);
             }
         }
@@ -182,26 +176,24 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override List<DefenseToken> DefenseTokens { get { return _defenseTokens; } }
 
-        public override List<RedDie> RedAS { get; }
+        public override List<RedDie> RedAS
+        {
+            get { return _redAS; }
+        }
 
-        public override List<BlueDie> BlueAS { get; }
+        public override List<BlueDie> BlueAS
+        {
+            get { return _blueAS; }
+        }
 
-        public override List<BlackDie> BlackAS { get; }
+        public override List<BlackDie> BlackAS
+        {
+            get { return _blackAS; }
+        }
 
         public VictoryStarDestroyer(int id, ContentManager content)
         {
             Upgrades = new UpgradeCard[8];
-
-            _hull = 8;
-
-            Id = id;
-            RedAS = new List<RedDie>();
-            BlueAS = new List<BlueDie>();
-            BlackAS = new List<BlackDie>();
-
-            _defenseTokens = new List<DefenseToken>();
-
-            BlueAS.Add(new BlueDie(DieTypeEnum.Blue));
 
             Arcs = new FiringArc[4];
             Arcs[0] = new FiringArc(3, (Math.PI / 180) * 105);
@@ -209,7 +201,27 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             Arcs[2] = new FiringArc(3, (Math.PI / 180) * 85);
             Arcs[3] = new FiringArc(1, (Math.PI / 180) * 85);
 
+            _redAS = new List<RedDie>();
+            _blueAS = new List<BlueDie>();
+            _blackAS = new List<BlackDie>();
+
             ShipTypeA = true;
+
+            _hull = 8;
+            _command = 3;
+            _squadron = 3;
+            _engineering = 4;
+
+            _navToken = false;
+            _engToken = false;
+            _firToken = false;
+            _sqdToken = false;
+
+            Id = id;
+
+            _defenseTokens = new List<DefenseToken>();
+
+            _blueAS.Add(new BlueDie(DieTypeEnum.Blue));
 
             _defenseTokens.Add(new RedirectDefenseToken(0));
             _defenseTokens.Add(new RedirectDefenseToken(1));
@@ -227,9 +239,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         {
             foreach (var arc in Arcs) arc.ClearDice();
 
-            RedAS.Clear();
-            BlueAS.Clear();
-            BlackAS.Clear();
+            _redAS.Clear();
+            _blueAS.Clear();
+            _blackAS.Clear();
 
             BlueAS.Add(new BlueDie(DieTypeEnum.Blue));
 
@@ -252,6 +264,32 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
                 Arcs[2].AddDice(2, DieTypeEnum.Red);
                 Arcs[2].AddDice(1, DieTypeEnum.Blue);
                 Arcs[3].AddDice(2, DieTypeEnum.Red);
+            }
+        }
+
+        public override void refreshShip()
+        {
+            foreach (var upgrade in Upgrades)
+            {
+                if (upgrade != null)
+                {
+                    switch (upgrade.Name)
+                    {
+                        case "Enhanced Armament":
+                            Arcs[1].AddDice(1, DieTypeEnum.Red);
+                            Arcs[2].AddDice(1, DieTypeEnum.Red);
+                            break;
+                        case "Expanded Launchers":
+                            Arcs[0].AddDice(2, DieTypeEnum.Black);
+                            break;
+                        case "Expanded Hangar Bay":
+                            _squadron += 1;
+                            break;
+                        case "Engineering Team":
+                            _engineering += 1;
+                            break;
+                    }
+                }
             }
         }
     }

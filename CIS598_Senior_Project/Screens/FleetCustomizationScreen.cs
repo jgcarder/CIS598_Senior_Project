@@ -52,6 +52,8 @@ namespace CIS598_Senior_Project.Screens
         private UpgradeCard _selectedUpgrade;
         private UpgradeCard _previousUpgrade;
 
+        private Texture2D _background;
+
         private SelectedUpgradeType _selectedUpgradeType;
 
         private GraphicsDevice _graphics;
@@ -138,6 +140,9 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(47, new Rectangle(widthIncrement * 61, 71 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
             _buttons.Add(new CustButton(48, new Rectangle(widthIncrement * 61, 85 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
 
+            _buttons.Add(new CustButton(49, new Rectangle(widthIncrement * 49, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                        //Add ship to fleet button
+            _buttons.Add(new CustButton(50, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                   //clear ship upgrades button
+
             _buttons.Add(new CustButton(60, new Rectangle(widthIncrement, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                        //Add ship/squadron to fleet
             
             
@@ -156,7 +161,8 @@ namespace CIS598_Senior_Project.Screens
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             _gameFont = _content.Load<SpriteFont>("bangersMenuFont");
-            _texture = _content.Load<Texture2D>("button_test");
+            _texture = _content.Load<Texture2D>("MetalBackground");
+            _background = _content.Load<Texture2D>("FleetEditBackground");
 
             foreach(var button in _buttons)
             {
@@ -216,6 +222,7 @@ namespace CIS598_Senior_Project.Screens
                             {
                                 button.Color = Color.DarkSlateGray;
                                 button.AnAction(button, new ButtonClickedEventArgs() { Id = button.Id });
+                                if (button.Id > 21) _selectedShip.refreshShip();
                             }
 
                             if (_currentMouseState.LeftButton == ButtonState.Pressed)
@@ -300,7 +307,7 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.Begin();
 
-            //spriteBatch.Draw(_texture, source, source, Color.White);
+            spriteBatch.Draw(_background, Vector2.Zero, Color.White);
 
             foreach (var button in _buttons)
             {
@@ -441,100 +448,140 @@ namespace CIS598_Senior_Project.Screens
                 case 22: //Assault mark 2 A
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 23: //Assault mark 2 B
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 24: //Corellian corvette A
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 25: //Corellian corvette B
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 26: //Nebulon-B Escort Frigate
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 27: //Nebulon-B Support Frigate
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 28: //Gladiator I class SD
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 29: //Gladiator II class SD
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 30: //Victory I class SD
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 31: //Victory II class SD
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     upgradeButtonSet();
                     break;
                 case 32: //selecting title
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.Title;
                     individualUpgradeSet();
                     break;
                 case 33: //selecting officers
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.Officers;
                     individualUpgradeSet();
                     break;
                 case 34: //selecting weapons teams
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.WeaponsTeam;
                     individualUpgradeSet();
                     break;
                 case 35: //selecting support team
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.SupportTeam;
                     individualUpgradeSet();
                     break;
                 case 36: //selecting offensive retrofit
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.OffensiveRetrofit;
                     individualUpgradeSet();
                     break;
                 case 37: //selecting defensive retrofit
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.DefensiveRetrofit;
                     individualUpgradeSet();
                     break;
                 case 38: //selecting ion cannons
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.IonCannon;
                     individualUpgradeSet();
                     break;
                 case 39: //selecting turbolasers
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.Turbolasers;
                     individualUpgradeSet();
                     break;
                 case 40: //selecting ordinance
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.Ordinance;
                     individualUpgradeSet();
                     break;
                 case 41: //selecting commaders
                     buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     _selectedUpgradeType = SelectedUpgradeType.Commander;
                     individualUpgradeSet();
                     break;
@@ -566,9 +613,17 @@ namespace CIS598_Senior_Project.Screens
                     selectingUpgrade(48);
                     upgradeShip();
                     break;
-                case 49:
+                case 49: //add ship to fleet
+                    _fleet.Ships.Add(_selectedShip);
+                    buttonSweeper(9);
                     break;
-                case 50:
+                case 50: //clear ship upgrades
+                    _selectedShip.Commander = null;
+                    _selectedShip.Title = null;
+                    _selectedShip.Upgrades = new UpgradeCard[8];
+                    buttonSweeper(42);
+                    _buttons[49].IsActive = true;
+                    _buttons[50].IsActive = true;
                     break;
                 case 51:
                     break;
@@ -819,6 +874,9 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// Applys the current upgrade to the current ship.
+        /// </summary>
         private void upgradeShip()
         {
             if (_selectedUpgradeType == SelectedUpgradeType.Title) _selectedShip.Title = _selectedUpgrade;
