@@ -58,6 +58,10 @@ namespace CIS598_Senior_Project.FleetObjects
             {
                 return _name;
             }
+            set
+            {
+                _name = value;
+            }
         }
 
         public bool IsRebelFleet
