@@ -8,7 +8,6 @@ namespace CIS598_Senior_Project.FleetObjects
 {
     public class Fleet
     {
-        private int _totalPoints;
         private List<Ship> _ships;
         private List<Squadron> _squadrons;
         private String _name;
@@ -23,6 +22,19 @@ namespace CIS598_Senior_Project.FleetObjects
                 {
                     x += ship.PointCost;
                 }
+                foreach (var squad in _squadrons)
+                {
+                    x += squad.PointCost;
+                }
+                return x;
+            }
+        }
+
+        public int SquadronPoints
+        {
+            get
+            {
+                int x = 0;
                 foreach (var squad in _squadrons)
                 {
                     x += squad.PointCost;
@@ -75,7 +87,6 @@ namespace CIS598_Senior_Project.FleetObjects
             _ships = new List<Ship>();
             _name = "";
             _squadrons = new List<Squadron>();
-            _totalPoints = 0;
             _isRebelFleet = false;
         }
     }

@@ -75,6 +75,10 @@ namespace CIS598_Senior_Project.Screens
 
         private Game _game;
 
+        /// <summary>
+        /// The Screen's constructor
+        /// </summary>
+        /// <param name="game">The game the screen takes place in</param>
         public FleetCustomizationScreen(Game game)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -173,10 +177,28 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(54, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 14, 8 * heightIncrement, 10 * widthIncrement, 7 * heightIncrement), true));    //Button to start editing the fleet name
             _buttons.Add(new CustButton(55, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 14, 16 * heightIncrement, 10 * widthIncrement, 7 * heightIncrement), false));  //button to set the fleet name
 
+            _buttons.Add(new CustButton(56, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, _game.GraphicsDevice.Viewport.Height - heightIncrement * 6, 7 * widthIncrement, 5 * heightIncrement), true));  //button to see the fleet to remove ships/squads
+            _buttons.Add(new CustButton(57, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 8, _game.GraphicsDevice.Viewport.Height - heightIncrement * 6, 7 * widthIncrement, 5 * heightIncrement), false));  //button to stop viewing fleet
+
+            _buttons.Add(new CustButton(58, new Rectangle(), false));
+            _buttons.Add(new CustButton(59, new Rectangle(), false));
+            _buttons.Add(new CustButton(60, new Rectangle(), false));
+            _buttons.Add(new CustButton(61, new Rectangle(), false));
+            _buttons.Add(new CustButton(62, new Rectangle(), false));
+            _buttons.Add(new CustButton(63, new Rectangle(), false));
+            _buttons.Add(new CustButton(64, new Rectangle(), false));
+            _buttons.Add(new CustButton(65, new Rectangle(), false));
+            _buttons.Add(new CustButton(66, new Rectangle(), false));
+            _buttons.Add(new CustButton(67, new Rectangle(), false));
+            _buttons.Add(new CustButton(68, new Rectangle(), false));
+            _buttons.Add(new CustButton(69, new Rectangle(), false));
+            _buttons.Add(new CustButton(70, new Rectangle(), false));
 
         }
 
-        // Load graphics content for the game
+        /// <summary>
+        /// Load graphics content for the game
+        /// </summary>
         public override void Activate()
         {
             if (_content == null)
@@ -208,18 +230,29 @@ namespace CIS598_Senior_Project.Screens
             ScreenManager.Game.ResetElapsedTime();
         }
 
+        /// <summary>
+        /// Deactivates the screen
+        /// </summary>
         public override void Deactivate()
         {
             base.Deactivate();
         }
 
+        /// <summary>
+        /// Unloads the screens content
+        /// </summary>
         public override void Unload()
         {
             _content.Unload();
         }
 
-        // This method checks the GameScreen.IsActive property, so the game will
-        // stop updating when the pause menu is active, or if you tab away to a different application.
+        /// <summary>
+        /// This method checks the GameScreen.IsActive property, so the game will
+        /// stop updating when the pause menu is active, or if you tab away to a different application. 
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
+        /// <param name="otherScreenHasFocus">Does the screen have focus or not</param>
+        /// <param name="coveredByOtherScreen">Is another screen on top of this one or not</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
@@ -339,7 +372,11 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
-        // Unlike the Update method, this will only be called when the gameplay screen is active.
+        /// <summary>
+        /// Unlike the Update method, this will only be called when the gameplay screen is active.
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
+        /// <param name="input">Input state</param>
         public override void HandleInput(GameTime gameTime, InputState input)
         {
             if (input == null)
@@ -358,6 +395,10 @@ namespace CIS598_Senior_Project.Screens
             bool gamePadDisconnected = !gamePadState.IsConnected && input.GamePadWasConnected[playerIndex];
         }
 
+        /// <summary>
+        /// Draws the screen objects
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
         public override void Draw(GameTime gameTime)
         {
             // This game has a blue background. Why? Because!
@@ -402,6 +443,11 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// The event handler for the buttons on the screen
+        /// </summary>
+        /// <param name="sender">The button that is pressed</param>
+        /// <param name="e">The event args</param>
         private void ButtonCatcher(object sender, ButtonClickedEventArgs e)
         {
             CustButton button = (CustButton)sender;
@@ -438,6 +484,8 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[3].IsActive = false;
                     _buttons[5].IsActive = true;
                     _buttons[6].IsActive = true;
+                    _buttons[56].IsActive = true;
+                    _buttons[57].IsActive = false;
                     break;
                 case 3: //select imp fleet
                     buttonSweeper(5);
@@ -447,6 +495,8 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[2].IsActive = false;
                     _buttons[7].IsActive = true;
                     _buttons[8].IsActive = true;
+                    _buttons[56].IsActive = true;
+                    _buttons[57].IsActive = false;
                     break;
                 case 4: //instructions
                     break;
@@ -765,7 +815,7 @@ namespace CIS598_Senior_Project.Screens
                     break;
                 case 51:
                     int x = _numSquads;
-                    if(_selectedSquadron.PointCost * (x + 1) <= 400/3)
+                    if(_selectedSquadron.PointCost * (x + 1) <= (400/3) - _fleet.SquadronPoints)
                     {
                         _numSquads++;
                     }
@@ -793,19 +843,184 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[54].IsActive = true;
                     _buttons[55].IsActive = false;
                     break;
-                case 56:
+                case 56: //view ships/squads
+                    _buttons[56].IsActive = false;
+                    _buttons[57].IsActive = true;
+                    displayFleet();
                     break;
-                case 57:
+                case 57: //stop viewing fleet
+                    buttonSweeper(58);
+                    _buttons[56].IsActive = true;
+                    _buttons[57].IsActive = false;
                     break;
-                case 58:
+                case 58: //ship1
+                    _fleet.Ships.RemoveAt(0);
+                    displayFleet();
                     break;
-                case 59:
+                case 59: //ship2
+                    _fleet.Ships.RemoveAt(1);
+                    displayFleet();
                     break;
-                case 60:
+                case 60: //ship3
+                    _fleet.Ships.RemoveAt(2);
+                    displayFleet();
+                    break;
+                case 61: //ship4
+                    _fleet.Ships.RemoveAt(3);
+                    displayFleet();
+                    break;
+                case 62: //ship5
+                    _fleet.Ships.RemoveAt(4);
+                    displayFleet();
+                    break;
+                case 63: //ship6
+                    _fleet.Ships.RemoveAt(5);
+                    displayFleet();
+                    break;
+                case 64: //ship7
+                    _fleet.Ships.RemoveAt(6);
+                    displayFleet();
+                    break;
+                case 65: //ship8
+                    _fleet.Ships.RemoveAt(7);
+                    displayFleet();
+                    break;
+                case 66: //ship9
+                    _fleet.Ships.RemoveAt(8);
+                    displayFleet();
+                    break;
+                case 67: //squad type 1
+                    removeSquadrons(67);
+                    displayFleet();
+                    break;
+                case 68: //squad type 2
+                    removeSquadrons(68);
+                    displayFleet();
+                    break;
+                case 69: //squad type 3
+                    removeSquadrons(69);
+                    displayFleet();
+                    break;
+                case 70: //squad type 4
+                    removeSquadrons(70);
+                    displayFleet();
                     break;
             }
         }
 
+        /// <summary>
+        /// The brains behind the removal of squadrons
+        /// </summary>
+        /// <param name="index">the button ID selected</param>
+        private void removeSquadrons(int index)
+        {
+            switch(index)
+            {
+                case 67:
+                    if(_fleet.IsRebelFleet)
+                    {
+                        if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
+                    }
+                    else
+                    {
+                        if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
+                    }
+                    break;
+                case 68:
+                    if (_fleet.IsRebelFleet)
+                    {
+                        if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
+                    }
+                    else
+                    {
+                        if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
+                    }
+                    break;
+                case 69:
+                    if (_fleet.IsRebelFleet)
+                    {
+                        if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
+                    }
+                    else
+                    {
+                        if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
+                    }
+                    break;
+                case 70:
+                    if (_fleet.IsRebelFleet)
+                    {
+                        if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
+                    }
+                    else
+                    {
+                        if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
+                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Displays the current fleet to the user.
+        /// </summary>
+        private void displayFleet()
+        {
+            buttonSweeper(5);
+            int squadCount = 0;
+
+            for(int i = 0; i < _fleet.Ships.Count; i++)
+            {
+                _buttons[i + 58].IsActive = true;
+            }
+
+            if(_fleet.IsRebelFleet)
+            {
+                if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) squadCount++;
+                if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) squadCount++;
+                if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) squadCount++;
+                if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) squadCount++;
+            }
+            else
+            {
+                if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) squadCount++;
+                if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) squadCount++;
+                if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) squadCount++;
+                if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) squadCount++;
+            }
+
+            for(int i = 0; i < squadCount; i++)
+            {
+                _buttons[i + 67].IsActive = true;
+            }
+
+        }
+
+        /// <summary>
+        /// Adds the current squads to the fleet.
+        /// </summary>
         private void addSquads()
         {
             for(int i = 0; i < _numSquads; i++)
@@ -823,6 +1038,10 @@ namespace CIS598_Senior_Project.Screens
             _numSquads = 0;
         }
 
+        /// <summary>
+        /// Dicers what upgrade is selected when certain buttons are pressed
+        /// </summary>
+        /// <param name="button">The index of the pressed button</param>
         private void selectingUpgrade(int button)
         {
             string ship = getSelectedShip();
@@ -1085,7 +1304,7 @@ namespace CIS598_Senior_Project.Screens
         {
             for(int i = index; i < _buttons.Count; i++)
             {
-                if(_buttons[i].Id != 54 && _buttons[i].Id != 55)
+                if(_buttons[i].Id != 54 && _buttons[i].Id != 55 && _buttons[i].Id != 56 && _buttons[i].Id != 57)
                 {
                     _buttons[i].IsActive = false;
                 }
@@ -1119,6 +1338,9 @@ namespace CIS598_Senior_Project.Screens
             if (_selectedShip.UpgradeTypes[7] == 1) _buttons[37].IsActive = true;
         }
 
+        /// <summary>
+        /// Filters what upgrade buttons appear to certain ships
+        /// </summary>
         private void individualUpgradeSet()
         {
             string shipType = getSelectedShip();
