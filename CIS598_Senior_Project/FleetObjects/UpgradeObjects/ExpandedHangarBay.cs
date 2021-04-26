@@ -19,7 +19,8 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Your squadron value is increased by 1.";
+                return "Your squadron value is\n" +
+                       "increased by 1.";
             }
         }
 

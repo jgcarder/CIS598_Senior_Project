@@ -19,8 +19,9 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "BLUE Critical: Exhaust all of the " +
-                       "defenders defense tokens.";
+                return "BLUE Critical: Exhaust all\n" +
+                       "of the defenders defense\n" +
+                       "tokens.";
             }
         }
 

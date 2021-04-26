@@ -19,10 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "When you resolve the Redirect defense " +
-                       "token effect, you can choose more than " +
-                       "one hull zone to suffer damage, which may " +
-                       "include a nonadjacentt hull zone.";
+                return "When you resolve the Redirect\n" +
+                       "token effect, you can choose\n" +
+                       "more than one hull zone to\n" +
+                       "suffer damage, which may\n" +
+                       "include a nonadjacent hull zone.";
             }
         }
 

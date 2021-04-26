@@ -19,10 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Squadron: The anti-squadron armament " +
-                       "of each squadron that you activate " +
-                       "is increased by one blue die until " +
-                       "the end of its activation.";
+                return "Squadron: The anti-squadron\n" +
+                       "armament of each squadron that\n" +
+                       "you activate is increased by one\n" +
+                       "blue die until the end of its\n" +
+                       "activation.";
             }
         }
 

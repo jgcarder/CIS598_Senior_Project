@@ -19,8 +19,9 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "When you reveal a command, you may look " +
-                       "at all command dials assigned to one enemy " +
+                return "When you reveal a command,\n" +
+                       "you may look at all command\n" +
+                       "dials assigned to one enemy\n" +
                        "ship.";
             }
         }

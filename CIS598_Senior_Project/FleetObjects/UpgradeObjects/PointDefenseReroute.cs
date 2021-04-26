@@ -19,9 +19,9 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "While attacking a squadron at close " +
-                       "range, you may reroll your Critical " +
-                       "icons.";
+                return "While attacking a squadron at\n" +
+                       "close range, you may reroll\n" +
+                       "your Critical icons.";
             }
         }
 

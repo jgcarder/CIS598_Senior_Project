@@ -34,7 +34,15 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             get
             {
                 int x = _points;
-                foreach (var upgd in Upgrades) x += upgd.PointCost;
+                foreach (var upgd in Upgrades)
+                {
+                    if (upgd != null)
+                    {
+                        x += upgd.PointCost;
+                    }
+                }
+                if (Title != null) x += Title.PointCost;
+                if (Commander != null) x += Commander.PointCost;
                 return x;
             }
         }

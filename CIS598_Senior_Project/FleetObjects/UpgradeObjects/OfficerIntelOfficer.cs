@@ -19,10 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "While attacking, after you roll your " +
-                       "attack pool, you may exhaust this card " +
-                       "to choose 1 defense token. If that " +
-                       "token is spent during this attack, " +
+                return "While attacking, after you\n" +
+                       "roll your attack pool, you may\n" +
+                       "exhaust this card to choose 1\n" +
+                       "defense token. If that token is\n" +
+                       "spent during this attack, \n" +
                        "discard that token";
             }
         }

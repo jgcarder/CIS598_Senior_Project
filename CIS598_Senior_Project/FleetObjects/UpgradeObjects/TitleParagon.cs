@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "While attacking a ship you have already " +
-                       "attacked this round, add 1 black die " +
-                       "to your attack pool.";
+                return "While attacking a ship you\n" +
+                       "have already attacked this\n" +
+                       "round, add 1 black die to your\n" +
+                       "attack pool.";
             }
         }
 

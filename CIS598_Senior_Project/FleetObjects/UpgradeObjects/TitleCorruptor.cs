@@ -19,9 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Squadron: The speed of each squadron " +
-                       "with BOMBER you activate is increased " +
-                       "by 1 until the end of its activation.";
+                return "Squadron: The speed of each\n" +
+                       "squadron with BOMBER you\n" +
+                       "activate is increased by 1\n" +
+                       "until the end of its\n" +
+                       "activation.";
             }
         }
 

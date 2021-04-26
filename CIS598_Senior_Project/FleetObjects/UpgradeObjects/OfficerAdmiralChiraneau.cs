@@ -19,11 +19,12 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Squadron Token: Squadrons that you " +
-                       "activate can move even if they are " +
-                       "engaged. When an engaged squadron moves " +
-                       "in this way, treat it as having a printed " +
-                       "speed of '2'.";
+                return "Squadron Token: Squadrons that\n" +
+                       "you activate can move even if\n" +
+                       "they are engaged. When an\n" +
+                       "engaged squadron moves in this\n" +
+                       "way, treat it as having a \n" +
+                       "printed speed of '2'.";
             }
         }
 

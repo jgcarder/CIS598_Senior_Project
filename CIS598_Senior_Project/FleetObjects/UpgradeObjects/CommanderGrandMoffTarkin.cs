@@ -19,9 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "At the start of each Ship Phase, you may " +
-                       "choose one command. Each friendly ship " +
-                       "gains a command token matching that command.";
+                return "At the start of each Ship\n" +
+                       "Phase, you may choose one\n" +
+                       "command. Each friendly ship\n" +
+                       "gains a command token matching\n" +
+                       "that command.";
             }
         }
 

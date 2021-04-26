@@ -19,8 +19,9 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "While attacking a ship from your front " +
-                       "hull zone, your  icons count as two " +
+                return "While attacking a ship from\n" +
+                       "your front hull zone, your\n" +
+                       "Critical icons count as two\n" +
                        "damage instead of one.";
             }
         }

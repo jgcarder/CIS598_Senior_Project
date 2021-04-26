@@ -45,7 +45,6 @@ namespace CIS598_Senior_Project.Screens
 
         private string _fleetName;
         private string _fleetDeats;
-        private string _cardDeats;
 
         private Texture2D _texture;
         private Texture2D _background;
@@ -68,6 +67,7 @@ namespace CIS598_Senior_Project.Screens
         private Squadron _selectedSquadron;
 
         private SpriteFont _galbasic;
+        private SpriteFont _descriptor;
 
         private SelectedUpgradeType _selectedUpgradeType;
 
@@ -90,7 +90,6 @@ namespace CIS598_Senior_Project.Screens
 
             _fleetName = "<Fleet Name>";
             _fleetDeats = "";
-            _cardDeats = "";
 
             _game = game;
 
@@ -180,19 +179,19 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(56, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, _game.GraphicsDevice.Viewport.Height - heightIncrement * 6, 7 * widthIncrement, 5 * heightIncrement), true));  //button to see the fleet to remove ships/squads
             _buttons.Add(new CustButton(57, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 8, _game.GraphicsDevice.Viewport.Height - heightIncrement * 6, 7 * widthIncrement, 5 * heightIncrement), false));  //button to stop viewing fleet
 
-            _buttons.Add(new CustButton(58, new Rectangle(), false));
-            _buttons.Add(new CustButton(59, new Rectangle(), false));
-            _buttons.Add(new CustButton(60, new Rectangle(), false));
-            _buttons.Add(new CustButton(61, new Rectangle(), false));
-            _buttons.Add(new CustButton(62, new Rectangle(), false));
-            _buttons.Add(new CustButton(63, new Rectangle(), false));
-            _buttons.Add(new CustButton(64, new Rectangle(), false));
-            _buttons.Add(new CustButton(65, new Rectangle(), false));
-            _buttons.Add(new CustButton(66, new Rectangle(), false));
-            _buttons.Add(new CustButton(67, new Rectangle(), false));
-            _buttons.Add(new CustButton(68, new Rectangle(), false));
-            _buttons.Add(new CustButton(69, new Rectangle(), false));
-            _buttons.Add(new CustButton(70, new Rectangle(), false));
+            _buttons.Add(new CustButton(58, new Rectangle(widthIncrement * 13, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(59, new Rectangle(widthIncrement * 13, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(60, new Rectangle(widthIncrement * 13, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(61, new Rectangle(widthIncrement * 13, 52 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(62, new Rectangle(widthIncrement * 13, 69 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(63, new Rectangle(widthIncrement * 13, 86 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(64, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(65, new Rectangle(widthIncrement * 25, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(66, new Rectangle(widthIncrement * 25, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(67, new Rectangle(widthIncrement * 37, heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(68, new Rectangle(widthIncrement * 37, 15 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(69, new Rectangle(widthIncrement * 37, 29 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(70, new Rectangle(widthIncrement * 37, 43 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
 
         }
 
@@ -209,6 +208,7 @@ namespace CIS598_Senior_Project.Screens
             _background = _content.Load<Texture2D>("FleetEditBackground");
             _gradient = _content.Load<Texture2D>("MenuGradient2");
             _galbasic = _content.Load<SpriteFont>("galbasic");
+            _descriptor = _content.Load<SpriteFont>("descriptor");
 
             foreach(var button in _buttons)
             {
@@ -432,6 +432,53 @@ namespace CIS598_Senior_Project.Screens
                 spriteBatch.DrawString(_galbasic, "" + _numSquads, new Vector2(widthIncrement * 29, 23 * heightIncrement), Color.AntiqueWhite);
             }
 
+            if(_selectedUpgrade != null)
+            {
+                spriteBatch.DrawString(_descriptor, _selectedUpgrade.Name, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, 18 * heightIncrement), Color.AntiqueWhite);
+                spriteBatch.DrawString(_descriptor, _selectedUpgrade.Text, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, 21 * heightIncrement), Color.AntiqueWhite);
+            }
+
+            //Displaying the fleet to the user
+            double heightoffset = 36;
+            spriteBatch.DrawString(_descriptor, "FLEET: " + _fleet.TotalPoints + " total points", new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, 34 * heightIncrement), Color.AntiqueWhite);
+            foreach(var ship in _fleet.Ships)
+            {
+                if(ship != null)
+                {
+                    if(ship.ShipTypeA)
+                    {
+                        spriteBatch.DrawString(_descriptor, " >" + ship.Name + "(A): " + ship.PointCost + "---------------", new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                    }
+                    else
+                    {
+                        spriteBatch.DrawString(_descriptor, " >" + ship.Name + "(B): " + ship.PointCost + "---------------", new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                    }
+                    heightoffset += 1.5;
+
+                    if (ship.Commander != null)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -" + "Commander " + ship.Commander.Name + ": " + ship.Commander.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+
+                    if (ship.Title != null)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -" + "Title " + ship.Title.Name + ": " + ship.Title.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+
+                    foreach (var upgrade in ship.Upgrades)
+                    {
+                        if(upgrade != null)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -" + upgrade.CardType.ToString() + " " + upgrade.Name + ": " + upgrade.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                    }
+                }
+            }
+            //Get the number of each squad type in the fleet through a method and add the call here!
+
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
@@ -466,7 +513,6 @@ namespace CIS598_Senior_Project.Screens
                     _numSquads = 0;
                     _fleetDeats = "";
                     _fleetName = "<Fleet Name>";
-                    _cardDeats = "";
                     _selectedShip = null;
                     _selectedUpgrade = null;
                     _previousUpgrade = null;
@@ -480,6 +526,7 @@ namespace CIS598_Senior_Project.Screens
                     buttonSweeper(5);
                     _fleet.IsRebelFleet = true;
                     _selectedSquadron = null;
+                    _selectedUpgrade = null;
                     _numSquads = 0;
                     _buttons[3].IsActive = false;
                     _buttons[5].IsActive = true;
@@ -491,6 +538,7 @@ namespace CIS598_Senior_Project.Screens
                     buttonSweeper(5);
                     _fleet.IsRebelFleet = false;
                     _selectedSquadron = null;
+                    _selectedUpgrade = null;
                     _numSquads = 0;
                     _buttons[2].IsActive = false;
                     _buttons[7].IsActive = true;
@@ -503,6 +551,7 @@ namespace CIS598_Senior_Project.Screens
                 case 5: //rebel ships
                     buttonSweeper(7);
                     _selectedSquadron = null;
+                    _selectedUpgrade = null;
                     _numSquads = 0;
                     _buttons[9].IsActive = true;
                     _buttons[10].IsActive = true;
@@ -511,6 +560,7 @@ namespace CIS598_Senior_Project.Screens
                 case 6: //rebel squads
                     buttonSweeper(7);
                     _selectedSquadron = null;
+                    _selectedUpgrade = null;
                     _numSquads = 0;
                     _buttons[14].IsActive = true;
                     _buttons[15].IsActive = true;
@@ -520,6 +570,7 @@ namespace CIS598_Senior_Project.Screens
                 case 7: //imp ships
                     buttonSweeper(9);
                     _selectedSquadron = null;
+                    _selectedUpgrade = null;
                     _numSquads = 0;
                     _buttons[12].IsActive = true;
                     _buttons[13].IsActive = true;
@@ -527,6 +578,7 @@ namespace CIS598_Senior_Project.Screens
                 case 8: //imp squads
                     buttonSweeper(9);
                     _selectedSquadron = null;
+                    _selectedUpgrade = null;
                     _numSquads = 0;
                     _buttons[18].IsActive = true;
                     _buttons[19].IsActive = true;
@@ -537,35 +589,35 @@ namespace CIS598_Senior_Project.Screens
                     buttonSweeper(14);
                     _buttons[22].IsActive = true;
                     _buttons[23].IsActive = true;
-
+                    _selectedUpgrade = null;
                     _selectedShip = new AssaultFrigateMarkII(_shipID, _content);
                     break;
                 case 10: //select cr90
                     buttonSweeper(14);
                     _buttons[24].IsActive = true;
                     _buttons[25].IsActive = true;
-
+                    _selectedUpgrade = null;
                     _selectedShip = new CR90Corvette(_shipID, _content);
                     break;
                 case 11: //select nebulon
                     buttonSweeper(14);
                     _buttons[26].IsActive = true;
                     _buttons[27].IsActive = true;
-
+                    _selectedUpgrade = null;
                     _selectedShip = new NebulonBFrigate(_shipID, _content);
                     break;
                 case 12: //select gladiator
                     buttonSweeper(14);
                     _buttons[28].IsActive = true;
                     _buttons[29].IsActive = true;
-
+                    _selectedUpgrade = null;
                     _selectedShip = new GladiatorStarDestroyer(_shipID, _content);
                     break;
                 case 13: //select victory
                     buttonSweeper(14);
                     _buttons[30].IsActive = true;
                     _buttons[31].IsActive = true;
-
+                    _selectedUpgrade = null;
                     _selectedShip = new VictoryStarDestroyer(_shipID, _content);
                     break;
                 case 14: //a-wing
@@ -638,6 +690,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 23: //Assault mark 2 B
                     _selectedShip.ShipTypeA = false;
@@ -645,6 +698,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 24: //Corellian corvette A
                     _selectedShip.ShipTypeA = true;
@@ -652,6 +706,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 25: //Corellian corvette B
                     _selectedShip.ShipTypeA = false;
@@ -659,6 +714,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 26: //Nebulon-B Escort Frigate
                     _selectedShip.ShipTypeA = true;
@@ -666,6 +722,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 27: //Nebulon-B Support Frigate
                     _selectedShip.ShipTypeA = false;
@@ -673,6 +730,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 28: //Gladiator I class SD
                     _selectedShip.ShipTypeA = true;
@@ -680,6 +738,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 29: //Gladiator II class SD
                     _selectedShip.ShipTypeA = false;
@@ -687,6 +746,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 30: //Victory I class SD
                     _selectedShip.ShipTypeA = true;
@@ -694,6 +754,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 31: //Victory II class SD
                     _selectedShip.ShipTypeA = false;
@@ -701,6 +762,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
                     upgradeButtonSet();
+                    _selectedUpgrade = null;
                     break;
                 case 32: //selecting title
                     buttonSweeper(42);
@@ -804,6 +866,7 @@ namespace CIS598_Senior_Project.Screens
                     _fleet.Ships.Add(_selectedShip);
                     _shipID++;
                     buttonSweeper(9);
+                    _selectedUpgrade = null;
                     break;
                 case 50: //clear ship upgrades
                     _selectedShip.Commander = null;
@@ -812,6 +875,7 @@ namespace CIS598_Senior_Project.Screens
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
+                    _selectedUpgrade = null;
                     break;
                 case 51:
                     int x = _numSquads;
@@ -1344,7 +1408,8 @@ namespace CIS598_Senior_Project.Screens
         private void individualUpgradeSet()
         {
             string shipType = getSelectedShip();
-            if(!shipType.Equals("null"))
+            _selectedUpgrade = null;
+            if (!shipType.Equals("null"))
             {
                 switch (_selectedUpgradeType)
                 {

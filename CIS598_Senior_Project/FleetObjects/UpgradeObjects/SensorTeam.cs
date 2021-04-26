@@ -19,9 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "While attacking, you may exhaust this " +
-                       "card and spend one die to change one " +
-                       "of your dice to a face with an Accuracy icon.";
+                return "While attacking, you may\n" +
+                       "exhaust this card and spend\n" +
+                       "one die to change one of your\n" +
+                       "dice to a face with an Accuracy\n" +
+                       "icon.";
             }
         }
 

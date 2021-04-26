@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "When you spend a command token, you may " +
-                       "exhaust this card to gain one command " +
-                       "token of the same type.";
+                return "When you spend a command token,\n" +
+                       "you may exhaust this card to\n" +
+                       "gain one command token of the\n" +
+                       "same type.";
             }
         }
 

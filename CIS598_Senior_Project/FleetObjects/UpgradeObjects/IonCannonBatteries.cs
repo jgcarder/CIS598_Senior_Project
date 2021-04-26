@@ -19,10 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "BLUE Critical: Choose and discard 1 " +
-                       "command token from the defender. If " +
-                       "the defender does not have any " +
-                       "command tokens, the defending hull " +
+                return "BLUE Critical: Choose and\n" +
+                       "discard 1 command token from\n" +
+                       "the defender. If the defender\n" +
+                       "does not have any command\n" +
+                       "tokens, the defending hull\n" +
                        "zone loses one shield instead.";
             }
         }

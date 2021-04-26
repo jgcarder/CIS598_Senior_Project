@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Before you gain a command token, 1 " +
-                       "friendly ship at distance 1-5 may gain " +
-                       "that token instead.";
+                return "Before you gain a command\n" +
+                       "token, 1 friendly ship at\n" +
+                       "distance 1-5 may gain that\n" +
+                       "token instead.";
             }
         }
 

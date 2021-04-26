@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "The black dice in your battery armament " +
-                       "can be used at medium range. This effect " +
-                       "applies only when attacking the rear hull " +
+                return "The black dice in your battery\n" +
+                       "armament can be used at medium\n" +
+                       "range. This effect applies only\n" +
+                       "when attacking the rear hull\n" +
                        "zone of a ship.";
             }
         }

@@ -19,10 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "NON-RECURRING Right sidebar: 1 Engineering token. " +
-                       "While defending, you may exhaust this " +
-                       "card to spend 1 defense token that your " +
-                       "opponent targeted with an  result.";
+                return "While defending, you may\n" +
+                       "exhaust this card to spend 1\n" +
+                       "defense token that your\n" +
+                       "opponent targeted with an\n" +
+                       "Accuracy result.";
             }
         }
 

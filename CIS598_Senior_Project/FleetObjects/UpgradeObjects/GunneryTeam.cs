@@ -19,12 +19,13 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Concentrate Fire: The next attack you " +
-                       "perform this activation can be performed " +
-                       "from this hull zone. Each of your hull " +
-                       "zones cannot target the same ship or " +
-                       "squadron more than once during your " +
-                       "activation.";
+                return "Concentrate Fire: The next\n" +
+                       "attack you perform this\n" +
+                       "activation can be performed\n" +
+                       "from this hull zone. Each of\n" +
+                       "your hull zones cannot target\n" +
+                       "the same ship or squadron more\n" +
+                       "than once during your activation.";
             }
         }
 

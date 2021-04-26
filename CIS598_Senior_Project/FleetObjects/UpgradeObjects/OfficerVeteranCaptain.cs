@@ -19,9 +19,9 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "When you reveal a command you may " +
-                       "discard this card to gain one command " +
-                       "token of your choice.";
+                return "When you reveal a command you\n" +
+                       "may discard this card to gain\n" +
+                       "one command token of your choice.";
             }
         }
 

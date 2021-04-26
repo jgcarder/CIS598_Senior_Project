@@ -19,10 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "When you reveal a command, you may " +
-                       "choose another friendly ship at distance " +
-                       "1-5 and change that ships top command " +
-                       "to your revealed command.";
+                return "When you reveal a command,\n" +
+                       "you may choose another friendly\n" +
+                       "ship at distance 1-5 and change\n" +
+                       "that ships top command to your\n" +
+                       "revealed command.";
             }
         }
 

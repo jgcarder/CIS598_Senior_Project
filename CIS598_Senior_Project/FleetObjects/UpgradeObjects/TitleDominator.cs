@@ -19,10 +19,12 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "While attacking at close-medium range, " +
-                    "you may spend up to 2 shields from any of " +
-                    "your hull zones to add that number of blue " +
-                    "dice to your attack pool.";
+                return "While attacking at\n" +
+                       "close-medium range, you may\n" +
+                       "spend up to 2 shields from any\n" +
+                       "of your hull zones to add that\n" +
+                       "number of blue dice to your\n" +
+                       "attack pool.";
             }
         }
 

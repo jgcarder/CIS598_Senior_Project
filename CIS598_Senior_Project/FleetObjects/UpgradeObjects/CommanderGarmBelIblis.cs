@@ -19,11 +19,15 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "After deploying fleets, place 2 non-consecutive " +
-                       "round tokens on this card. At the start of the " +
-                       "Ship Phase during each round matching 1 of those " +
-                       "tokens, each friendly ship may gain a number of " +
-                       "command tokens equal to its command value.";
+                return "After deploying fleets, place\n" +
+                       "2 non-consecutive round tokens\n" +
+                       "on this card. At the start of\n" +
+                       "the Ship Phase during each \n" +
+                       "round matching 1 of those\n" +
+                       "tokens, each friendly ship may\n" +
+                       "gain a number of command\n" +
+                       "tokens equal to its command\n" +
+                       "value.";
             }
         }
 

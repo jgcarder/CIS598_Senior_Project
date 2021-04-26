@@ -19,10 +19,12 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "When a friendly ship resolves the Evade " +
-                       "defense token effect, it can cancel 1 die " +
-                       "at medium range or reroll 1 additional " +
-                       "die at close range or distance 1.";
+                return "When a friendly ship resolves\n" +
+                       "the Evade Defense token effect,\n" +
+                       "it can cancel 1 die at medium\n" +
+                       "range or reroll 1 additional\n" +
+                       "die at close range or distance\n" +
+                       "1.";
             }
         }
 

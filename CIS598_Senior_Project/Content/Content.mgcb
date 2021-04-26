@@ -68,6 +68,13 @@
 /processorParam:TextureFormat=Color
 /build:colored_packed.png
 
+#begin descriptor.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:descriptor.spritefont
+
 #begin FleetEditBackground.jpg
 /importer:TextureImporter
 /processor:TextureProcessor

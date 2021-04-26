@@ -19,8 +19,9 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "BLUE Critical: Cancel all attack dice " +
-                       "to deal one faceup damage card to the " +
+                return "BLUE Critical: Cancel all\n" +
+                       "attack dice to deal one\n" +
+                       "faceup damage card to the\n" +
                        "defender.";
             }
         }

@@ -19,10 +19,12 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Before an enemy ship is dealt a faceup " +
-                       "damage card, look at the top four cards " +
-                       "of the damage deck, place one on top of " +
-                       "the deck and discard the others.";
+                return "Before an enemy ship is dealt\n" +
+                       "a faceup damage card, look at\n" +
+                       "the top four cards of the\n" +
+                       "damage deck, place one on top\n" +
+                       "of the deck and discard the\n" +
+                       "others.";
             }
         }
 

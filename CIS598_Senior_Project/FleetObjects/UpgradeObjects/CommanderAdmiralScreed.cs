@@ -19,9 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Once per activation, when a friendly ship " +
-                       "is attacking, it may spend one die to change " +
-                       "a die to a face with a critical icon.";
+                return "Once per activation, when\n" +
+                       "a friendly ship is attacking,\n" +
+                       "it may spend one die to change\n" +
+                       "a die to a face with a Critical\n" +
+                       "icon.";
             }
         }
 

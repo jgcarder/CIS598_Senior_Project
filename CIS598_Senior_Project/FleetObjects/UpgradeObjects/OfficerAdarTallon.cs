@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "After you resolve a Squadron command, exhaust " +
-                       "this card to toggle the activation " +
-                       "slider of one squadron activated with " +
+                return "After you resolve a Squadron\n" +
+                       "command, exhaust this card to\n" +
+                       "toggle the activation slider\n" +
+                       "of one squadron activated with\n" +
                        "that command.";
             }
         }

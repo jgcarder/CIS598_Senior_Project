@@ -19,11 +19,13 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Squadron: Each squadron you activate " +
-                       "may choose to only attack during your " +
-                       "activation. If it does, while attacking, " +
-                       "it may add 1 die to its attack pool of " +
-                       "a color already in its attack pool.";
+                return "Squadron: Each squadron you\n" +
+                       "activate may choose to only\n" +
+                       "attack during your activation.\n" +
+                       "If it does, while attacking,\n" +
+                       "it may add 1 die to its attack\n" +
+                       "pool of a color already in its\n" +
+                       "attack pool.";
             }
         }
 

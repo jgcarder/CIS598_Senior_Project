@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "When you reveal a command, you may gain " +
-                       "one matching command token without " +
-                       "spending the command dial.";
+                return "When you reveal a command,\n" +
+                       "you may gain one matching\n" +
+                       "command token without spending\n" +
+                       "the command dial.";
             }
         }
 

@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Critical: The first 2 damage cards " +
-                       "dealt to the defender by this attack " +
-                       "are dealt faceup.";
+                return "Critical: The first 2 damage\n" +
+                       "cards dealt to the defender\n" +
+                       "by this attack are dealt\n" +
+                       "faceup.";
             }
         }
 

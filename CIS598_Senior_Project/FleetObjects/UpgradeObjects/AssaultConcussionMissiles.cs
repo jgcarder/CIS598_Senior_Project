@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "BLACK Critical: Exhaust this card. " +
-                       "Each hull zone adjacent to the " +
-                       "defending hull zone suffers 1 damage.";
+                return "BLACK Critical: Exhaust this\n" +
+                       "card. Each hull zone adjacent\n" +
+                       "to the defending hull zone\n" +
+                       "suffers 1 damage.";
             }
         }
 

@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "When a friendly ship at distance 1-5 " +
-                       "resoves an Engineering command, it gains " +
-                       "one additional engineering point";
+                return "When a friendly ship at\n" +
+                       "distance 1-5 resoves an\n" +
+                       "Engineering command, it gains\n" +
+                       "one additional engineering point.";
             }
         }
 

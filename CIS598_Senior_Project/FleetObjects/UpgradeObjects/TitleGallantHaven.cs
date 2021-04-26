@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Before a friendly squadron at distance " +
-                       "1 suffers damage from an attack, reduce " +
-                       "the total damage by one.";
+                return "Before a friendly squadron at\n" +
+                       "distance 1 suffers damage\n" +
+                       "from an attack, reduce the\n" +
+                       "total damage by one.";
             }
         }
 

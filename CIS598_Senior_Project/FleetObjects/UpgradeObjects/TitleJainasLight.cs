@@ -19,8 +19,9 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "You can ignore the effects of overlapping " +
-                       "obstacles. Your attacks cannot be obstructed.";
+                return "You can ignore the effects of\n" +
+                       "overlapping obstacles. Your\n" +
+                       "attacks cannot be obstructed.";
             }
         }
 

@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "While attacking, you may spend 1 blue " +
-                       "die to reroll any number of dice in your " +
-                       "attack pool.";
+                return "While attacking, you may spend\n" +
+                       "1 blue die to reroll any\n" +
+                       "number of dice in your attack\n" +
+                       "pool.";
             }
         }
 

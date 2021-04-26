@@ -19,9 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Before you reveal a command, you may " +
-                       "spend one command token to change that " +
-                       "command to a Navigation or Engineering command";
+                return "Before you reveal a command,\n" +
+                       "you may spend one command\n" +
+                       "token to change that command\n" +
+                       "to a Navigation or Engineering\n" +
+                       "command.";
             }
         }
 

@@ -19,7 +19,8 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Engineering: Gain one additional engineering point.";
+                return "Engineering: Gain one\n" +
+                       "additional engineering point.";
             }
         }
 

@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Modification. The battery armament for " +
-                       "your front hull zone is increased by 2 " +
-                       "black dice.";
+                return "Modification. The battery\n" +
+                       "armament for your front hull\n" +
+                       "zone is increased by 2 black\n" +
+                       "dice.";
             }
         }
 

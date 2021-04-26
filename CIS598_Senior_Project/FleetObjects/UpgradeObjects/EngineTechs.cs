@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Navication: After you execute a maneuver, " +
-                       "you may exhaust this card to execute a " +
-                       "1-speed maneuver.";
+                return "Navication: After you execute\n" +
+                       "a maneuver, you may exhaust\n" +
+                       "this card to execute a 1-speed\n" +
+                       "maneuver.";
             }
         }
 

@@ -19,10 +19,11 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         { 
             get 
             { 
-                return "The hull value of each friendly ship is " +
-                       "increased according to its size class: " +
-                       "Small ship: 1. " +
-                       "Medium ship: 2. " +
+                return "The hull value of each\n" +
+                       "friendly ship is increased\n" +
+                       "according to its size class:\n" + 
+                       "Small ship: 1.\n" + 
+                       "Medium ship: 2.\n" +
                        "Large ship: 3."; 
             } 
         }

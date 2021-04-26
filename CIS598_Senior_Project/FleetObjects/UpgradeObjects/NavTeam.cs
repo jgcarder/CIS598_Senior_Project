@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Navigation: Your Navigation tokens can " +
-                       "either change your speed or increase 1 " +
-                       "yaw value by 1.";
+                return "Navigation: Your Navigation\n" +
+                       "tokens can either change your\n" +
+                       "speed or increase 1 yaw value\n" +
+                       "by 1.";
             }
         }
 

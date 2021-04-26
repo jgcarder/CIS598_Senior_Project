@@ -19,11 +19,12 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "During your Attack step, you can " +
-                       "perform only 1 attack. You can " +
-                       "perform 1 of your attacks after you " +
-                       "execute your first maneuver during your " +
-                       "activation.";
+                return "During your Attack step, you\n" +
+                       "can perform only 1 attack.\n" +
+                       "You can perform 1 of your\n" +
+                       "attacks after you execute\n" +
+                       "your first maneuver during\n" +
+                       "your activation.";
             }
         }
 

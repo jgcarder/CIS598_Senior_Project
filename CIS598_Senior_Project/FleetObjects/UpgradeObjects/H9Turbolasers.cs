@@ -19,9 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Modification While attacking, you may " +
-                       "change 1 die face with a Hit or Critical " +
-                       "icon to a face with an Accuracy icon.";
+                return "Modification While attacking,\n" +
+                    "you may change 1 die face with a\n" +
+                    "Hit or Critical icon to a face with\n" +
+                    "an Accuracy icon.";
             }
         }
 

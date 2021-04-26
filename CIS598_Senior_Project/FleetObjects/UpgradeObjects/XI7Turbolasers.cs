@@ -19,11 +19,13 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "While attacking, if the defender spends " +
-                       "a Redirect Defense token, it cannot " +
-                       "suffer more than 1 damage on each hull " +
-                       "zone other than the defending hull zone " +
-                       "when it resolves the Redirect Defense effect.";
+                return "While attacking, if the\n" +
+                       "defender spends a Redirect\n" +
+                       "Defense token, it cannot suffer\n" +
+                       "more than 1 damage on each hull\n" +
+                       "zone other than the defending\n" +
+                       "hull zone when it resolves the\n" +
+                       "Redirect Defense effect.";
             }
         }
 
