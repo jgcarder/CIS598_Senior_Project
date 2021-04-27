@@ -10,7 +10,7 @@ namespace CIS598_Senior_Project.MenuObjects
     {
         public int Id { get; set; }
 
-        public Texture2D texture { get; set; }
+        public Texture2D Texture { get; set; }
 
         public Color Color { get; set; }
 
@@ -29,6 +29,16 @@ namespace CIS598_Senior_Project.MenuObjects
             Position = new Vector2(area.X, area.Y);
             Area = area;
             Color = Color.White;
+        }
+
+        public CustButton(int id, Rectangle area, bool initialActivity, Texture2D image)
+        {
+            IsActive = initialActivity;
+            Id = id;
+            Position = new Vector2(area.X, area.Y);
+            Area = area;
+            Color = Color.White;
+            this.Texture = image;
         }
     }
 }

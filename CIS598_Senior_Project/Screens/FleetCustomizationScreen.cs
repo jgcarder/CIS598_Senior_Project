@@ -49,6 +49,7 @@ namespace CIS598_Senior_Project.Screens
         private Texture2D _texture;
         private Texture2D _background;
         private Texture2D _gradient;
+        private Texture2D _test;
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
@@ -210,7 +211,32 @@ namespace CIS598_Senior_Project.Screens
             _galbasic = _content.Load<SpriteFont>("galbasic");
             _descriptor = _content.Load<SpriteFont>("descriptor");
 
-            foreach(var button in _buttons)
+            _buttons[0].Texture = _content.Load<Texture2D>("SaveQuit");
+            _buttons[1].Texture = _content.Load<Texture2D>("ClearFleet");
+            _buttons[2].Texture = _content.Load<Texture2D>("RebelFleet");
+            _buttons[3].Texture = _content.Load<Texture2D>("ImperialFleet");
+
+            _buttons[5].Texture = _content.Load<Texture2D>("RebelShips");
+            _buttons[6].Texture = _content.Load<Texture2D>("RebelSquads");
+            _buttons[7].Texture = _content.Load<Texture2D>("ImperialShips");
+            _buttons[8].Texture = _content.Load<Texture2D>("ImperialSquads");
+
+            _buttons[9].Texture = _content.Load<Texture2D>("AssaultFrigate");
+            _buttons[10].Texture = _content.Load<Texture2D>("CR90Corvette");
+            _buttons[11].Texture = _content.Load<Texture2D>("NebulonB");
+            _buttons[12].Texture = _content.Load<Texture2D>("GladiatorSD");
+            _buttons[13].Texture = _content.Load<Texture2D>("VictorySD");
+
+            _buttons[14].Texture = _content.Load<Texture2D>("AWings");
+            _buttons[15].Texture = _content.Load<Texture2D>("BWings");
+            _buttons[16].Texture = _content.Load<Texture2D>("XWings");
+            _buttons[17].Texture = _content.Load<Texture2D>("YWings");
+            _buttons[18].Texture = _content.Load<Texture2D>("TIEFighters");
+            _buttons[19].Texture = _content.Load<Texture2D>("TIEAdvanced");
+            _buttons[20].Texture = _content.Load<Texture2D>("TIEInterceptor");
+            _buttons[21].Texture = _content.Load<Texture2D>("TIEBombers");
+
+            foreach (var button in _buttons)
             {
                 button.AnAction += ButtonCatcher;
             }
@@ -418,14 +444,24 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.DrawString(_galbasic, _fleetName, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, 3 * heightIncrement), Color.AntiqueWhite);
 
+            
             foreach (var button in _buttons)
             {
                 if (button.IsActive)
                 {
+                    if(button.Texture != null)
+                    {
+                        spriteBatch.Draw(button.Texture, button.Area, button.Color);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(_texture, button.Area, button.Color);
+                    }
                     //spriteBatch.Draw(button.texture, button.Area, button.Color);
-                    spriteBatch.Draw(_texture, button.Area, button.Color);
                 }
             }
+            
+            
 
             if(_selectedSquadron != null)
             {
@@ -477,7 +513,57 @@ namespace CIS598_Senior_Project.Screens
                     }
                 }
             }
-            //Get the number of each squad type in the fleet through a method and add the call here!
+
+            if(_fleet.Squadrons.Count > 0)
+            {
+                int[] sq = returnSquads();
+                if(_fleet.IsRebelFleet)
+                {
+                    if (sq[0] > 0) 
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -A-Wing Squadron(11): x" + sq[0] + " => " + sq[0] * 11, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[1] > 0)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -B-Wing Squadron(14): x" + sq[1] + " => " + sq[1] * 14, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[2] > 0)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -X-Wing Squadron(13): x" + sq[2] + " => " + sq[2] * 13, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[3] > 0)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -Y-Wing Squadron(10): x" + sq[3] + " => " + sq[3] * 10, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                }
+                else
+                {
+                    if (sq[0] > 0)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -TIE Fighter Squadron(8): x" + sq[0] + " => " + sq[0] * 8, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[1] > 0)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -TIE Advanced Squadron(12): x" + sq[1] + " => " + sq[1] * 12, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[2] > 0)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -TIE Interceptor Squadron(11): x" + sq[2] + " => " + sq[2] * 11, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[3] > 0)
+                    {
+                        spriteBatch.DrawString(_descriptor, "   -TIE Bomber Squadron(9): x" + sq[3] + " => " + sq[3] * 9, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, (float)(heightoffset * heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                }
+            }
 
             spriteBatch.End();
 
@@ -970,6 +1056,31 @@ namespace CIS598_Senior_Project.Screens
                     displayFleet();
                     break;
             }
+        }
+
+        /// <summary>
+        /// gets the number of squads of each type
+        /// </summary>
+        /// <returns></returns>
+        private int[] returnSquads()
+        {
+            int[] result = new int[4];
+            if(_fleet.IsRebelFleet)
+            {
+                result[0] += _fleet.Squadrons.FindAll(x => x.Name == "A-Wing Squadron").Count;
+                result[1] += _fleet.Squadrons.FindAll(x => x.Name == "B-Wing Squadron").Count;
+                result[2] += _fleet.Squadrons.FindAll(x => x.Name == "X-Wing Squadron").Count;
+                result[3] += _fleet.Squadrons.FindAll(x => x.Name == "Y-Wing Squadron").Count;
+            }
+            else
+            {
+                result[0] += _fleet.Squadrons.FindAll(x => x.Name == "TIE Fighter Squadron").Count;
+                result[1] += _fleet.Squadrons.FindAll(x => x.Name == "TIE Advanced Squadron").Count;
+                result[2] += _fleet.Squadrons.FindAll(x => x.Name == "TIE Interceptor Squadron").Count;
+                result[3] += _fleet.Squadrons.FindAll(x => x.Name == "TIE Bomber Squadron").Count;
+            }
+
+            return result;
         }
 
         /// <summary>
