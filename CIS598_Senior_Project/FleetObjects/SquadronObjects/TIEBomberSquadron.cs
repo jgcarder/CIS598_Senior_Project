@@ -57,7 +57,7 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
             AntiShipDice = new List<Die>();
             AntiSquadronDice = new List<Die>();
 
-            AntiSquadronDice.Add(new BlueDie(DieTypeEnum.Black));
+            AntiSquadronDice.Add(new BlackDie(DieTypeEnum.Black));
 
             AntiShipDice.Add(new BlackDie(DieTypeEnum.Black));
         }

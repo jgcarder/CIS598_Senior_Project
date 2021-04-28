@@ -49,7 +49,14 @@ namespace CIS598_Senior_Project.Screens
         private Texture2D _texture;
         private Texture2D _background;
         private Texture2D _gradient;
-        private Texture2D _test;
+        private Texture2D _aWings;
+        private Texture2D _bWings;
+        private Texture2D _xWings;
+        private Texture2D _yWings;
+        private Texture2D _tieFighters;
+        private Texture2D _tieAdvanced;
+        private Texture2D _tieInterceptors;
+        private Texture2D _tieBombers;
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
@@ -115,7 +122,7 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(1, new Rectangle(widthIncrement, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Clear fleet
             _buttons.Add(new CustButton(2, new Rectangle(widthIncrement, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Select rebel fleet
             _buttons.Add(new CustButton(3, new Rectangle(widthIncrement, 52 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Select imperial fleet
-            _buttons.Add(new CustButton(4, new Rectangle(widthIncrement, _game.GraphicsDevice.Viewport.Height - heightIncrement * 16, 10 * widthIncrement, 15 * heightIncrement), true));   //Instructions on how this works
+            _buttons.Add(new CustButton(4, new Rectangle(widthIncrement, _game.GraphicsDevice.Viewport.Height - heightIncrement * 16, 10 * widthIncrement, 15 * heightIncrement), false));   //Instructions on how this works
 
             _buttons.Add(new CustButton(5, new Rectangle(widthIncrement * 13, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                             //Select rebel ships
             _buttons.Add(new CustButton(6, new Rectangle(widthIncrement * 13, heightIncrement * 18, 10 * widthIncrement, 15 * heightIncrement), false));                                        //Select rebel squadrons
@@ -211,6 +218,15 @@ namespace CIS598_Senior_Project.Screens
             _galbasic = _content.Load<SpriteFont>("galbasic");
             _descriptor = _content.Load<SpriteFont>("descriptor");
 
+            _aWings = _content.Load<Texture2D>("AWingCard");
+            _bWings = _content.Load<Texture2D>("BWingCard");
+            _xWings = _content.Load<Texture2D>("XWingCard");
+            _yWings = _content.Load<Texture2D>("YWingCard");
+            _tieFighters = _content.Load<Texture2D>("TIEFighterCard");
+            _tieAdvanced = _content.Load<Texture2D>("TIEAdvancedCard");
+            _tieInterceptors = _content.Load<Texture2D>("TIEInterceptorCard");
+            _tieBombers = _content.Load<Texture2D>("TIEBomberCard");
+
             _buttons[0].Texture = _content.Load<Texture2D>("SaveQuit");
             _buttons[1].Texture = _content.Load<Texture2D>("ClearFleet");
             _buttons[2].Texture = _content.Load<Texture2D>("RebelFleet");
@@ -235,6 +251,43 @@ namespace CIS598_Senior_Project.Screens
             _buttons[19].Texture = _content.Load<Texture2D>("TIEAdvanced");
             _buttons[20].Texture = _content.Load<Texture2D>("TIEInterceptor");
             _buttons[21].Texture = _content.Load<Texture2D>("TIEBombers");
+
+            _buttons[22].Texture = _content.Load<Texture2D>("AssaultA");
+            _buttons[23].Texture = _content.Load<Texture2D>("AssaultB");
+            _buttons[24].Texture = _content.Load<Texture2D>("CR90A");
+            _buttons[25].Texture = _content.Load<Texture2D>("CR90B");
+            _buttons[26].Texture = _content.Load<Texture2D>("NebulonBEscort");
+            _buttons[27].Texture = _content.Load<Texture2D>("NebulonBSupport");
+            _buttons[28].Texture = _content.Load<Texture2D>("GladiatorISD");
+            _buttons[29].Texture = _content.Load<Texture2D>("GladiatorIISD");
+            _buttons[30].Texture = _content.Load<Texture2D>("VictoryISD");
+            _buttons[31].Texture = _content.Load<Texture2D>("VictoryIISD");
+
+            _buttons[32].Texture = _content.Load<Texture2D>("Title");
+            _buttons[33].Texture = _content.Load<Texture2D>("Officers");
+            _buttons[34].Texture = _content.Load<Texture2D>("WeaponsTeam");
+            _buttons[35].Texture = _content.Load<Texture2D>("SupportTeam");
+            _buttons[36].Texture = _content.Load<Texture2D>("OffensiveRetro");
+            _buttons[37].Texture = _content.Load<Texture2D>("DefenseRetro");
+            _buttons[38].Texture = _content.Load<Texture2D>("IonCannon");
+            _buttons[39].Texture = _content.Load<Texture2D>("Turbolasers");
+            _buttons[40].Texture = _content.Load<Texture2D>("Ordinance");
+            _buttons[41].Texture = _content.Load<Texture2D>("Commander");
+
+            _buttons[49].Texture = _content.Load<Texture2D>("AddToFleet");
+            _buttons[50].Texture = _content.Load<Texture2D>("ClearUpgrades");
+
+            _buttons[51].Texture = _content.Load<Texture2D>("Increase");
+            _buttons[52].Texture = _content.Load<Texture2D>("Decrease");
+            _buttons[53].Texture = _content.Load<Texture2D>("AddToFleet");
+
+            _buttons[54].Texture = _content.Load<Texture2D>("EditName");
+            _buttons[55].Texture = _content.Load<Texture2D>("SetName");
+
+            _buttons[56].Texture = _content.Load<Texture2D>("ViewFleet");
+            _buttons[57].Texture = _content.Load<Texture2D>("StopViewing");
+
+            setFleetButtons();
 
             foreach (var button in _buttons)
             {
@@ -288,6 +341,8 @@ namespace CIS598_Senior_Project.Screens
             _previousKeyState = _currentKeyState;
             _currentKeyState = Keyboard.GetState();
 
+            setFleetButtons();
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
@@ -318,6 +373,10 @@ namespace CIS598_Senior_Project.Screens
                             {
                                 button.Color = Color.White;
                             }
+                        }
+                        else
+                        {
+                            button.Color = Color.White;
                         }
                     }
                 }
@@ -428,7 +487,7 @@ namespace CIS598_Senior_Project.Screens
         public override void Draw(GameTime gameTime)
         {
             // This game has a blue background. Why? Because!
-            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.CornflowerBlue, 0, 0);
+            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
 
             var source = new Rectangle(100, 100, 50, 50);
             //_button.TouchArea = source;
@@ -438,7 +497,7 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(_background, Vector2.Zero, Color.White);
+            spriteBatch.Draw(_background, new Rectangle(0, 0, widthIncrement * 105, heightIncrement * 110), Color.White);
 
             spriteBatch.Draw(_gradient, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 18, 0), Color.White);
 
@@ -460,8 +519,18 @@ namespace CIS598_Senior_Project.Screens
                     //spriteBatch.Draw(button.texture, button.Area, button.Color);
                 }
             }
-            
-            
+
+            if (_selectedSquadron != null)
+            {
+                if (_selectedSquadron is AWingSquadron) spriteBatch.Draw(_aWings, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 15 * widthIncrement, 40 * heightIncrement), Color.White);
+                if (_selectedSquadron is BWingSquadron) spriteBatch.Draw(_bWings, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 15 * widthIncrement, 40 * heightIncrement), Color.White);
+                if (_selectedSquadron is XWingSquadron) spriteBatch.Draw(_xWings, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 15 * widthIncrement, 40 * heightIncrement), Color.White);
+                if (_selectedSquadron is YWingSquadron) spriteBatch.Draw(_yWings, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 15 * widthIncrement, 40 * heightIncrement), Color.White);
+                if (_selectedSquadron is TIEFighterSquadron) spriteBatch.Draw(_tieFighters, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 15 * widthIncrement, 40 * heightIncrement), Color.White);
+                if (_selectedSquadron is TIEAdvancedSquadron) spriteBatch.Draw(_tieAdvanced, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 15 * widthIncrement, 40 * heightIncrement), Color.White);
+                if (_selectedSquadron is TIEInterceptorSquadron) spriteBatch.Draw(_tieInterceptors, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 15 * widthIncrement, 40 * heightIncrement), Color.White);
+                if (_selectedSquadron is TIEBomberSquadron) spriteBatch.Draw(_tieBombers, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 15 * widthIncrement, 40 * heightIncrement), Color.White);
+            }
 
             if(_selectedSquadron != null)
             {
@@ -470,13 +539,13 @@ namespace CIS598_Senior_Project.Screens
 
             if(_selectedUpgrade != null)
             {
-                spriteBatch.DrawString(_descriptor, _selectedUpgrade.Name, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, 18 * heightIncrement), Color.AntiqueWhite);
+                spriteBatch.DrawString(_descriptor, _selectedUpgrade.Name + ": " + _selectedUpgrade.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, 18 * heightIncrement), Color.AntiqueWhite);
                 spriteBatch.DrawString(_descriptor, _selectedUpgrade.Text, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, 21 * heightIncrement), Color.AntiqueWhite);
             }
 
             //Displaying the fleet to the user
-            double heightoffset = 36;
-            spriteBatch.DrawString(_descriptor, "FLEET: " + _fleet.TotalPoints + " total points", new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, 34 * heightIncrement), Color.AntiqueWhite);
+            double heightoffset = 40;
+            spriteBatch.DrawString(_descriptor, "FLEET: " + _fleet.TotalPoints + " total points", new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, 38 * heightIncrement), Color.AntiqueWhite);
             foreach(var ship in _fleet.Ships)
             {
                 if(ship != null)
@@ -607,6 +676,8 @@ namespace CIS598_Senior_Project.Screens
 
                     _buttons[2].IsActive = true;
                     _buttons[3].IsActive = true;
+                    _buttons[56].IsActive = true;
+                    _buttons[57].IsActive = false;
                     break;
                 case 2: //select rebel fleet
                     buttonSweeper(5);
@@ -956,6 +1027,7 @@ namespace CIS598_Senior_Project.Screens
                     break;
                 case 50: //clear ship upgrades
                     _selectedShip.Commander = null;
+                    _selectedShip.HasCommander = false;
                     _selectedShip.Title = null;
                     _selectedShip.Upgrades = new UpgradeCard[8];
                     buttonSweeper(42);
@@ -1059,9 +1131,76 @@ namespace CIS598_Senior_Project.Screens
         }
 
         /// <summary>
+        /// Sets the images for the fleet remover buttons.
+        /// </summary>
+        private void setFleetButtons()
+        {
+            for (int i = 0; i < _fleet.Ships.Count; i++)
+            {
+                if (_fleet.Ships[i] is AssaultFrigateMarkII) _buttons[i + 58].Texture = _content.Load<Texture2D>("AssaultFrigate");
+                else if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("CR90Corvette");
+                else if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("NebulonB");
+                else if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("GladiatorSD");
+                else if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("VictorySD");
+            }
+
+            int x = 0;
+            int[] s = returnSquads();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] > 0)
+                {
+                    if (_fleet.IsRebelFleet)
+                    {
+                        if (i == 0) _buttons[x + 67].Texture = _content.Load<Texture2D>("AWings");
+                        if (i == 1) _buttons[x + 67].Texture = _content.Load<Texture2D>("BWings");
+                        if (i == 2) _buttons[x + 67].Texture = _content.Load<Texture2D>("XWings");
+                        if (i == 3) _buttons[x + 67].Texture = _content.Load<Texture2D>("YWings");
+                    }
+                    else
+                    {
+                        if (i == 0) _buttons[x + 67].Texture = _content.Load<Texture2D>("TIEFighters");
+                        if (i == 1) _buttons[x + 67].Texture = _content.Load<Texture2D>("TIEAdvanced");
+                        if (i == 2) _buttons[x + 67].Texture = _content.Load<Texture2D>("TIEInterceptor");
+                        if (i == 3) _buttons[x + 67].Texture = _content.Load<Texture2D>("TIEBombers");
+                    }
+                    x++;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if the passed in card is in use.
+        /// </summary>
+        /// <param name="card">The card to check</param>
+        /// <returns>True if it is already used</returns>
+        private bool isInUse(UpgradeCard card)
+        {
+            foreach(var ship in _fleet.Ships)
+            {
+                switch(card.CardType)
+                {
+                    case UpgradeTypeEnum.Title:
+                        if(card.Name.Equals(ship.Title.Name))
+                        {
+                            return true;
+                        }
+                        break;
+                    case UpgradeTypeEnum.Officers:
+                        if(card.Name.Equals(ship.Upgrades[0].Name))
+                        {
+                            return true;
+                        }
+                        break;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// gets the number of squads of each type
         /// </summary>
-        /// <returns></returns>
+        /// <returns>the list of number of squads by type</returns>
         private int[] returnSquads()
         {
             int[] result = new int[4];
@@ -1084,6 +1223,23 @@ namespace CIS598_Senior_Project.Screens
         }
 
         /// <summary>
+        /// Returns the index of the 'hit'th non zero index
+        /// </summary>
+        /// <param name="hit">the hit'th non-zero entry index</param>
+        /// <returns>the hit'th non-zero entry index</returns>
+        private int getHitNumber(int hit)
+        {
+            int numHits = 0;
+            int[] s = returnSquads();
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] > 0) numHits++;
+                if (numHits == hit) return i;
+            }
+            return -1; 
+        }
+
+        /// <summary>
         /// The brains behind the removal of squadrons
         /// </summary>
         /// <param name="index">the button ID selected</param>
@@ -1094,65 +1250,107 @@ namespace CIS598_Senior_Project.Screens
                 case 67:
                     if(_fleet.IsRebelFleet)
                     {
-                        if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
+                        switch(getHitNumber(1))
+                        {
+                            case 0:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
+                                break;
+                            case 1:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
+                                break;
+                            case 2:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
+                                break;
+                            case 3:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
+                                break;
+                        }
                     }
                     else
                     {
-                        if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
+                        switch (getHitNumber(1))
+                        {
+                            case 0:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
+                                break;
+                            case 1:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
+                                break;
+                            case 2:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
+                                break;
+                            case 3:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
+                                break;
+                        }
                     }
                     break;
                 case 68:
                     if (_fleet.IsRebelFleet)
                     {
-                        if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
+                        switch (getHitNumber(2))
+                        {
+                            case 1:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
+                                break;
+                            case 2:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
+                                break;
+                            case 3:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
+                                break;
+                        }
                     }
                     else
                     {
-                        if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
+                        switch (getHitNumber(2))
+                        {
+                            case 1:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
+                                break;
+                            case 2:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
+                                break;
+                            case 3:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
+                                break;
+                        }
                     }
                     break;
                 case 69:
                     if (_fleet.IsRebelFleet)
                     {
-                        if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
+                        switch (getHitNumber(3))
+                        {
+                            case 2:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
+                                break;
+                            case 3:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
+                                break;
+                        }
                     }
                     else
                     {
-                        if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
+                        switch (getHitNumber(3))
+                        {
+                            case 2:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
+                                break;
+                            case 3:
+                                _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
+                                break;
+                        }
                     }
                     break;
                 case 70:
                     if (_fleet.IsRebelFleet)
                     {
-                        if (_fleet.Squadrons.Exists(x => x.Name == "Y-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "A-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "A-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "B-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "B-Wing Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "X-Wing Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "X-Wing Squadron");
+                        _fleet.Squadrons.RemoveAll(x => x.Name == "Y-Wing Squadron");
                     }
                     else
                     {
-                        if (_fleet.Squadrons.Exists(x => x.Name == "TIE Bomber Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Fighter Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Fighter Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Advanced Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Advanced Squadron");
-                        else if (_fleet.Squadrons.Exists(x => x.Name == "TIE Interceptor Squadron")) _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Interceptor Squadron");
+                        _fleet.Squadrons.RemoveAll(x => x.Name == "TIE Bomber Squadron");
                     }
                     break;
             }
@@ -1241,7 +1439,7 @@ namespace CIS598_Senior_Project.Screens
                             if (button == 44) _selectedUpgrade = new TitleYavaris(_content);
                             break;
                         case "Gladiator":
-                            if (button == 42) _selectedUpgrade = new TitleDominator(_content);
+                            if (button == 42) _selectedUpgrade = new TitleDemolisher(_content);
                             if (button == 43) _selectedUpgrade = new TitleInsidious(_content);
                             break;
                         case "Victory":
@@ -1357,9 +1555,9 @@ namespace CIS598_Senior_Project.Screens
                             if (button == 48) _selectedUpgrade = new OfficerWeaponsLiaison(_content);
                             break;
                         case "Victory":
-                            if (button == 42) _selectedUpgrade = new OfficerAdarTallon(_content);
-                            if (button == 43) _selectedUpgrade = new OfficerLeiaOrgana(_content);
-                            if (button == 44) _selectedUpgrade = new OfficerRaymusAntilles(_content);
+                            if (button == 42) _selectedUpgrade = new OfficerAdmiralChiraneau(_content);
+                            if (button == 43) _selectedUpgrade = new OfficerDirectorIsard(_content);
+                            if (button == 44) _selectedUpgrade = new OfficerWullfYularen(_content);
                             if (button == 45) _selectedUpgrade = new OfficerDefenseLiaison(_content);
                             if (button == 46) _selectedUpgrade = new OfficerIntelOfficer(_content);
                             if (button == 47) _selectedUpgrade = new OfficerVeteranCaptain(_content);
@@ -1459,7 +1657,7 @@ namespace CIS598_Senior_Project.Screens
         private void upgradeShip()
         {
             if (_selectedUpgradeType == SelectedUpgradeType.Title) _selectedShip.Title = _selectedUpgrade;
-            else if(_selectedUpgradeType == SelectedUpgradeType.Commander) _selectedShip.Commander = _selectedUpgrade;
+            else if(_selectedUpgradeType == SelectedUpgradeType.Commander) _selectedShip.Commander = _selectedUpgrade; _selectedShip.HasCommander = true;
 
             if (_selectedShip.UpgradeTypes[0] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.Officers) _selectedShip.Upgrades[0] = _selectedUpgrade;
             if (_selectedShip.UpgradeTypes[1] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.SupportTeam) _selectedShip.Upgrades[1] = _selectedUpgrade;
@@ -1500,7 +1698,6 @@ namespace CIS598_Senior_Project.Screens
                 if(ship.HasCommander)
                 {
                     _buttons[41].IsActive = false;
-                    break;
                 }
             }
 
@@ -1528,34 +1725,43 @@ namespace CIS598_Senior_Project.Screens
                         switch (shipType)
                         {
                             case "Assault":
-                                _buttons[42].IsActive = true;
-                                _buttons[43].IsActive = true;
+                                _buttons[42].IsActive = !isInUse(new TitleGallantHaven(_content));
+                                _buttons[43].IsActive = !isInUse(new TitleParagon(_content));
                                 break;
                             case "CR90":
-                                _buttons[42].IsActive = true;
-                                _buttons[43].IsActive = true;
-                                _buttons[44].IsActive = true;
+                                _buttons[42].IsActive = !isInUse(new TitleDodonnasPride(_content));
+                                _buttons[43].IsActive = !isInUse(new TitleJainasLight(_content));
+                                _buttons[44].IsActive = !isInUse(new TitleTantiveIV(_content));
                                 break;
                             case "Nebulon":
-                                _buttons[42].IsActive = true;
-                                _buttons[43].IsActive = true;
-                                _buttons[44].IsActive = true;
+                                _buttons[42].IsActive = !isInUse(new TitleRedemption(_content));
+                                _buttons[43].IsActive = !isInUse(new TitleSalvation(_content));
+                                _buttons[44].IsActive = !isInUse(new TitleYavaris(_content));
                                 break;
                             case "Gladiator":
-                                _buttons[42].IsActive = true;
-                                _buttons[43].IsActive = true;
+                                _buttons[42].IsActive = !isInUse(new TitleDemolisher(_content));
+                                _buttons[43].IsActive = !isInUse(new TitleInsidious(_content));
                                 break;
                             case "Victory":
-                                _buttons[42].IsActive = true;
-                                _buttons[43].IsActive = true;
-                                _buttons[44].IsActive = true;
+                                _buttons[42].IsActive = !isInUse(new TitleCorruptor(_content));
+                                _buttons[43].IsActive = !isInUse(new TitleDominator(_content));
+                                _buttons[44].IsActive = !isInUse(new TitleWarlord(_content));
                                 break;
                         }
                         break;
                     case SelectedUpgradeType.Officers:
-                        _buttons[42].IsActive = true;
-                        _buttons[43].IsActive = true;
-                        _buttons[44].IsActive = true;
+                        if(_fleet.IsRebelFleet)
+                        {
+                            _buttons[42].IsActive = !isInUse(new OfficerAdarTallon(_content));
+                            _buttons[43].IsActive = !isInUse(new OfficerLeiaOrgana(_content));
+                            _buttons[44].IsActive = !isInUse(new OfficerRaymusAntilles(_content));
+                        }
+                        else
+                        {
+                            _buttons[42].IsActive = !isInUse(new OfficerAdmiralChiraneau(_content));
+                            _buttons[43].IsActive = !isInUse(new OfficerDirectorIsard(_content));
+                            _buttons[44].IsActive = !isInUse(new OfficerWullfYularen(_content));
+                        }
                         _buttons[45].IsActive = true;
                         _buttons[46].IsActive = true;
                         _buttons[47].IsActive = true;

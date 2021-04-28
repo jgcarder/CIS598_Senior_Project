@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CIS598_Senior_Project.StateManagement;
+using CIS598_Senior_Project.FleetObjects;
 
 namespace CIS598_Senior_Project.Screens
 {
@@ -18,6 +19,8 @@ namespace CIS598_Senior_Project.Screens
         private Texture2D _gradientTexture;
         private readonly InputAction _menuSelect;
         private readonly InputAction _menuCancel;
+
+        private Fleet _fleet;
 
         public event EventHandler<PlayerIndexEventArgs> Accepted;
         public event EventHandler<PlayerIndexEventArgs> Cancelled;
@@ -35,6 +38,33 @@ namespace CIS598_Senior_Project.Screens
                 _message = message;
 
             IsPopup = true;
+
+            TransitionOnTime = TimeSpan.FromSeconds(0.2);
+            TransitionOffTime = TimeSpan.FromSeconds(0.2);
+
+            _menuSelect = new InputAction(
+                new[] { Buttons.A, Buttons.Start },
+                new[] { Keys.Enter, Keys.Space }, true);
+            _menuCancel = new InputAction(
+                new[] { Buttons.B, Buttons.Back },
+                new[] { Keys.Back, Keys.Escape }, true);
+        }
+
+        // Constructor lets the caller specify whether to include the standard
+        // "A=ok, B=cancel" usage text prompt.
+        public MessageBoxScreen(string message, Fleet fleet, bool includeUsageText = true)
+        {
+            const string usageText = "\nSpace, Enter = ok" +
+                                     "\nBackspace = cancel";
+
+            if (includeUsageText)
+                _message = message + usageText;
+            else
+                _message = message;
+
+            IsPopup = true;
+
+            _fleet = fleet;
 
             TransitionOnTime = TimeSpan.FromSeconds(0.2);
             TransitionOffTime = TimeSpan.FromSeconds(0.2);
@@ -68,6 +98,7 @@ namespace CIS598_Senior_Project.Screens
             // Cancelled events, so they can tell which player triggered them.
             if (_menuSelect.Occurred(input, ControllingPlayer, out playerIndex))
             {
+                //if(_fleet != null) //save it
                 Accepted?.Invoke(this, new PlayerIndexEventArgs(playerIndex));
                 ExitScreen();
             }
