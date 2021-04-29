@@ -27,7 +27,7 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
             }
         }
 
-        public override string Name { get { return "Corruptor"; } }
+        public override string Name { get { return "Corrupter"; } }
 
         public override int PointCost { get { return 5; } }
 

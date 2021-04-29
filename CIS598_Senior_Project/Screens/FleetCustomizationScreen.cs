@@ -662,6 +662,8 @@ namespace CIS598_Senior_Project.Screens
             {
                 case 0: //save and exit
                     //Save fleet to .txt file
+                    FleetLoader.SaveFleet(_fleet);
+
                     ScreenManager.AddScreen(new BackgroundScreen(), null);
                     ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
                     break;
