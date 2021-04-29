@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 {
-    public class TitleCorruptor : UpgradeCard
+    public class TitleCorrupter : UpgradeCard
     {
         public override bool IsUnique { get; } = true;
 
@@ -37,7 +37,7 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 
         public override UpgradeTypeEnum CardType { get; }
 
-        public TitleCorruptor(ContentManager content)
+        public TitleCorrupter(ContentManager content)
         {
             CardType = UpgradeTypeEnum.Title;
         }

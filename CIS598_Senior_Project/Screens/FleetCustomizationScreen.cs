@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: FleetCustomizationScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using CIS598_Senior_Project.StateManagement;
@@ -442,7 +446,7 @@ namespace CIS598_Senior_Project.Screens
                     if (_currentKeyState.IsKeyDown(Keys.Y) && _previousKeyState.IsKeyUp(Keys.Y)) _fleetName += "y";
                     if (_currentKeyState.IsKeyDown(Keys.Z) && _previousKeyState.IsKeyUp(Keys.Z)) _fleetName += "z";
                 }
-                if (_currentKeyState.IsKeyDown(Keys.Space) && _previousKeyState.IsKeyUp(Keys.Space)) _fleetName += " ";
+                if (_currentKeyState.IsKeyDown(Keys.Space) && _previousKeyState.IsKeyUp(Keys.Space)) _fleetName += "_";
                 if (_currentKeyState.IsKeyDown(Keys.NumPad0) && _previousKeyState.IsKeyUp(Keys.NumPad0)) _fleetName += "0";
                 if (_currentKeyState.IsKeyDown(Keys.NumPad1) && _previousKeyState.IsKeyUp(Keys.NumPad1)) _fleetName += "1";
                 if (_currentKeyState.IsKeyDown(Keys.NumPad2) && _previousKeyState.IsKeyUp(Keys.NumPad2)) _fleetName += "2";
@@ -1187,9 +1191,12 @@ namespace CIS598_Senior_Project.Screens
                         }
                         break;
                     case UpgradeTypeEnum.Officers:
-                        if(card.Name.Equals(ship.Upgrades[0].Name))
+                        if(ship.Upgrades[0] != null)
                         {
-                            return true;
+                            if (card.Name.Equals(ship.Upgrades[0].Name))
+                            {
+                                return true;
+                            }
                         }
                         break;
                 }
@@ -1443,7 +1450,7 @@ namespace CIS598_Senior_Project.Screens
                             if (button == 43) _selectedUpgrade = new TitleInsidious(_content);
                             break;
                         case "Victory":
-                            if (button == 42) _selectedUpgrade = new TitleCorruptor(_content);
+                            if (button == 42) _selectedUpgrade = new TitleCorrupter(_content);
                             if (button == 43) _selectedUpgrade = new TitleDominator(_content);
                             if (button == 44) _selectedUpgrade = new TitleWarlord(_content);
                             break;
@@ -1727,25 +1734,38 @@ namespace CIS598_Senior_Project.Screens
                             case "Assault":
                                 _buttons[42].IsActive = !isInUse(new TitleGallantHaven(_content));
                                 _buttons[43].IsActive = !isInUse(new TitleParagon(_content));
+                                _buttons[42].Texture = _content.Load<Texture2D>("GallantHavenCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("ParagonCard");
                                 break;
                             case "CR90":
                                 _buttons[42].IsActive = !isInUse(new TitleDodonnasPride(_content));
                                 _buttons[43].IsActive = !isInUse(new TitleJainasLight(_content));
                                 _buttons[44].IsActive = !isInUse(new TitleTantiveIV(_content));
+                                _buttons[42].Texture = _content.Load<Texture2D>("DodannasPrideCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("JainasLightCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("TantiveIVCard");
                                 break;
                             case "Nebulon":
                                 _buttons[42].IsActive = !isInUse(new TitleRedemption(_content));
                                 _buttons[43].IsActive = !isInUse(new TitleSalvation(_content));
                                 _buttons[44].IsActive = !isInUse(new TitleYavaris(_content));
+                                _buttons[42].Texture = _content.Load<Texture2D>("RedemptionCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("SalvationCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("YavarisCard");
                                 break;
                             case "Gladiator":
                                 _buttons[42].IsActive = !isInUse(new TitleDemolisher(_content));
                                 _buttons[43].IsActive = !isInUse(new TitleInsidious(_content));
+                                _buttons[42].Texture = _content.Load<Texture2D>("DemolisherCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("InsidiousCard");
                                 break;
                             case "Victory":
-                                _buttons[42].IsActive = !isInUse(new TitleCorruptor(_content));
+                                _buttons[42].IsActive = !isInUse(new TitleCorrupter(_content));
                                 _buttons[43].IsActive = !isInUse(new TitleDominator(_content));
                                 _buttons[44].IsActive = !isInUse(new TitleWarlord(_content));
+                                _buttons[42].Texture = _content.Load<Texture2D>("CorrupterCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("DominatorCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("WarlordCard");
                                 break;
                         }
                         break;
@@ -1755,17 +1775,27 @@ namespace CIS598_Senior_Project.Screens
                             _buttons[42].IsActive = !isInUse(new OfficerAdarTallon(_content));
                             _buttons[43].IsActive = !isInUse(new OfficerLeiaOrgana(_content));
                             _buttons[44].IsActive = !isInUse(new OfficerRaymusAntilles(_content));
+                            _buttons[42].Texture = _content.Load<Texture2D>("AdarTallonCard");
+                            _buttons[43].Texture = _content.Load<Texture2D>("LeiaOrganaCard");
+                            _buttons[44].Texture = _content.Load<Texture2D>("RaymusAntillesCard");
                         }
                         else
                         {
                             _buttons[42].IsActive = !isInUse(new OfficerAdmiralChiraneau(_content));
                             _buttons[43].IsActive = !isInUse(new OfficerDirectorIsard(_content));
                             _buttons[44].IsActive = !isInUse(new OfficerWullfYularen(_content));
+                            _buttons[42].Texture = _content.Load<Texture2D>("AdmiralChiraneauCard");
+                            _buttons[43].Texture = _content.Load<Texture2D>("DirectorIsardCard");
+                            _buttons[44].Texture = _content.Load<Texture2D>("WullfYularenCard");
                         }
                         _buttons[45].IsActive = true;
                         _buttons[46].IsActive = true;
                         _buttons[47].IsActive = true;
                         _buttons[48].IsActive = true;
+                        _buttons[45].Texture = _content.Load<Texture2D>("DefenseLiaisonCard");
+                        _buttons[46].Texture = _content.Load<Texture2D>("IntelOfficerCard");
+                        _buttons[47].Texture = _content.Load<Texture2D>("VeteranCaptainCard");
+                        _buttons[48].Texture = _content.Load<Texture2D>("WeaponsLiaisonCard");
                         break;
                     case SelectedUpgradeType.OffensiveRetrofit:
                         switch (shipType)
@@ -1773,10 +1803,14 @@ namespace CIS598_Senior_Project.Screens
                             case "Assault":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("ExpandedHangarBayCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("PointDefenseRerouteCard");
                                 break;
                             case "Victory":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("ExpandedHangarBayCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("PointDefenseRerouteCard");
                                 break;
                         }
                         break;
@@ -1786,10 +1820,14 @@ namespace CIS598_Senior_Project.Screens
                             case "Assault":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("AdvancedProjectorsCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("ElectronicCountermeasuresCard");
                                 break;
                             case "CR90":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("AdvancedProjectorsCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("ElectronicCountermeasuresCard");
                                 break;
                         }
                         break;
@@ -1800,16 +1838,25 @@ namespace CIS598_Senior_Project.Screens
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("EngineTechsCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("EngineeringTeamCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("NavTeamCard");
                                 break;
                             case "Nebulon":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("EngineTechsCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("EngineeringTeamCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("NavTeamCard");
                                 break;
                             case "Gladiator":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("EngineTechsCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("EngineeringTeamCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("NavTeamCard");
                                 break;
                         }
                         break;
@@ -1820,16 +1867,25 @@ namespace CIS598_Senior_Project.Screens
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("FlightControllersCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("GunneryTeamCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("SensorTeamCard");
                                 break;
                             case "Gladiator":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("FlightControllersCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("GunneryTeamCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("SensorTeamCard");
                                 break;
                             case "Victory":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("FlightControllersCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("GunneryTeamCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("SensorTeamCard");
                                 break;
                         }
                         break;
@@ -1841,6 +1897,10 @@ namespace CIS598_Senior_Project.Screens
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
                                 _buttons[45].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("EmhancedArmamentCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("H9TurbolasersCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("XI7TurbolasersCard");
+                                _buttons[45].Texture = _content.Load<Texture2D>("XX9TurbolasersCard");
                                 break;
                             case "CR90":
                                 if(_selectedShip.ShipTypeA)
@@ -1849,6 +1909,10 @@ namespace CIS598_Senior_Project.Screens
                                     _buttons[43].IsActive = true;
                                     _buttons[44].IsActive = true;
                                     _buttons[45].IsActive = true;
+                                    _buttons[42].Texture = _content.Load<Texture2D>("EmhancedArmamentCard");
+                                    _buttons[43].Texture = _content.Load<Texture2D>("H9TurbolasersCard");
+                                    _buttons[44].Texture = _content.Load<Texture2D>("XI7TurbolasersCard");
+                                    _buttons[45].Texture = _content.Load<Texture2D>("XX9TurbolasersCard");
                                 }
                                 break;
                             case "Nebulon":
@@ -1856,6 +1920,10 @@ namespace CIS598_Senior_Project.Screens
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
                                 _buttons[45].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("EmhancedArmamentCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("H9TurbolasersCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("XI7TurbolasersCard");
+                                _buttons[45].Texture = _content.Load<Texture2D>("XX9TurbolasersCard");
                                 break;
                             case "Victory":
                                 if (!_selectedShip.ShipTypeA)
@@ -1864,6 +1932,10 @@ namespace CIS598_Senior_Project.Screens
                                     _buttons[43].IsActive = true;
                                     _buttons[44].IsActive = true;
                                     _buttons[45].IsActive = true;
+                                    _buttons[42].Texture = _content.Load<Texture2D>("EmhancedArmamentCard");
+                                    _buttons[43].Texture = _content.Load<Texture2D>("H9TurbolasersCard");
+                                    _buttons[44].Texture = _content.Load<Texture2D>("XI7TurbolasersCard");
+                                    _buttons[45].Texture = _content.Load<Texture2D>("XX9TurbolasersCard");
                                 }
                                 break;
                         }
@@ -1877,12 +1949,18 @@ namespace CIS598_Senior_Project.Screens
                                     _buttons[42].IsActive = true;
                                     _buttons[43].IsActive = true;
                                     _buttons[44].IsActive = true;
+                                    _buttons[42].Texture = _content.Load<Texture2D>("IonCannonBatteriesCard");
+                                    _buttons[43].Texture = _content.Load<Texture2D>("LeadingShotsCard");
+                                    _buttons[44].Texture = _content.Load<Texture2D>("OverloadPulseCard");
                                 }
                                 break;
                             case "Victory":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
                                 _buttons[44].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("IonCannonBatteriesCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("LeadingShotsCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("OverloadPulseCard");
                                 break;
                         }
                         break;
@@ -1892,12 +1970,16 @@ namespace CIS598_Senior_Project.Screens
                             case "Gladiator":
                                 _buttons[42].IsActive = true;
                                 _buttons[43].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("AssaultConcussionMissilesCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("ExpandedLaunchersCard");
                                 break;
                             case "Victory":
                                 if (_selectedShip.ShipTypeA)
                                 {
                                     _buttons[42].IsActive = true;
                                     _buttons[43].IsActive = true;
+                                    _buttons[42].Texture = _content.Load<Texture2D>("AssaultConcussionMissilesCard");
+                                    _buttons[43].Texture = _content.Load<Texture2D>("ExpandedLaunchersCard");
                                 }
                                 break;
                         }
@@ -1906,6 +1988,18 @@ namespace CIS598_Senior_Project.Screens
                         _buttons[42].IsActive = true;
                         _buttons[43].IsActive = true;
                         _buttons[44].IsActive = true;
+                        if(_fleet.IsRebelFleet)
+                        {
+                            _buttons[42].Texture = _content.Load<Texture2D>("GarmBelIblisCard");
+                            _buttons[43].Texture = _content.Load<Texture2D>("GeneralDodonnaCard");
+                            _buttons[44].Texture = _content.Load<Texture2D>("MonMothmaCard");
+                        }
+                        else
+                        {
+                            _buttons[42].Texture = _content.Load<Texture2D>("AdmiralMottiCard");
+                            _buttons[43].Texture = _content.Load<Texture2D>("AdmiralScreedCard");
+                            _buttons[44].Texture = _content.Load<Texture2D>("GrandMoffTarkinCard");
+                        }
                         break;
                 }
             }
