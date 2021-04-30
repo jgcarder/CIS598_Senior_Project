@@ -14,7 +14,7 @@ namespace CIS598_Senior_Project.Screens
             _game = game;
 
             var newFleetMenuEntry = new MenuEntry("New Fleet");
-            var editFleetMenuEntry = new MenuEntry("Edit Fleet");
+            var editFleetMenuEntry = new MenuEntry("Load Fleet");
             var backMenuEntry = new MenuEntry("Back");
 
             newFleetMenuEntry.Selected += NewFleetMenuEntrySelected;

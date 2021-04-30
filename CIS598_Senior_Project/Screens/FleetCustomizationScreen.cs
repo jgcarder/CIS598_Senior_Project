@@ -49,6 +49,7 @@ namespace CIS598_Senior_Project.Screens
 
         private string _fleetName;
         private string _fleetDeats;
+        private string _saveMessage;
 
         private Texture2D _texture;
         private Texture2D _background;
@@ -102,6 +103,7 @@ namespace CIS598_Senior_Project.Screens
 
             _fleetName = "<Fleet Name>";
             _fleetDeats = "";
+            _saveMessage = "";
 
             _game = game;
 
@@ -126,7 +128,7 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(1, new Rectangle(widthIncrement, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Clear fleet
             _buttons.Add(new CustButton(2, new Rectangle(widthIncrement, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Select rebel fleet
             _buttons.Add(new CustButton(3, new Rectangle(widthIncrement, 52 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Select imperial fleet
-            _buttons.Add(new CustButton(4, new Rectangle(widthIncrement, _game.GraphicsDevice.Viewport.Height - heightIncrement * 16, 10 * widthIncrement, 15 * heightIncrement), false));   //Instructions on how this works
+            _buttons.Add(new CustButton(4, new Rectangle(widthIncrement, _game.GraphicsDevice.Viewport.Height - heightIncrement * 16, 10 * widthIncrement, 15 * heightIncrement), true));   //Instructions on how this works
 
             _buttons.Add(new CustButton(5, new Rectangle(widthIncrement * 13, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                             //Select rebel ships
             _buttons.Add(new CustButton(6, new Rectangle(widthIncrement * 13, heightIncrement * 18, 10 * widthIncrement, 15 * heightIncrement), false));                                        //Select rebel squadrons
@@ -235,6 +237,7 @@ namespace CIS598_Senior_Project.Screens
             _buttons[1].Texture = _content.Load<Texture2D>("ClearFleet");
             _buttons[2].Texture = _content.Load<Texture2D>("RebelFleet");
             _buttons[3].Texture = _content.Load<Texture2D>("ImperialFleet");
+            _buttons[4].Texture = _content.Load<Texture2D>("QuitWithoutSaving");
 
             _buttons[5].Texture = _content.Load<Texture2D>("RebelShips");
             _buttons[6].Texture = _content.Load<Texture2D>("RebelSquads");
@@ -638,6 +641,8 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
 
+            spriteBatch.DrawString(_descriptor, _saveMessage, new Vector2(_game.GraphicsDevice.Viewport.Width - widthIncrement * 17, _game.GraphicsDevice.Viewport.Height - heightIncrement * 10), Color.AntiqueWhite);
+
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
@@ -658,14 +663,48 @@ namespace CIS598_Senior_Project.Screens
         {
             CustButton button = (CustButton)sender;
 
+            _saveMessage = "";
+
             switch(button.Id)
             {
                 case 0: //save and exit
                     //Save fleet to .txt file
-                    FleetLoader.SaveFleet(_fleet);
+                    //FleetLoader.SaveFleet(_fleet);
 
-                    ScreenManager.AddScreen(new BackgroundScreen(), null);
-                    ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                    if(_fleet.Name != null)
+                    {
+                        if(!_fleet.Name.Equals(""))
+                        {
+                            bool comm = false;
+                            foreach(var s in _fleet.Ships)
+                            {
+                                if (s.HasCommander) comm = true;
+                            }
+
+                            if(comm)
+                            {
+                                if(_fleet.TotalPoints > 400)
+                                {
+                                    _saveMessage = "Your fleet must be 400 points or less.";
+                                }
+                                else
+                                {
+                                    FleetLoader.SaveFleet(_fleet);
+                                    ScreenManager.AddScreen(new BackgroundScreen(), null);
+                                    ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                                }
+                            }
+                            else
+                            {
+                                _saveMessage = "You must have a commander.";
+                            }
+                        }
+                        else
+                        {
+                            _saveMessage = "Your fleet needs a name.";
+                        }
+                    }
+                    
                     break;
                 case 1: //clear fleet
                     buttonSweeper(5);
@@ -709,7 +748,9 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[56].IsActive = true;
                     _buttons[57].IsActive = false;
                     break;
-                case 4: //instructions
+                case 4: //Quit without saving
+                    ScreenManager.AddScreen(new BackgroundScreen(), null);
+                    ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
                     break;
                 case 5: //rebel ships
                     buttonSweeper(7);
@@ -1379,6 +1420,12 @@ namespace CIS598_Senior_Project.Screens
             for(int i = 0; i < _fleet.Ships.Count; i++)
             {
                 _buttons[i + 58].IsActive = true;
+
+                if (_fleet.Ships[i] is AssaultFrigateMarkII) _buttons[i + 58].Texture = _content.Load<Texture2D>("AssaultFrigate");
+                if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("CR90Corvette");
+                if (_fleet.Ships[i] is NebulonBFrigate) _buttons[i + 58].Texture = _content.Load<Texture2D>("NebulonB");
+                if (_fleet.Ships[i] is GladiatorStarDestroyer) _buttons[i + 58].Texture = _content.Load<Texture2D>("GladiatorSD");
+                if (_fleet.Ships[i] is VictoryStarDestroyer) _buttons[i + 58].Texture = _content.Load<Texture2D>("VictorySD");
             }
 
             if(_fleet.IsRebelFleet)
