@@ -35,7 +35,7 @@ namespace CIS598_Senior_Project.Screens
 
         private void EditFleetMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-
+            ScreenManager.AddScreen(new FleetLoadScreen(_game), e.PlayerIndex);
         }
 
         private void BackMenuEntrySelected(object sender, PlayerIndexEventArgs e)

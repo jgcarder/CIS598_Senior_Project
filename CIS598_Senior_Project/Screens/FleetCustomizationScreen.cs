@@ -210,6 +210,128 @@ namespace CIS598_Senior_Project.Screens
         }
 
         /// <summary>
+        /// An overload constructor allowing for a fleet to be passed in
+        /// </summary>
+        /// <param name="game">The game</param>
+        /// <param name="fleet">The fleet to edit</param>
+        public FleetCustomizationScreen(Game game, Fleet fleet)
+        {
+            TransitionOnTime = TimeSpan.FromSeconds(1.5);
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            _numSquads = 0;
+            _shipID = 0;
+            _squadronID = 0;
+
+            _fleetName = fleet.Name;
+            _fleetDeats = "";
+            _saveMessage = "";
+
+            _game = game;
+
+            _buttons = new List<CustButton>();
+
+            _selectedUpgradeType = SelectedUpgradeType.None;
+
+            //_graphics = ScreenManager.GraphicsDevice;
+
+            _fleet = fleet;
+
+            widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
+            heightIncrement = _game.GraphicsDevice.Viewport.Height / 100;
+
+            //_buttons.Add(new CustButton(0, new Rectangle(), true)); //Fleet ships
+            //_buttons.Add(new CustButton(0, new Rectangle(), true)); //Fleet squadrons
+            //_buttons.Add(new CustButton(0, new Rectangle(), true)); //Add button whose role changes 
+            //_buttons.Add(new CustButton(0, new Rectangle(), true)); //Remove button whose role changes
+            //_buttons.Add(new CustButton(0, new Rectangle(), true)); //Select upgrades(Title, Officer, Weapons team, offensive retrofit, ordinance, turbolasers, ion cannon, defensive retrofit, support team)
+
+            _buttons.Add(new CustButton(0, new Rectangle(widthIncrement, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                               //Save and quit
+            _buttons.Add(new CustButton(1, new Rectangle(widthIncrement, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Clear fleet
+            _buttons.Add(new CustButton(2, new Rectangle(widthIncrement, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Select rebel fleet
+            _buttons.Add(new CustButton(3, new Rectangle(widthIncrement, 52 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Select imperial fleet
+            _buttons.Add(new CustButton(4, new Rectangle(widthIncrement, _game.GraphicsDevice.Viewport.Height - heightIncrement * 16, 10 * widthIncrement, 15 * heightIncrement), true));   //Instructions on how this works
+
+            _buttons.Add(new CustButton(5, new Rectangle(widthIncrement * 13, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                             //Select rebel ships
+            _buttons.Add(new CustButton(6, new Rectangle(widthIncrement * 13, heightIncrement * 18, 10 * widthIncrement, 15 * heightIncrement), false));                                        //Select rebel squadrons
+            _buttons.Add(new CustButton(7, new Rectangle(widthIncrement * 13, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                             //Select imperial ships
+            _buttons.Add(new CustButton(8, new Rectangle(widthIncrement * 13, heightIncrement * 18, 10 * widthIncrement, 15 * heightIncrement), false));                                        //Select imperial squadrons
+
+            _buttons.Add(new CustButton(9, new Rectangle(widthIncrement * 13, heightIncrement * 35, 10 * widthIncrement, 15 * heightIncrement), false));                                            //Select Assault Frigate Mark II
+            _buttons.Add(new CustButton(10, new Rectangle(widthIncrement * 13, heightIncrement * 52, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select CR90 Corellian Corvette
+            _buttons.Add(new CustButton(11, new Rectangle(widthIncrement * 13, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select Nebulon B Frigate
+            _buttons.Add(new CustButton(12, new Rectangle(widthIncrement * 13, heightIncrement * 35, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select Gladiator SD
+            _buttons.Add(new CustButton(13, new Rectangle(widthIncrement * 13, heightIncrement * 52, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select Victory SD
+
+            _buttons.Add(new CustButton(14, new Rectangle(widthIncrement * 13, heightIncrement * 35, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select A-wing squadron
+            _buttons.Add(new CustButton(15, new Rectangle(widthIncrement * 13, heightIncrement * 52, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select B-wing squadron
+            _buttons.Add(new CustButton(16, new Rectangle(widthIncrement * 13, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select X-wing squadron
+            _buttons.Add(new CustButton(17, new Rectangle(widthIncrement * 13, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select Y-wing squadron
+            _buttons.Add(new CustButton(18, new Rectangle(widthIncrement * 13, heightIncrement * 35, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select tie fighter squadron
+            _buttons.Add(new CustButton(19, new Rectangle(widthIncrement * 13, heightIncrement * 52, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select tie advanced squadron
+            _buttons.Add(new CustButton(20, new Rectangle(widthIncrement * 13, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select tie interceptor squadron
+            _buttons.Add(new CustButton(21, new Rectangle(widthIncrement * 13, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                           //Select tie bomber squadron
+
+            _buttons.Add(new CustButton(22, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select Mark II A
+            _buttons.Add(new CustButton(23, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select Mark II B
+            _buttons.Add(new CustButton(24, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select version A
+            _buttons.Add(new CustButton(25, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select version B
+            _buttons.Add(new CustButton(26, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select escort refit
+            _buttons.Add(new CustButton(27, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select support refit
+            _buttons.Add(new CustButton(28, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select gladiator class I
+            _buttons.Add(new CustButton(29, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select gladiator class II
+            _buttons.Add(new CustButton(30, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select victory class I
+            _buttons.Add(new CustButton(31, new Rectangle(widthIncrement * 37, heightIncrement, 10 * widthIncrement, 32 * heightIncrement), false));                                                    //Select victory class II
+
+            _buttons.Add(new CustButton(32, new Rectangle(widthIncrement * 25, heightIncrement * 35, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Title
+            _buttons.Add(new CustButton(33, new Rectangle(widthIncrement * 37, heightIncrement * 35, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Officer
+            _buttons.Add(new CustButton(34, new Rectangle(widthIncrement * 25, heightIncrement * 52, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Weapons Team
+            _buttons.Add(new CustButton(35, new Rectangle(widthIncrement * 37, heightIncrement * 52, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Support Team
+            _buttons.Add(new CustButton(36, new Rectangle(widthIncrement * 25, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Offencive Retrofit
+            _buttons.Add(new CustButton(37, new Rectangle(widthIncrement * 37, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Defencive Retrofit
+            _buttons.Add(new CustButton(38, new Rectangle(widthIncrement * 25, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Ion Cannon
+            _buttons.Add(new CustButton(39, new Rectangle(widthIncrement * 37, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Turbo Laser
+            _buttons.Add(new CustButton(40, new Rectangle(widthIncrement * 49, heightIncrement * 69, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Ordinance
+            _buttons.Add(new CustButton(41, new Rectangle(widthIncrement * 49, heightIncrement * 86, 10 * widthIncrement, 15 * heightIncrement), false));                                                   //Select Commander
+
+            _buttons.Add(new CustButton(42, new Rectangle(widthIncrement * 61, heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));                                                             //Upgrade select
+            _buttons.Add(new CustButton(43, new Rectangle(widthIncrement * 61, 15 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(44, new Rectangle(widthIncrement * 61, 29 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(45, new Rectangle(widthIncrement * 61, 43 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(46, new Rectangle(widthIncrement * 61, 57 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(47, new Rectangle(widthIncrement * 61, 71 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(48, new Rectangle(widthIncrement * 61, 85 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+
+            _buttons.Add(new CustButton(49, new Rectangle(widthIncrement * 49, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                            //Add ship to fleet button
+            _buttons.Add(new CustButton(50, new Rectangle(widthIncrement * 49, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                       //clear ship upgrades button
+
+            _buttons.Add(new CustButton(51, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                            //Increase squadrons to add
+            _buttons.Add(new CustButton(52, new Rectangle(widthIncrement * 25, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                       //Decrease squadrons to add
+            _buttons.Add(new CustButton(53, new Rectangle(widthIncrement * 25, 52 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                       //Add squadrons to fleet
+
+            _buttons.Add(new CustButton(54, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 14, 8 * heightIncrement, 10 * widthIncrement, 7 * heightIncrement), true));    //Button to start editing the fleet name
+            _buttons.Add(new CustButton(55, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 14, 16 * heightIncrement, 10 * widthIncrement, 7 * heightIncrement), false));  //button to set the fleet name
+
+            _buttons.Add(new CustButton(56, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 16, _game.GraphicsDevice.Viewport.Height - heightIncrement * 6, 7 * widthIncrement, 5 * heightIncrement), true));  //button to see the fleet to remove ships/squads
+            _buttons.Add(new CustButton(57, new Rectangle(_game.GraphicsDevice.Viewport.Width - widthIncrement * 8, _game.GraphicsDevice.Viewport.Height - heightIncrement * 6, 7 * widthIncrement, 5 * heightIncrement), false));  //button to stop viewing fleet
+
+            _buttons.Add(new CustButton(58, new Rectangle(widthIncrement * 13, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(59, new Rectangle(widthIncrement * 13, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(60, new Rectangle(widthIncrement * 13, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(61, new Rectangle(widthIncrement * 13, 52 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(62, new Rectangle(widthIncrement * 13, 69 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(63, new Rectangle(widthIncrement * 13, 86 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(64, new Rectangle(widthIncrement * 25, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(65, new Rectangle(widthIncrement * 25, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(66, new Rectangle(widthIncrement * 25, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));
+            _buttons.Add(new CustButton(67, new Rectangle(widthIncrement * 37, heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(68, new Rectangle(widthIncrement * 37, 15 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(69, new Rectangle(widthIncrement * 37, 29 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+            _buttons.Add(new CustButton(70, new Rectangle(widthIncrement * 37, 43 * heightIncrement, 6 * widthIncrement, 12 * heightIncrement), false));
+
+        }
+
+        /// <summary>
         /// Load graphics content for the game
         /// </summary>
         public override void Activate()
