@@ -62,21 +62,23 @@ namespace CIS598_Senior_Project
                 if(fleet.IsRebelFleet)
                 {
                     if (squads[0] > 0) sw.WriteLine(">>>,A-Wing Squadron," + squads[0]);
-                    if (squads[1] > 0) sw.WriteLine(">>>,B-Wing Squadron" + squads[1]);
-                    if (squads[2] > 0) sw.WriteLine(">>>,X-Wing Squadron" + squads[2]);
-                    if (squads[3] > 0) sw.WriteLine(">>>,Y-Wing Squadron" + squads[3]);
+                    if (squads[1] > 0) sw.WriteLine(">>>,B-Wing Squadron," + squads[1]);
+                    if (squads[2] > 0) sw.WriteLine(">>>,X-Wing Squadron," + squads[2]);
+                    if (squads[3] > 0) sw.WriteLine(">>>,Y-Wing Squadron," + squads[3]);
                 }
                 else
                 {
                     if (squads[0] > 0) sw.WriteLine(">>>,TIE Fighter Squadron," + squads[0]);
-                    if (squads[1] > 0) sw.WriteLine(">>>,TIE Advanced Squadron" + squads[1]);
-                    if (squads[2] > 0) sw.WriteLine(">>>,TIE Interceptor Squadron" + squads[2]);
-                    if (squads[3] > 0) sw.WriteLine(">>>,TIE Bomber Squadron" + squads[3]);
+                    if (squads[1] > 0) sw.WriteLine(">>>,TIE Advanced Squadron," + squads[1]);
+                    if (squads[2] > 0) sw.WriteLine(">>>,TIE Interceptor Squadron," + squads[2]);
+                    if (squads[3] > 0) sw.WriteLine(">>>,TIE Bomber Squadron," + squads[3]);
                 }
                 sw.Close();
 
+                List<string> list = AvailableFleets();
+
                 using StreamWriter sw2 = new StreamWriter("Fleets.txt", true);
-                sw2.WriteLine(fleet.Name + "," + fleet.IsRebelFleet);
+                bool record = recordName(fleet.Name + "," + fleet.IsRebelFleet, sw2, list);
                 sw2.Close();
                 return true;
             }
@@ -118,7 +120,7 @@ namespace CIS598_Senior_Project
                     switch(split[0])
                     {
                         case ">": //ship
-                            if (selectedShip != null) fleet.Ships.Add(selectedShip);
+                            if (selectedShip != null) fleet.Ships.Add(selectedShip); selectedShip = null;
 
                             switch(split[1])
                             {
@@ -291,7 +293,9 @@ namespace CIS598_Senior_Project
                             }
                             break;
                         case ">>>": //squadron
-                            switch(split[1])
+                            if (selectedShip != null) fleet.Ships.Add(selectedShip); selectedShip = null;
+
+                            switch (split[1])
                             {
                                 case "A-Wing Squadron":
                                     addSquadrons(split[1], int.Parse(split[2]), id, content, fleet);
@@ -338,7 +342,7 @@ namespace CIS598_Senior_Project
         /// Deletes the fleet from the save files
         /// </summary>
         /// <param name="fleetName">The name of the fleet to be deleted with attached IsRebelFleet bool by comma</param>
-        /// <returns></returns>
+        /// <returns>true if successful, false otherwise</returns>
         public static bool DeleteFleet(string fleetName)
         {
             try
@@ -503,6 +507,26 @@ namespace CIS598_Senior_Project
                     }
                     break;
             }
+        }
+
+        /// <summary>
+        /// Checks if a fleet name is already in use in the file system
+        /// </summary>
+        /// <param name="name">The name to check for with bool attached</param>
+        /// <param name="sw">The stream writer that writes to the files</param>
+        /// <returns>true if already exists, false if new</returns>
+        private static bool recordName(string name, StreamWriter sw, List<string> names)
+        {
+            foreach(var s in names)
+            {
+                if(s.Equals(name))
+                {
+                    return true;
+                }
+            }
+
+            sw.WriteLine(name);
+            return false;
         }
     }
 }

@@ -1187,9 +1187,12 @@ namespace CIS598_Senior_Project.Screens
                 switch(card.CardType)
                 {
                     case UpgradeTypeEnum.Title:
-                        if(card.Name.Equals(ship.Title.Name))
+                        if(ship.Title != null)
                         {
-                            return true;
+                            if (card.Name.Equals(ship.Title.Name))
+                            {
+                                return true;
+                            }
                         }
                         break;
                     case UpgradeTypeEnum.Officers:
@@ -1666,7 +1669,11 @@ namespace CIS598_Senior_Project.Screens
         private void upgradeShip()
         {
             if (_selectedUpgradeType == SelectedUpgradeType.Title) _selectedShip.Title = _selectedUpgrade;
-            else if(_selectedUpgradeType == SelectedUpgradeType.Commander) _selectedShip.Commander = _selectedUpgrade; _selectedShip.HasCommander = true;
+            if(_selectedUpgradeType == SelectedUpgradeType.Commander)
+            {
+                _selectedShip.Commander = _selectedUpgrade; 
+                _selectedShip.HasCommander = true;
+            }
 
             if (_selectedShip.UpgradeTypes[0] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.Officers) _selectedShip.Upgrades[0] = _selectedUpgrade;
             if (_selectedShip.UpgradeTypes[1] == 1 && _selectedUpgrade.CardType == UpgradeTypeEnum.SupportTeam) _selectedShip.Upgrades[1] = _selectedUpgrade;
