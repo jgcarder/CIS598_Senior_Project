@@ -158,21 +158,27 @@ namespace CIS598_Senior_Project
                                     break;
                                 case "Admiral Motti":
                                     selectedShip.Commander = new CommanderAdmiralMotti(content);
+                                    selectedShip.HasCommander = true;
                                     break;
                                 case "Admiral Screed":
                                     selectedShip.Commander = new CommanderAdmiralScreed(content);
+                                    selectedShip.HasCommander = true;
                                     break;
                                 case "Garm Bel Iblis":
                                     selectedShip.Commander = new CommanderGarmBelIblis(content);
+                                    selectedShip.HasCommander = true;
                                     break;
                                 case "General Dodonna":
                                     selectedShip.Commander = new CommanderGeneralDodonna(content);
+                                    selectedShip.HasCommander = true;
                                     break;
                                 case "Grand Moff Tarkin":
                                     selectedShip.Commander = new CommanderGrandMoffTarkin(content);
+                                    selectedShip.HasCommander = true;
                                     break;
                                 case "Mon Mothma":
                                     selectedShip.Commander = new CommanderMonMothma(content);
+                                    selectedShip.HasCommander = true;
                                     break;
                                 case "Electronic Countermeasures":
                                     selectedShip.Upgrades[7] = new ElectronicCountermeasures(content);

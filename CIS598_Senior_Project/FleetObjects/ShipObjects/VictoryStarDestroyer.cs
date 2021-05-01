@@ -91,7 +91,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             {
                 if (ShipTypeA)
                 {
-                    return new int[] { 1, 0, 1, 1, 1, 0, 1, 0 };
+                    return new int[] { 1, 0, 1, 1, 1, 1, 0, 0 };
                 }
                 else
                 {

@@ -248,8 +248,8 @@ namespace CIS598_Senior_Project.Screens
 
             _buttons.Add(new CustButton(0, new Rectangle(widthIncrement, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                               //Save and quit
             _buttons.Add(new CustButton(1, new Rectangle(widthIncrement, 18 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Clear fleet
-            _buttons.Add(new CustButton(2, new Rectangle(widthIncrement, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Select rebel fleet
-            _buttons.Add(new CustButton(3, new Rectangle(widthIncrement, 52 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), true));                                          //Select imperial fleet
+            _buttons.Add(new CustButton(2, new Rectangle(widthIncrement, 35 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), fleet.IsRebelFleet));                                          //Select rebel fleet
+            _buttons.Add(new CustButton(3, new Rectangle(widthIncrement, 52 * heightIncrement, 10 * widthIncrement, 15 * heightIncrement), !fleet.IsRebelFleet));                                          //Select imperial fleet
             _buttons.Add(new CustButton(4, new Rectangle(widthIncrement, _game.GraphicsDevice.Viewport.Height - heightIncrement * 16, 10 * widthIncrement, 15 * heightIncrement), true));   //Instructions on how this works
 
             _buttons.Add(new CustButton(5, new Rectangle(widthIncrement * 13, heightIncrement, 10 * widthIncrement, 15 * heightIncrement), false));                                             //Select rebel ships
@@ -1771,13 +1771,10 @@ namespace CIS598_Senior_Project.Screens
                             if (button == 45) _selectedUpgrade = new XX9Turbolasers(_content);
                             break;
                         case "Victory":
-                            if (!_selectedShip.ShipTypeA)
-                            {
-                                if (button == 42) _selectedUpgrade = new EnhancedArmament(_content);
-                                if (button == 43) _selectedUpgrade = new H9Turbolasers(_content);
-                                if (button == 44) _selectedUpgrade = new XI7Turbolasers(_content);
-                                if (button == 45) _selectedUpgrade = new XX9Turbolasers(_content);
-                            }
+                            if (button == 42) _selectedUpgrade = new EnhancedArmament(_content);
+                            if (button == 43) _selectedUpgrade = new H9Turbolasers(_content);
+                            if (button == 44) _selectedUpgrade = new XI7Turbolasers(_content);
+                            if (button == 45) _selectedUpgrade = new XX9Turbolasers(_content);
                             break;
                     }
                     break;
@@ -1793,9 +1790,12 @@ namespace CIS598_Senior_Project.Screens
                             }
                             break;
                         case "Victory":
-                            if (button == 42) _selectedUpgrade = new IonCannonBatteries(_content);
-                            if (button == 43) _selectedUpgrade = new LeadingShots(_content);
-                            if (button == 44) _selectedUpgrade = new OverloadPulse(_content);
+                            if(!_selectedShip.ShipTypeA)
+                            {
+                                if (button == 42) _selectedUpgrade = new IonCannonBatteries(_content);
+                                if (button == 43) _selectedUpgrade = new LeadingShots(_content);
+                                if (button == 44) _selectedUpgrade = new OverloadPulse(_content);
+                            }
                             break;
                     }
                     break;
@@ -2104,17 +2104,14 @@ namespace CIS598_Senior_Project.Screens
                                 _buttons[45].Texture = _content.Load<Texture2D>("XX9TurbolasersCard");
                                 break;
                             case "Victory":
-                                if (!_selectedShip.ShipTypeA)
-                                {
-                                    _buttons[42].IsActive = true;
-                                    _buttons[43].IsActive = true;
-                                    _buttons[44].IsActive = true;
-                                    _buttons[45].IsActive = true;
-                                    _buttons[42].Texture = _content.Load<Texture2D>("EmhancedArmamentCard");
-                                    _buttons[43].Texture = _content.Load<Texture2D>("H9TurbolasersCard");
-                                    _buttons[44].Texture = _content.Load<Texture2D>("XI7TurbolasersCard");
-                                    _buttons[45].Texture = _content.Load<Texture2D>("XX9TurbolasersCard");
-                                }
+                                _buttons[42].IsActive = true;
+                                _buttons[43].IsActive = true;
+                                _buttons[44].IsActive = true;
+                                _buttons[45].IsActive = true;
+                                _buttons[42].Texture = _content.Load<Texture2D>("EmhancedArmamentCard");
+                                _buttons[43].Texture = _content.Load<Texture2D>("H9TurbolasersCard");
+                                _buttons[44].Texture = _content.Load<Texture2D>("XI7TurbolasersCard");
+                                _buttons[45].Texture = _content.Load<Texture2D>("XX9TurbolasersCard");
                                 break;
                         }
                         break;
@@ -2133,12 +2130,15 @@ namespace CIS598_Senior_Project.Screens
                                 }
                                 break;
                             case "Victory":
-                                _buttons[42].IsActive = true;
-                                _buttons[43].IsActive = true;
-                                _buttons[44].IsActive = true;
-                                _buttons[42].Texture = _content.Load<Texture2D>("IonCannonBatteriesCard");
-                                _buttons[43].Texture = _content.Load<Texture2D>("LeadingShotsCard");
-                                _buttons[44].Texture = _content.Load<Texture2D>("OverloadPulseCard");
+                                if(!_selectedShip.ShipTypeA)
+                                {
+                                    _buttons[42].IsActive = true;
+                                    _buttons[43].IsActive = true;
+                                    _buttons[44].IsActive = true;
+                                    _buttons[42].Texture = _content.Load<Texture2D>("IonCannonBatteriesCard");
+                                    _buttons[43].Texture = _content.Load<Texture2D>("LeadingShotsCard");
+                                    _buttons[44].Texture = _content.Load<Texture2D>("OverloadPulseCard");
+                                }
                                 break;
                         }
                         break;
