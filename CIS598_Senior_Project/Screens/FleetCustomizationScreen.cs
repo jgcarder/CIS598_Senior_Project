@@ -597,7 +597,7 @@ namespace CIS598_Senior_Project.Screens
                 throw new ArgumentNullException(nameof(input));
 
             // Look up inputs for the active player profile.
-            int playerIndex = (int)ControllingPlayer.Value;
+            int playerIndex = 0;// (int)ControllingPlayer.Value;
 
             var keyboardState = input.CurrentKeyboardStates[playerIndex];
             var gamePadState = input.CurrentGamePadStates[playerIndex];

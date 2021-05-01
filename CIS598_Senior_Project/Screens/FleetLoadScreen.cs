@@ -107,6 +107,7 @@ namespace CIS598_Senior_Project.Screens
             _descriptor = _content.Load<SpriteFont>("descriptor");
 
             _texture = _content.Load<Texture2D>("MetalBackground");
+            _background = _content.Load<Texture2D>("LoadBackground");
 
             _fleetsList = FleetLoader.AvailableFleets();
 
@@ -164,12 +165,14 @@ namespace CIS598_Senior_Project.Screens
             else
                 _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
 
+
             _fleetsList = FleetLoader.AvailableFleets();
             for (int i = 0; i < _fleetsList.Count; i++)
             {
                 if (_fleetsList[i] != null)
                 {
                     _buttons[i + 5].IsActive = true;
+
                     string[] line = _fleetsList[i].Split(',');
                     if (line[1].Equals("True"))
                     {
@@ -244,6 +247,8 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.Begin();
 
+            spriteBatch.Draw(_background, new Vector2(), Color.White);
+
             for(int i = 0; i < _buttons.Count; i++)
             {
                 if (_buttons[i].IsActive)
@@ -259,7 +264,9 @@ namespace CIS598_Senior_Project.Screens
 
                     if(i >= 5)
                     {
-                        spriteBatch.DrawString(_descriptor, _fleetsList[i - 5].Split(',')[0], new Vector2(_buttons[i].Position.X + _widthIncrement * 11, _buttons[i].Position.Y), _buttons[i - 5].Color);
+                        string s = _fleetsList[i - 5].Split(',')[0];
+                        Vector2 v = new Vector2(_buttons[i].Position.X + _widthIncrement * 11, _buttons[i].Position.Y);
+                        spriteBatch.DrawString(_descriptor, s, v, _buttons[i].Color);
                     }
                 }
             }
@@ -292,13 +299,23 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[4].IsActive = true;
                     break;
                 case 3: //confirm
-                    if (_isDelete) FleetLoader.DeleteFleet(_selectedFleet);
+                    if (_isDelete) 
+                    {
+                        FleetLoader.DeleteFleet(_selectedFleet);
+                        _fleetsList.Remove(_selectedFleet);
+                        resetButtons();
+                    } 
                     else if(_isEdit)
                     {
                         Fleet fleet = FleetLoader.LoadFleet(_selectedFleet.Split(',')[0], _content);
+
+                        bool result = FleetLoader.DeleteFleet(_selectedFleet);
+
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
                         ScreenManager.AddScreen(new FleetCustomizationScreen(_game, fleet), null);
                     }
+                    _buttons[3].IsActive = false;
+                    _buttons[4].IsActive = false;
                     break;
                 case 4: //cancel
                     _isEdit = false;
@@ -389,10 +406,7 @@ namespace CIS598_Senior_Project.Screens
         {
             for (int i = index; i < _buttons.Count; i++)
             {
-                if (_buttons[i].Id != 54 && _buttons[i].Id != 55 && _buttons[i].Id != 56 && _buttons[i].Id != 57)
-                {
-                    _buttons[i].IsActive = false;
-                }
+                _buttons[i].IsActive = false;
             }
         }
 
@@ -407,6 +421,35 @@ namespace CIS598_Senior_Project.Screens
             _buttons[2].IsActive = true;
             _buttons[3].IsActive = false;
             _buttons[4].IsActive = false;
+
+            //buttonSweeper(5);
+        }
+
+        /// <summary>
+        /// Resets the buttons
+        /// </summary>
+        private void resetButtons()
+        {
+            buttonSweeper(5);
+
+            _fleetsList = FleetLoader.AvailableFleets();
+            for (int i = 0; i < _fleetsList.Count; i++)
+            {
+                if (_fleetsList[i] != null)
+                {
+                    _buttons[i + 5].IsActive = true;
+
+                    string[] line = _fleetsList[i].Split(',');
+                    if (line[1].Equals("True"))
+                    {
+                        _buttons[i + 5].Texture = _content.Load<Texture2D>("RebelFleet");
+                    }
+                    else if (line[1].Equals("False"))
+                    {
+                        _buttons[i + 5].Texture = _content.Load<Texture2D>("ImperialFleet");
+                    }
+                }
+            }
         }
     }
 }

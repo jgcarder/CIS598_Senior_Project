@@ -333,6 +333,8 @@ namespace CIS598_Senior_Project
                     line = sr.ReadLine();
                     id++;
                 }
+                if (selectedShip != null) fleet.Ships.Add(selectedShip);
+
                 return fleet;
             }
             catch(Exception e)
