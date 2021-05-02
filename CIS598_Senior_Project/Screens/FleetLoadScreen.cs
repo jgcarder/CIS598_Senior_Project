@@ -108,6 +108,7 @@ namespace CIS598_Senior_Project.Screens
 
             _texture = _content.Load<Texture2D>("MetalBackground");
             _background = _content.Load<Texture2D>("LoadBackground");
+            _gradient = _content.Load<Texture2D>("MenuGradient2");
 
             _fleetsList = FleetLoader.AvailableFleets();
 
@@ -225,7 +226,7 @@ namespace CIS598_Senior_Project.Screens
                 throw new ArgumentNullException(nameof(input));
 
             // Look up inputs for the active player profile.
-            int playerIndex = (int)ControllingPlayer.Value;
+            int playerIndex = 0;// (int)ControllingPlayer.Value;
 
             var keyboardState = input.CurrentKeyboardStates[playerIndex];
             var gamePadState = input.CurrentGamePadStates[playerIndex];
@@ -249,7 +250,9 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.Draw(_background, new Vector2(), Color.White);
 
-            for(int i = 0; i < _buttons.Count; i++)
+            spriteBatch.Draw(_gradient, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 18, 0), Color.White);
+
+            for (int i = 0; i < _buttons.Count; i++)
             {
                 if (_buttons[i].IsActive)
                 {
@@ -271,11 +274,118 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
 
+            if(_selectedFleet != null)
+            {
+                Fleet fleet = FleetLoader.LoadFleet(_selectedFleet.Split(',')[0], _content);
+                double heightoffset = 1;
+                spriteBatch.DrawString(_descriptor, "FLEET: " + fleet.Name + "--" + fleet.TotalPoints + " total points", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (int)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+
+                heightoffset += 1.5;
+                foreach(var ship in fleet.Ships)
+                {
+                    if(ship != null)
+                    {
+                        if (ship.ShipTypeA)
+                        {
+                            spriteBatch.DrawString(_descriptor, " >" + ship.Name + "(A): " + ship.PointCost + "---------------", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        }
+                        else
+                        {
+                            spriteBatch.DrawString(_descriptor, " >" + ship.Name + "(B): " + ship.PointCost + "---------------", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        }
+                        heightoffset += 1.5;
+
+                        if (ship.Commander != null)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -" + "Commander " + ship.Commander.Name + ": " + ship.Commander.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+
+                        if (ship.Title != null)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -" + "Title " + ship.Title.Name + ": " + ship.Title.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+
+                        foreach (var upgrade in ship.Upgrades)
+                        {
+                            if (upgrade != null)
+                            {
+                                spriteBatch.DrawString(_descriptor, "   -" + upgrade.CardType.ToString() + " " + upgrade.Name + ": " + upgrade.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                                heightoffset += 1.5;
+                            }
+                        }
+                    }
+                }
+
+                if (fleet.Squadrons.Count > 0)
+                {
+                    int[] sq = returnSquads(fleet);
+                    if (fleet.IsRebelFleet)
+                    {
+                        if (sq[0] > 0)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -A-Wing Squadron(11): x" + sq[0] + " => " + sq[0] * 11, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                        if (sq[1] > 0)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -B-Wing Squadron(14): x" + sq[1] + " => " + sq[1] * 14, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                        if (sq[2] > 0)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -X-Wing Squadron(13): x" + sq[2] + " => " + sq[2] * 13, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                        if (sq[3] > 0)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -Y-Wing Squadron(10): x" + sq[3] + " => " + sq[3] * 10, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                    }
+                    else
+                    {
+                        if (sq[0] > 0)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -TIE Fighter Squadron(8): x" + sq[0] + " => " + sq[0] * 8, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                        if (sq[1] > 0)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -TIE Advanced Squadron(12): x" + sq[1] + " => " + sq[1] * 12, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                        if (sq[2] > 0)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -TIE Interceptor Squadron(11): x" + sq[2] + " => " + sq[2] * 11, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                        if (sq[3] > 0)
+                        {
+                            spriteBatch.DrawString(_descriptor, "   -TIE Bomber Squadron(9): x" + sq[3] + " => " + sq[3] * 9, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                    }
+                }
+            }
+            
             spriteBatch.End();
 
-            base.Draw(gameTime);
+            // If the game is transitioning on or off, fade it out to black.
+            if (TransitionPosition > 0 || _pauseAlpha > 0)
+            {
+                float alpha = MathHelper.Lerp(1f - TransitionAlpha, 1f, _pauseAlpha / 2);
+
+                ScreenManager.FadeBackBufferToBlack(alpha);
+            }
         }
 
+        /// <summary>
+        /// The even handler for the buttons
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonCatcher(object sender, ButtonClickedEventArgs e)
         {
             CustButton button = (CustButton)sender;
@@ -303,6 +413,7 @@ namespace CIS598_Senior_Project.Screens
                     {
                         FleetLoader.DeleteFleet(_selectedFleet);
                         _fleetsList.Remove(_selectedFleet);
+                        _selectedFleet = null;
                         resetButtons();
                     } 
                     else if(_isEdit)
@@ -310,6 +421,7 @@ namespace CIS598_Senior_Project.Screens
                         Fleet fleet = FleetLoader.LoadFleet(_selectedFleet.Split(',')[0], _content);
 
                         bool result = FleetLoader.DeleteFleet(_selectedFleet);
+                        _selectedFleet = null;
 
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
                         ScreenManager.AddScreen(new FleetCustomizationScreen(_game, fleet), null);
@@ -450,6 +562,31 @@ namespace CIS598_Senior_Project.Screens
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// gets the number of squads of each type
+        /// </summary>
+        /// <returns>the list of number of squads by type</returns>
+        private int[] returnSquads(Fleet fleet)
+        {
+            int[] result = new int[4];
+            if (fleet.IsRebelFleet)
+            {
+                result[0] += fleet.Squadrons.FindAll(x => x.Name == "A-Wing Squadron").Count;
+                result[1] += fleet.Squadrons.FindAll(x => x.Name == "B-Wing Squadron").Count;
+                result[2] += fleet.Squadrons.FindAll(x => x.Name == "X-Wing Squadron").Count;
+                result[3] += fleet.Squadrons.FindAll(x => x.Name == "Y-Wing Squadron").Count;
+            }
+            else
+            {
+                result[0] += fleet.Squadrons.FindAll(x => x.Name == "TIE Fighter Squadron").Count;
+                result[1] += fleet.Squadrons.FindAll(x => x.Name == "TIE Advanced Squadron").Count;
+                result[2] += fleet.Squadrons.FindAll(x => x.Name == "TIE Interceptor Squadron").Count;
+                result[3] += fleet.Squadrons.FindAll(x => x.Name == "TIE Bomber Squadron").Count;
+            }
+
+            return result;
         }
     }
 }

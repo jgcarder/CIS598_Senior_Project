@@ -579,6 +579,18 @@
 /processorParam:TextureFormat=Color
 /build:FleetMenuBackground.jpg
 
+#begin FleetsMenuLabel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:FleetsMenuLabel.png
+
 #begin FlightControllersCard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -862,6 +874,18 @@
 /processorParam:TextureFormat=Color
 /build:LoadBackground.jpg
 
+#begin ManageFleets.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ManageFleets.png
+
 #begin menufont.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -964,6 +988,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:NebulonBSupport.png
+
+#begin NewFleet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NewFleet.png
 
 #begin OffensiveRetro.png
 /importer:TextureImporter
@@ -1408,6 +1444,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:WeaponsTeam.png
+
+#begin WideBack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:WideBack.png
 
 #begin WullfYularenCard.png
 /importer:TextureImporter

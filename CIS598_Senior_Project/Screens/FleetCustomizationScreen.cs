@@ -513,75 +513,78 @@ namespace CIS598_Senior_Project.Screens
 
             if(_buttons[55].IsActive)
             {
-                if(_currentKeyState.IsKeyDown(Keys.LeftShift) || _currentKeyState.IsKeyDown(Keys.RightShift))
+                if(_fleetName.Length <= 11)
                 {
-                    if (_currentKeyState.IsKeyDown(Keys.A) && _previousKeyState.IsKeyUp(Keys.A)) _fleetName += "A";
-                    if (_currentKeyState.IsKeyDown(Keys.B) && _previousKeyState.IsKeyUp(Keys.B)) _fleetName += "B";
-                    if (_currentKeyState.IsKeyDown(Keys.C) && _previousKeyState.IsKeyUp(Keys.C)) _fleetName += "C";
-                    if (_currentKeyState.IsKeyDown(Keys.D) && _previousKeyState.IsKeyUp(Keys.D)) _fleetName += "D";
-                    if (_currentKeyState.IsKeyDown(Keys.E) && _previousKeyState.IsKeyUp(Keys.E)) _fleetName += "E";
-                    if (_currentKeyState.IsKeyDown(Keys.F) && _previousKeyState.IsKeyUp(Keys.F)) _fleetName += "F";
-                    if (_currentKeyState.IsKeyDown(Keys.G) && _previousKeyState.IsKeyUp(Keys.G)) _fleetName += "G";
-                    if (_currentKeyState.IsKeyDown(Keys.H) && _previousKeyState.IsKeyUp(Keys.H)) _fleetName += "H";
-                    if (_currentKeyState.IsKeyDown(Keys.I) && _previousKeyState.IsKeyUp(Keys.I)) _fleetName += "I";
-                    if (_currentKeyState.IsKeyDown(Keys.J) && _previousKeyState.IsKeyUp(Keys.J)) _fleetName += "J";
-                    if (_currentKeyState.IsKeyDown(Keys.K) && _previousKeyState.IsKeyUp(Keys.K)) _fleetName += "K";
-                    if (_currentKeyState.IsKeyDown(Keys.L) && _previousKeyState.IsKeyUp(Keys.L)) _fleetName += "L";
-                    if (_currentKeyState.IsKeyDown(Keys.M) && _previousKeyState.IsKeyUp(Keys.M)) _fleetName += "M";
-                    if (_currentKeyState.IsKeyDown(Keys.N) && _previousKeyState.IsKeyUp(Keys.N)) _fleetName += "N";
-                    if (_currentKeyState.IsKeyDown(Keys.O) && _previousKeyState.IsKeyUp(Keys.O)) _fleetName += "O";
-                    if (_currentKeyState.IsKeyDown(Keys.P) && _previousKeyState.IsKeyUp(Keys.P)) _fleetName += "P";
-                    if (_currentKeyState.IsKeyDown(Keys.Q) && _previousKeyState.IsKeyUp(Keys.Q)) _fleetName += "Q";
-                    if (_currentKeyState.IsKeyDown(Keys.R) && _previousKeyState.IsKeyUp(Keys.R)) _fleetName += "R";
-                    if (_currentKeyState.IsKeyDown(Keys.S) && _previousKeyState.IsKeyUp(Keys.S)) _fleetName += "S";
-                    if (_currentKeyState.IsKeyDown(Keys.T) && _previousKeyState.IsKeyUp(Keys.T)) _fleetName += "T";
-                    if (_currentKeyState.IsKeyDown(Keys.U) && _previousKeyState.IsKeyUp(Keys.U)) _fleetName += "U";
-                    if (_currentKeyState.IsKeyDown(Keys.V) && _previousKeyState.IsKeyUp(Keys.V)) _fleetName += "V";
-                    if (_currentKeyState.IsKeyDown(Keys.W) && _previousKeyState.IsKeyUp(Keys.W)) _fleetName += "W";
-                    if (_currentKeyState.IsKeyDown(Keys.X) && _previousKeyState.IsKeyUp(Keys.X)) _fleetName += "X";
-                    if (_currentKeyState.IsKeyDown(Keys.Y) && _previousKeyState.IsKeyUp(Keys.Y)) _fleetName += "Y";
-                    if (_currentKeyState.IsKeyDown(Keys.Z) && _previousKeyState.IsKeyUp(Keys.Z)) _fleetName += "Z";
+                    if (_currentKeyState.IsKeyDown(Keys.LeftShift) || _currentKeyState.IsKeyDown(Keys.RightShift))
+                    {
+                        if (_currentKeyState.IsKeyDown(Keys.A) && _previousKeyState.IsKeyUp(Keys.A)) _fleetName += "A";
+                        if (_currentKeyState.IsKeyDown(Keys.B) && _previousKeyState.IsKeyUp(Keys.B)) _fleetName += "B";
+                        if (_currentKeyState.IsKeyDown(Keys.C) && _previousKeyState.IsKeyUp(Keys.C)) _fleetName += "C";
+                        if (_currentKeyState.IsKeyDown(Keys.D) && _previousKeyState.IsKeyUp(Keys.D)) _fleetName += "D";
+                        if (_currentKeyState.IsKeyDown(Keys.E) && _previousKeyState.IsKeyUp(Keys.E)) _fleetName += "E";
+                        if (_currentKeyState.IsKeyDown(Keys.F) && _previousKeyState.IsKeyUp(Keys.F)) _fleetName += "F";
+                        if (_currentKeyState.IsKeyDown(Keys.G) && _previousKeyState.IsKeyUp(Keys.G)) _fleetName += "G";
+                        if (_currentKeyState.IsKeyDown(Keys.H) && _previousKeyState.IsKeyUp(Keys.H)) _fleetName += "H";
+                        if (_currentKeyState.IsKeyDown(Keys.I) && _previousKeyState.IsKeyUp(Keys.I)) _fleetName += "I";
+                        if (_currentKeyState.IsKeyDown(Keys.J) && _previousKeyState.IsKeyUp(Keys.J)) _fleetName += "J";
+                        if (_currentKeyState.IsKeyDown(Keys.K) && _previousKeyState.IsKeyUp(Keys.K)) _fleetName += "K";
+                        if (_currentKeyState.IsKeyDown(Keys.L) && _previousKeyState.IsKeyUp(Keys.L)) _fleetName += "L";
+                        if (_currentKeyState.IsKeyDown(Keys.M) && _previousKeyState.IsKeyUp(Keys.M)) _fleetName += "M";
+                        if (_currentKeyState.IsKeyDown(Keys.N) && _previousKeyState.IsKeyUp(Keys.N)) _fleetName += "N";
+                        if (_currentKeyState.IsKeyDown(Keys.O) && _previousKeyState.IsKeyUp(Keys.O)) _fleetName += "O";
+                        if (_currentKeyState.IsKeyDown(Keys.P) && _previousKeyState.IsKeyUp(Keys.P)) _fleetName += "P";
+                        if (_currentKeyState.IsKeyDown(Keys.Q) && _previousKeyState.IsKeyUp(Keys.Q)) _fleetName += "Q";
+                        if (_currentKeyState.IsKeyDown(Keys.R) && _previousKeyState.IsKeyUp(Keys.R)) _fleetName += "R";
+                        if (_currentKeyState.IsKeyDown(Keys.S) && _previousKeyState.IsKeyUp(Keys.S)) _fleetName += "S";
+                        if (_currentKeyState.IsKeyDown(Keys.T) && _previousKeyState.IsKeyUp(Keys.T)) _fleetName += "T";
+                        if (_currentKeyState.IsKeyDown(Keys.U) && _previousKeyState.IsKeyUp(Keys.U)) _fleetName += "U";
+                        if (_currentKeyState.IsKeyDown(Keys.V) && _previousKeyState.IsKeyUp(Keys.V)) _fleetName += "V";
+                        if (_currentKeyState.IsKeyDown(Keys.W) && _previousKeyState.IsKeyUp(Keys.W)) _fleetName += "W";
+                        if (_currentKeyState.IsKeyDown(Keys.X) && _previousKeyState.IsKeyUp(Keys.X)) _fleetName += "X";
+                        if (_currentKeyState.IsKeyDown(Keys.Y) && _previousKeyState.IsKeyUp(Keys.Y)) _fleetName += "Y";
+                        if (_currentKeyState.IsKeyDown(Keys.Z) && _previousKeyState.IsKeyUp(Keys.Z)) _fleetName += "Z";
+                    }
+                    else
+                    {
+                        if (_currentKeyState.IsKeyDown(Keys.A) && _previousKeyState.IsKeyUp(Keys.A)) _fleetName += "a";
+                        if (_currentKeyState.IsKeyDown(Keys.B) && _previousKeyState.IsKeyUp(Keys.B)) _fleetName += "b";
+                        if (_currentKeyState.IsKeyDown(Keys.C) && _previousKeyState.IsKeyUp(Keys.C)) _fleetName += "c";
+                        if (_currentKeyState.IsKeyDown(Keys.D) && _previousKeyState.IsKeyUp(Keys.D)) _fleetName += "d";
+                        if (_currentKeyState.IsKeyDown(Keys.E) && _previousKeyState.IsKeyUp(Keys.E)) _fleetName += "e";
+                        if (_currentKeyState.IsKeyDown(Keys.F) && _previousKeyState.IsKeyUp(Keys.F)) _fleetName += "f";
+                        if (_currentKeyState.IsKeyDown(Keys.G) && _previousKeyState.IsKeyUp(Keys.G)) _fleetName += "g";
+                        if (_currentKeyState.IsKeyDown(Keys.H) && _previousKeyState.IsKeyUp(Keys.H)) _fleetName += "h";
+                        if (_currentKeyState.IsKeyDown(Keys.I) && _previousKeyState.IsKeyUp(Keys.I)) _fleetName += "i";
+                        if (_currentKeyState.IsKeyDown(Keys.J) && _previousKeyState.IsKeyUp(Keys.J)) _fleetName += "j";
+                        if (_currentKeyState.IsKeyDown(Keys.K) && _previousKeyState.IsKeyUp(Keys.K)) _fleetName += "k";
+                        if (_currentKeyState.IsKeyDown(Keys.L) && _previousKeyState.IsKeyUp(Keys.L)) _fleetName += "l";
+                        if (_currentKeyState.IsKeyDown(Keys.M) && _previousKeyState.IsKeyUp(Keys.M)) _fleetName += "m";
+                        if (_currentKeyState.IsKeyDown(Keys.N) && _previousKeyState.IsKeyUp(Keys.N)) _fleetName += "n";
+                        if (_currentKeyState.IsKeyDown(Keys.O) && _previousKeyState.IsKeyUp(Keys.O)) _fleetName += "o";
+                        if (_currentKeyState.IsKeyDown(Keys.P) && _previousKeyState.IsKeyUp(Keys.P)) _fleetName += "p";
+                        if (_currentKeyState.IsKeyDown(Keys.Q) && _previousKeyState.IsKeyUp(Keys.Q)) _fleetName += "q";
+                        if (_currentKeyState.IsKeyDown(Keys.R) && _previousKeyState.IsKeyUp(Keys.R)) _fleetName += "r";
+                        if (_currentKeyState.IsKeyDown(Keys.S) && _previousKeyState.IsKeyUp(Keys.S)) _fleetName += "s";
+                        if (_currentKeyState.IsKeyDown(Keys.T) && _previousKeyState.IsKeyUp(Keys.T)) _fleetName += "t";
+                        if (_currentKeyState.IsKeyDown(Keys.U) && _previousKeyState.IsKeyUp(Keys.U)) _fleetName += "u";
+                        if (_currentKeyState.IsKeyDown(Keys.V) && _previousKeyState.IsKeyUp(Keys.V)) _fleetName += "v";
+                        if (_currentKeyState.IsKeyDown(Keys.W) && _previousKeyState.IsKeyUp(Keys.W)) _fleetName += "w";
+                        if (_currentKeyState.IsKeyDown(Keys.X) && _previousKeyState.IsKeyUp(Keys.X)) _fleetName += "x";
+                        if (_currentKeyState.IsKeyDown(Keys.Y) && _previousKeyState.IsKeyUp(Keys.Y)) _fleetName += "y";
+                        if (_currentKeyState.IsKeyDown(Keys.Z) && _previousKeyState.IsKeyUp(Keys.Z)) _fleetName += "z";
+                    }
+                    if (_currentKeyState.IsKeyDown(Keys.Space) && _previousKeyState.IsKeyUp(Keys.Space)) _fleetName += "_";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad0) && _previousKeyState.IsKeyUp(Keys.NumPad0)) _fleetName += "0";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad1) && _previousKeyState.IsKeyUp(Keys.NumPad1)) _fleetName += "1";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad2) && _previousKeyState.IsKeyUp(Keys.NumPad2)) _fleetName += "2";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad3) && _previousKeyState.IsKeyUp(Keys.NumPad3)) _fleetName += "3";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad4) && _previousKeyState.IsKeyUp(Keys.NumPad4)) _fleetName += "4";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad5) && _previousKeyState.IsKeyUp(Keys.NumPad5)) _fleetName += "5";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad6) && _previousKeyState.IsKeyUp(Keys.NumPad6)) _fleetName += "6";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad7) && _previousKeyState.IsKeyUp(Keys.NumPad7)) _fleetName += "7";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad8) && _previousKeyState.IsKeyUp(Keys.NumPad8)) _fleetName += "8";
+                    if (_currentKeyState.IsKeyDown(Keys.NumPad9) && _previousKeyState.IsKeyUp(Keys.NumPad9)) _fleetName += "9";
                 }
-                else
-                {
-                    if (_currentKeyState.IsKeyDown(Keys.A) && _previousKeyState.IsKeyUp(Keys.A)) _fleetName += "a";
-                    if (_currentKeyState.IsKeyDown(Keys.B) && _previousKeyState.IsKeyUp(Keys.B)) _fleetName += "b";
-                    if (_currentKeyState.IsKeyDown(Keys.C) && _previousKeyState.IsKeyUp(Keys.C)) _fleetName += "c";
-                    if (_currentKeyState.IsKeyDown(Keys.D) && _previousKeyState.IsKeyUp(Keys.D)) _fleetName += "d";
-                    if (_currentKeyState.IsKeyDown(Keys.E) && _previousKeyState.IsKeyUp(Keys.E)) _fleetName += "e";
-                    if (_currentKeyState.IsKeyDown(Keys.F) && _previousKeyState.IsKeyUp(Keys.F)) _fleetName += "f";
-                    if (_currentKeyState.IsKeyDown(Keys.G) && _previousKeyState.IsKeyUp(Keys.G)) _fleetName += "g";
-                    if (_currentKeyState.IsKeyDown(Keys.H) && _previousKeyState.IsKeyUp(Keys.H)) _fleetName += "h";
-                    if (_currentKeyState.IsKeyDown(Keys.I) && _previousKeyState.IsKeyUp(Keys.I)) _fleetName += "i";
-                    if (_currentKeyState.IsKeyDown(Keys.J) && _previousKeyState.IsKeyUp(Keys.J)) _fleetName += "j";
-                    if (_currentKeyState.IsKeyDown(Keys.K) && _previousKeyState.IsKeyUp(Keys.K)) _fleetName += "k";
-                    if (_currentKeyState.IsKeyDown(Keys.L) && _previousKeyState.IsKeyUp(Keys.L)) _fleetName += "l";
-                    if (_currentKeyState.IsKeyDown(Keys.M) && _previousKeyState.IsKeyUp(Keys.M)) _fleetName += "m";
-                    if (_currentKeyState.IsKeyDown(Keys.N) && _previousKeyState.IsKeyUp(Keys.N)) _fleetName += "n";
-                    if (_currentKeyState.IsKeyDown(Keys.O) && _previousKeyState.IsKeyUp(Keys.O)) _fleetName += "o";
-                    if (_currentKeyState.IsKeyDown(Keys.P) && _previousKeyState.IsKeyUp(Keys.P)) _fleetName += "p";
-                    if (_currentKeyState.IsKeyDown(Keys.Q) && _previousKeyState.IsKeyUp(Keys.Q)) _fleetName += "q";
-                    if (_currentKeyState.IsKeyDown(Keys.R) && _previousKeyState.IsKeyUp(Keys.R)) _fleetName += "r";
-                    if (_currentKeyState.IsKeyDown(Keys.S) && _previousKeyState.IsKeyUp(Keys.S)) _fleetName += "s";
-                    if (_currentKeyState.IsKeyDown(Keys.T) && _previousKeyState.IsKeyUp(Keys.T)) _fleetName += "t";
-                    if (_currentKeyState.IsKeyDown(Keys.U) && _previousKeyState.IsKeyUp(Keys.U)) _fleetName += "u";
-                    if (_currentKeyState.IsKeyDown(Keys.V) && _previousKeyState.IsKeyUp(Keys.V)) _fleetName += "v";
-                    if (_currentKeyState.IsKeyDown(Keys.W) && _previousKeyState.IsKeyUp(Keys.W)) _fleetName += "w";
-                    if (_currentKeyState.IsKeyDown(Keys.X) && _previousKeyState.IsKeyUp(Keys.X)) _fleetName += "x";
-                    if (_currentKeyState.IsKeyDown(Keys.Y) && _previousKeyState.IsKeyUp(Keys.Y)) _fleetName += "y";
-                    if (_currentKeyState.IsKeyDown(Keys.Z) && _previousKeyState.IsKeyUp(Keys.Z)) _fleetName += "z";
-                }
-                if (_currentKeyState.IsKeyDown(Keys.Space) && _previousKeyState.IsKeyUp(Keys.Space)) _fleetName += "_";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad0) && _previousKeyState.IsKeyUp(Keys.NumPad0)) _fleetName += "0";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad1) && _previousKeyState.IsKeyUp(Keys.NumPad1)) _fleetName += "1";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad2) && _previousKeyState.IsKeyUp(Keys.NumPad2)) _fleetName += "2";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad3) && _previousKeyState.IsKeyUp(Keys.NumPad3)) _fleetName += "3";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad4) && _previousKeyState.IsKeyUp(Keys.NumPad4)) _fleetName += "4";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad5) && _previousKeyState.IsKeyUp(Keys.NumPad5)) _fleetName += "5";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad6) && _previousKeyState.IsKeyUp(Keys.NumPad6)) _fleetName += "6";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad7) && _previousKeyState.IsKeyUp(Keys.NumPad7)) _fleetName += "7";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad8) && _previousKeyState.IsKeyUp(Keys.NumPad8)) _fleetName += "8";
-                if (_currentKeyState.IsKeyDown(Keys.NumPad9) && _previousKeyState.IsKeyUp(Keys.NumPad9)) _fleetName += "9";
                 if (_currentKeyState.IsKeyDown(Keys.Back) && _previousKeyState.IsKeyUp(Keys.Back) && _fleetName.Length > 0) _fleetName = _fleetName.Remove(_fleetName.Length - 1);
             }
         }
