@@ -25,7 +25,6 @@ namespace CIS598_Senior_Project
 
             var screenFactory = new ScreenFactory();
             Services.AddService(typeof(IScreenFactory), screenFactory);
-
             _screenManager = new ScreenManager(this);
             Components.Add(_screenManager);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Xna.Framework;
 
 namespace CIS598_Senior_Project.Screens
 {
@@ -25,8 +26,12 @@ namespace CIS598_Senior_Project.Screens
         private static bool _frobnicate = true;
         private static int _elf = 23;
 
-        public OptionsMenuScreen() : base("Options")
+        private Game _game;
+
+        public OptionsMenuScreen(Game game) : base("Options")
         {
+            _game = game;
+
             _ungulateMenuEntry = new MenuEntry(string.Empty);
             _languageMenuEntry = new MenuEntry(string.Empty);
             _frobnicateMenuEntry = new MenuEntry(string.Empty);
@@ -40,7 +45,7 @@ namespace CIS598_Senior_Project.Screens
             _languageMenuEntry.Selected += LanguageMenuEntrySelected;
             _frobnicateMenuEntry.Selected += FrobnicateMenuEntrySelected;
             _elfMenuEntry.Selected += ElfMenuEntrySelected;
-            back.Selected += OnCancel;
+            back.Selected += OnBack;
 
             MenuEntries.Add(_ungulateMenuEntry);
             MenuEntries.Add(_languageMenuEntry);
@@ -84,6 +89,11 @@ namespace CIS598_Senior_Project.Screens
         {
             _elf++;
             SetMenuEntryText();
+        }
+
+        private void OnBack(object sender, PlayerIndexEventArgs e)
+        {
+            ScreenManager.AddScreen(new MainMenuScreen(_game), 0);
         }
 
     }

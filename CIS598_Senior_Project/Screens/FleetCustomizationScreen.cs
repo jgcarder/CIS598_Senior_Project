@@ -430,12 +430,12 @@ namespace CIS598_Senior_Project.Screens
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
             // while, giving you a chance to admire the beautiful loading screen.
-            Thread.Sleep(1000);
+            //Thread.Sleep(200);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
             // it should not try to catch up.
-            ScreenManager.Game.ResetElapsedTime();
+            //ScreenManager.Game.ResetElapsedTime();
         }
 
         /// <summary>
@@ -487,7 +487,7 @@ namespace CIS598_Senior_Project.Screens
                         if (_currentMouseState.X >= button.Position.X && _currentMouseState.X <= button.Position.X + button.Area.Width
                                             && _currentMouseState.Y >= button.Position.Y && _currentMouseState.Y <= button.Position.Y + button.Area.Height)
                         {
-                            if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                            if (_currentMouseState.LeftButton == ButtonState.Pressed)// && _previousMouseState.LeftButton == ButtonState.Released)
                             {
                                 button.Color = Color.DarkSlateGray;
                                 button.AnAction(button, new ButtonClickedEventArgs() { Id = button.Id });
@@ -814,9 +814,15 @@ namespace CIS598_Senior_Project.Screens
                                 }
                                 else
                                 {
-                                    FleetLoader.SaveFleet(_fleet);
-                                    ScreenManager.AddScreen(new BackgroundScreen(), null);
-                                    ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
+                                    {
+                                        Thread.Sleep(200);
+                                        ScreenManager.Game.ResetElapsedTime();
+
+                                        FleetLoader.SaveFleet(_fleet);
+                                        ScreenManager.AddScreen(new BackgroundScreen(), null);
+                                        ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                                    }
                                 }
                             }
                             else

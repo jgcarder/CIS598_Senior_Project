@@ -555,6 +555,18 @@
 /processorParam:TextureFormat=Color
 /build:ExpandedLaunchersCard.png
 
+#begin FleetCreator.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:FleetCreator.png
+
 #begin FleetEditBackground.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -730,6 +742,18 @@
 /processorParam:TextureFormat=Color
 /build:H9TurbolasersCard.png
 
+#begin HotseatDuel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HotseatDuel.png
+
 #begin ImperialFleet.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -873,6 +897,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:LoadBackground.jpg
+
+#begin MainMenuLabel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MainMenuLabel.png
 
 #begin ManageFleets.png
 /importer:TextureImporter
@@ -1025,6 +1061,18 @@
 /processorParam:TextureFormat=Color
 /build:Officers.png
 
+#begin Options.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Options.png
+
 #begin Ordinance.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1061,6 +1109,42 @@
 /processorParam:TextureFormat=Color
 /build:ParagonCard.png
 
+#begin PlayCampaign.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayCampaign.png
+
+#begin PlayGame.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayGame.png
+
+#begin PlayMenuLabel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayMenuLabel.png
+
 #begin PointDefenseRerouteCard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1072,6 +1156,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:PointDefenseRerouteCard.png
+
+#begin QuitGame.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:QuitGame.png
 
 #begin QuitWithoutSaving.png
 /importer:TextureImporter

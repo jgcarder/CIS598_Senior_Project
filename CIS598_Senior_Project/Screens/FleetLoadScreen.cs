@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -139,8 +140,6 @@ namespace CIS598_Senior_Project.Screens
             {
                 button.AnAction += ButtonCatcher;
             }
-
-
         }
 
         public override void Deactivate()
@@ -196,7 +195,7 @@ namespace CIS598_Senior_Project.Screens
                         if (_currentMouseState.X >= button.Position.X && _currentMouseState.X <= button.Position.X + button.Area.Width
                                             && _currentMouseState.Y >= button.Position.Y && _currentMouseState.Y <= button.Position.Y + button.Area.Height)
                         {
-                            if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                            if (_currentMouseState.LeftButton == ButtonState.Pressed)// && _previousMouseState.LeftButton == ButtonState.Released)
                             {
                                 button.Color = Color.DarkSlateGray;
                                 button.AnAction(button, new ButtonClickedEventArgs() { Id = button.Id });
@@ -267,7 +266,10 @@ namespace CIS598_Senior_Project.Screens
 
                     if(i >= 5)
                     {
-                        string s = _fleetsList[i - 5].Split(',')[0];
+                        string s;
+                        if (_fleetsList.Count > 0) s = _fleetsList[i - 5].Split(',')[0];
+                        else s = "";
+                        
                         Vector2 v = new Vector2(_buttons[i].Position.X + _widthIncrement * 11, _buttons[i].Position.Y);
                         spriteBatch.DrawString(_descriptor, s, v, _buttons[i].Color);
                     }
@@ -393,8 +395,14 @@ namespace CIS598_Senior_Project.Screens
             switch(button.Id)
             {
                 case 0: //back button
-                    ScreenManager.AddScreen(new BackgroundScreen(), null);
-                    ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                    if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        Thread.Sleep(200);
+                        ScreenManager.Game.ResetElapsedTime();
+
+                        ScreenManager.AddScreen(new BackgroundScreen(), null);
+                        ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                    }
                     break;
                 case 1: //edit fleet
                     _isEdit = true;
@@ -418,13 +426,23 @@ namespace CIS598_Senior_Project.Screens
                     } 
                     else if(_isEdit)
                     {
-                        Fleet fleet = FleetLoader.LoadFleet(_selectedFleet.Split(',')[0], _content);
+                        if (_currentMouseState.LeftButton == ButtonState.Pressed)// && _previousMouseState.LeftButton == ButtonState.Pressed)
+                        {
+                            Fleet fleet = FleetLoader.LoadFleet(_selectedFleet.Split(',')[0], _content);
 
-                        bool result = FleetLoader.DeleteFleet(_selectedFleet);
-                        _selectedFleet = null;
+                            bool result = FleetLoader.DeleteFleet(_selectedFleet);
 
-                        ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new FleetCustomizationScreen(_game, fleet), null);
+                            _buttons[_fleetsList.IndexOf(_selectedFleet)].IsActive = false;
+                            _fleetsList.Remove(_selectedFleet);
+
+                            _selectedFleet = null;
+
+                            Thread.Sleep(200);
+                            ScreenManager.Game.ResetElapsedTime();
+
+                            ScreenManager.AddScreen(new BackgroundScreen(), null);
+                            ScreenManager.AddScreen(new FleetCustomizationScreen(_game, fleet), null);
+                        }
                     }
                     _buttons[3].IsActive = false;
                     _buttons[4].IsActive = false;
