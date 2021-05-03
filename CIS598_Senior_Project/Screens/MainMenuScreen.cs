@@ -178,7 +178,7 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 72), Color.AntiqueWhite);
+            spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34.2f, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 72), Color.White);
 
             for (int i = 0; i < _buttons.Count; i++)
             {
@@ -235,11 +235,11 @@ namespace CIS598_Senior_Project.Screens
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
 
-                        var confirmExitMessageBox = new MessageBoxScreen("Are you sure you want to exit?");
+                        ScreenManager.Game.Exit();
 
-                        confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
-
-                        ScreenManager.AddScreen(confirmExitMessageBox, 0);
+                        //var confirmExitMessageBox = new MessageBoxScreen("Are you sure you want to exit?");
+                        //confirmExitMessageBox.Accepted += ConfirmExitMessageBoxAccepted;
+                        //ScreenManager.AddScreen(confirmExitMessageBox, 0);
                     }
                     break;
             }

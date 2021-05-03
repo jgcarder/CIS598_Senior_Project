@@ -181,7 +181,7 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.AntiqueWhite);
+            spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.White);
 
             for (int i = 0; i < _buttons.Count; i++)
             {

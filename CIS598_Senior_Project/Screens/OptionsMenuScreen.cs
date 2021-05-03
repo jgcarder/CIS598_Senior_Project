@@ -1,94 +1,311 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
+using CIS598_Senior_Project.MenuObjects;
+using CIS598_Senior_Project.StateManagement;
 
 namespace CIS598_Senior_Project.Screens
 {
-    public class OptionsMenuScreen : MenuScreen
+    public class OptionsMenuScreen : GameScreen
     {
-
-        private enum Ungulate
-        {
-            BactrianCamel,
-            Dromedary,
-            Llama,
-        }
-
-        private readonly MenuEntry _ungulateMenuEntry;
-        private readonly MenuEntry _languageMenuEntry;
-        private readonly MenuEntry _frobnicateMenuEntry;
-        private readonly MenuEntry _elfMenuEntry;
-
-        private static Ungulate _currentUngulate = Ungulate.Dromedary;
-        private static readonly string[] Languages = { "C#", "French", "Deoxyribonucleic acid" };
-        private static int _currentLanguage;
-        private static bool _frobnicate = true;
-        private static int _elf = 23;
-
         private Game _game;
 
-        public OptionsMenuScreen(Game game) : base("Options")
+        private List<CustButton> _buttons;
+
+        private ContentManager _content;
+
+        private Texture2D _background;
+        private Texture2D _texture;
+        private Texture2D _label;
+
+        private SpriteFont _descriptor;
+
+        private int _widthIncrement;
+        private int _heightIncrement;
+
+        private double _master;
+        private double _music;
+        private double _sfx;
+
+        private string _masterDisplay;
+        private string _musicDisplay;
+        private string _sfxDisplay;
+
+        private MouseState _currentMouseState;
+        private MouseState _previousMouseState;
+
+        private float _pauseAlpha;
+        private readonly InputAction _pauseAction;
+
+        public OptionsMenuScreen(Game game)
         {
             _game = game;
+            _buttons = new List<CustButton>();
 
-            _ungulateMenuEntry = new MenuEntry(string.Empty);
-            _languageMenuEntry = new MenuEntry(string.Empty);
-            _frobnicateMenuEntry = new MenuEntry(string.Empty);
-            _elfMenuEntry = new MenuEntry(string.Empty);
+            _masterDisplay = "";
+            _musicDisplay = "";
+            _sfxDisplay = "";
 
-            SetMenuEntryText();
+            _music = 0.2;
+            _master = 0.5;
+            _sfx = 0.2;
 
-            var back = new MenuEntry("Back");
+            _widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
+            _heightIncrement = _game.GraphicsDevice.Viewport.Height / 100;
 
-            _ungulateMenuEntry.Selected += UngulateMenuEntrySelected;
-            _languageMenuEntry.Selected += LanguageMenuEntrySelected;
-            _frobnicateMenuEntry.Selected += FrobnicateMenuEntrySelected;
-            _elfMenuEntry.Selected += ElfMenuEntrySelected;
-            back.Selected += OnBack;
+            _buttons.Add(new CustButton(0, new Rectangle(_widthIncrement, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 16, 10 * _widthIncrement, 15 * _heightIncrement), true)); //back button
+            _buttons.Add(new CustButton(1, new Rectangle(_widthIncrement * 25, 15 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));                                    //decrease master volume
+            _buttons.Add(new CustButton(2, new Rectangle(_widthIncrement * 65, 15 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));                                    //increase master volume
 
-            MenuEntries.Add(_ungulateMenuEntry);
-            MenuEntries.Add(_languageMenuEntry);
-            MenuEntries.Add(_frobnicateMenuEntry);
-            MenuEntries.Add(_elfMenuEntry);
-            MenuEntries.Add(back);
+            _buttons.Add(new CustButton(3, new Rectangle(_widthIncrement * 25, 35 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));                                    //decrease music volume
+            _buttons.Add(new CustButton(4, new Rectangle(_widthIncrement * 65, 35 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));                                    //increase music volume
+
+            _buttons.Add(new CustButton(5, new Rectangle(_widthIncrement * 25, 55 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));                                    //decrease sfx volume
+            _buttons.Add(new CustButton(6, new Rectangle(_widthIncrement * 65, 55 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));                                    //increase sfx volume
+
+            _buttons.Add(new CustButton(7, new Rectangle(_widthIncrement, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 34, _widthIncrement * 10, _heightIncrement * 15), true));             //reset to defaults
         }
 
-        // Fills in the latest values for the options screen menu text.
-        private void SetMenuEntryText()
+        /// <summary>
+        /// For when the screen activates
+        /// </summary>
+        public override void Activate()
         {
-            _ungulateMenuEntry.Text = $"Preferred ungulate: {_currentUngulate}";
-            _languageMenuEntry.Text = $"Language: {Languages[_currentLanguage]}";
-            _frobnicateMenuEntry.Text = $"Frobnicate: {(_frobnicate ? "on" : "off")}";
-            _elfMenuEntry.Text = $"elf: {_elf.ToString()}";
+            if (_content == null)
+                _content = new ContentManager(ScreenManager.Game.Services, "Content");
+
+            _descriptor = _content.Load<SpriteFont>("galbasic");
+            _texture = _content.Load<Texture2D>("MetalBackground");
+
+            _buttons[0].Texture = _content.Load<Texture2D>("Back");
+            _buttons[1].Texture = _content.Load<Texture2D>("Decrease");
+            _buttons[2].Texture = _content.Load<Texture2D>("Increase");
+            _buttons[3].Texture = _content.Load<Texture2D>("Decrease");
+            _buttons[4].Texture = _content.Load<Texture2D>("Increase");
+            _buttons[5].Texture = _content.Load<Texture2D>("Decrease");
+            _buttons[6].Texture = _content.Load<Texture2D>("Increase");
+            _buttons[7].Texture = _content.Load<Texture2D>("Defaults");
+
+            _label = _content.Load<Texture2D>("OptionsMenuLabel");
+
+            foreach (var button in _buttons)
+            {
+                button.AnAction += ButtonCatcher;
+            }
         }
 
-        private void UngulateMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        /// <summary>
+        /// For when the screen deactivates
+        /// </summary>
+        public override void Deactivate()
         {
-            _currentUngulate++;
-
-            if (_currentUngulate > Ungulate.Llama)
-                _currentUngulate = 0;
-
-            SetMenuEntryText();
+            base.Deactivate();
         }
 
-        private void LanguageMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        /// <summary>
+        /// To unload the content
+        /// </summary>
+        public override void Unload()
         {
-            _currentLanguage = (_currentLanguage + 1) % Languages.Length;
-            SetMenuEntryText();
+            base.Unload();
         }
 
-        private void FrobnicateMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        /// <summary>
+        /// Updates the screen
+        /// </summary>
+        /// <param name="gameTime">The games time</param>
+        /// <param name="otherScreenHasFocus">if another screen is the focus of the user</param>
+        /// <param name="coveredByOtherScreen">If another screen is on top of this one.</param>
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
-            _frobnicate = !_frobnicate;
-            SetMenuEntryText();
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+
+            _previousMouseState = _currentMouseState;
+            _currentMouseState = Mouse.GetState();
+
+            // Gradually fade in or out depending on whether we are covered by the pause screen.
+            if (coveredByOtherScreen)
+                _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
+            else
+                _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
+
+            if (IsActive)
+            {
+                foreach (var button in _buttons)
+                {
+                    if (button.IsActive)
+                    {
+                        if (_currentMouseState.X >= button.Position.X && _currentMouseState.X <= button.Position.X + button.Area.Width
+                                            && _currentMouseState.Y >= button.Position.Y && _currentMouseState.Y <= button.Position.Y + button.Area.Height)
+                        {
+                            if (_currentMouseState.LeftButton == ButtonState.Pressed)// && _previousMouseState.LeftButton == ButtonState.Released)
+                            {
+                                button.Color = Color.DarkSlateGray;
+                                button.AnAction(button, new ButtonClickedEventArgs() { Id = button.Id });
+                            }
+
+                            if (_currentMouseState.LeftButton == ButtonState.Pressed)
+                            {
+                                button.Color = Color.DarkSlateGray;
+                            }
+                            else
+                            {
+                                button.Color = Color.White;
+                            }
+                        }
+                        else
+                        {
+                            button.Color = Color.White;
+                        }
+                    }
+                }
+            }
+
+            SoundEffect.MasterVolume = (float)_music * (float)_master;
+            MediaPlayer.Volume = (float)_sfx * (float)_master;
+
+            _masterDisplay = "";
+            _musicDisplay = "";
+            _sfxDisplay = "";
+            for (double i = 0; i < (_master * 100); i += 4.348)
+            {
+                _masterDisplay += "=";
+            }
+            for (double i = 0; i < (_sfx * 100); i += 4.348)
+            {
+                _sfxDisplay += "=";
+            }
+            for (double i = 0; i < (_music * 100); i += 4.348)
+            {
+                _musicDisplay += "=";
+            }
         }
 
-        private void ElfMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        /// <summary>
+        /// Handles some input from the user.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        /// <param name="input"></param>
+        public override void HandleInput(GameTime gameTime, InputState input)
         {
-            _elf++;
-            SetMenuEntryText();
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            // Look up inputs for the active player profile.
+            int playerIndex = 0;//(int)ControllingPlayer.Value;
+
+            var keyboardState = input.CurrentKeyboardStates[playerIndex];
+            var gamePadState = input.CurrentGamePadStates[playerIndex];
+
+            // The game pauses either if the user presses the pause button, or if
+            // they unplug the active gamepad. This requires us to keep track of
+            // whether a gamepad was ever plugged in, because we don't want to pause
+            // on PC if they are playing with a keyboard and have no gamepad at all!
+            bool gamePadDisconnected = !gamePadState.IsConnected && input.GamePadWasConnected[playerIndex];
+        }
+
+        /// <summary>
+        /// Draws the screen's assets
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
+        public override void Draw(GameTime gameTime)
+        {
+            // This game has a blue background. Why? Because!
+            ScreenManager.GraphicsDevice.Clear(ClearOptions.Target, Color.Black, 0, 0);
+
+            // Our player and enemy are both actually just text strings.
+            var spriteBatch = ScreenManager.SpriteBatch;
+
+            spriteBatch.Begin();
+
+            spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _heightIncrement * -7), Color.White);
+
+            spriteBatch.DrawString(_descriptor, "Master Volume", new Vector2(_widthIncrement * 36, 18 * _heightIncrement), Color.White);
+            spriteBatch.DrawString(_descriptor, _masterDisplay, new Vector2(_widthIncrement * 36, 23 * _heightIncrement), Color.White);
+
+            spriteBatch.DrawString(_descriptor, "Music Volume", new Vector2(_widthIncrement * 36, 38 * _heightIncrement), Color.White);
+            spriteBatch.DrawString(_descriptor, _musicDisplay, new Vector2(_widthIncrement * 36, 43 * _heightIncrement), Color.White);
+
+            spriteBatch.DrawString(_descriptor, "Sound Effects Volume", new Vector2(_widthIncrement * 36, 58 * _heightIncrement), Color.White);
+            spriteBatch.DrawString(_descriptor, _sfxDisplay, new Vector2(_widthIncrement * 36, 63 * _heightIncrement), Color.White);
+
+            for (int i = 0; i < _buttons.Count; i++)
+            {
+                if (_buttons[i].IsActive)
+                {
+                    if (_buttons[i].Texture != null)
+                    {
+                        spriteBatch.Draw(_buttons[i].Texture, _buttons[i].Area, _buttons[i].Color);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(_texture, _buttons[i].Area, _buttons[i].Color);
+                    }
+                }
+            }
+
+            spriteBatch.End();
+        }
+
+        /// <summary>
+        /// The even handler for the buttons
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ButtonCatcher(object sender, ButtonClickedEventArgs e)
+        {
+            CustButton button = (CustButton)sender;
+
+            switch (button.Id)
+            {
+                case 0: //back button
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        Thread.Sleep(200);
+                        ScreenManager.Game.ResetElapsedTime();
+
+                        ScreenManager.AddScreen(new BackgroundScreen(), null);
+                        ScreenManager.AddScreen(new MainMenuScreen(_game), null);
+                    }
+                    break;
+                case 1: //decrease master
+
+                    if (_master >= 0.02) _master -= 0.01;
+                    else _master = 0;
+                    break;
+                case 2: //increase master
+                    if (_master <= 0.98) _master += 0.01;
+                    else _master = 1;
+                    break;
+                case 3: //decrease music
+                    if (_music >= 0.02) _music -= 0.01;
+                    else _music = 0;
+                    break;
+                case 4: //increase music
+                    if (_music <= 0.98) _music += 0.01;
+                    else _music = 1;
+                    break;
+                case 5: //decrease sfx
+                    if (_sfx >= 0.02) _sfx -= 0.01;
+                    else _sfx = 0;
+                    break;
+                case 6: //increase sfx
+                    if (_sfx <= 0.98) _sfx += 0.01;
+                    else _sfx = 1;
+                    break;
+                case 7:
+                    _master = 0.5;
+                    _music = 0.2;
+                    _sfx = 0.2;
+                    break;
+            }
         }
 
         private void OnBack(object sender, PlayerIndexEventArgs e)

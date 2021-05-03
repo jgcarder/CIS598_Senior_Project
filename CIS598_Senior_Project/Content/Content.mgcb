@@ -368,6 +368,18 @@
 /processorParam:TextureFormat=Color
 /build:Decrease.png
 
+#begin Defaults.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Defaults.png
+
 #begin DefenseLiaisonCard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1072,6 +1084,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Options.png
+
+#begin OptionsMenuLabel.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:OptionsMenuLabel.png
 
 #begin Ordinance.png
 /importer:TextureImporter
