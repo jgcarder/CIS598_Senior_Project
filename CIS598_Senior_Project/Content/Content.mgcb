@@ -85,6 +85,18 @@
 /processorParam:TextureFormat=Color
 /build:AdvancedProjectorsCard.png
 
+#begin ArmadaLogo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ArmadaLogo.png
+
 #begin AssaultA.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -271,6 +283,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Cancel.png
+
+#begin CantinaBand.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:CantinaBand.mp3
 
 #begin ClearFleet.png
 /importer:TextureImporter
@@ -627,6 +645,18 @@
 /processorParam:TextureFormat=Color
 /build:FleetMenuBackground.jpg
 
+#begin FleetsMenuBackground.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:FleetsMenuBackground.jpg
+
 #begin FleetsMenuLabel.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -934,6 +964,18 @@
 /processorParam:TextureFormat=Color
 /build:LoadBackground.jpg
 
+#begin MainMenuBackground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MainMenuBackground.png
+
 #begin MainMenuLabel.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1073,6 +1115,18 @@
 /processorParam:TextureFormat=Color
 /build:NewFleet.png
 
+#begin NextSong.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NextSong.png
+
 #begin OffensiveRetro.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1108,6 +1162,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Options.png
+
+#begin OptionsMenuBackground.jpeg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:OptionsMenuBackground.jpeg
 
 #begin OptionsMenuLabel.png
 /importer:TextureImporter
@@ -1181,6 +1247,18 @@
 /processorParam:TextureFormat=Color
 /build:PlayGame.png
 
+#begin PlayMenuBackground.jpeg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PlayMenuBackground.jpeg
+
 #begin PlayMenuLabel.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1204,6 +1282,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:PointDefenseRerouteCard.png
+
+#begin PreviousSong.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PreviousSong.png
 
 #begin QuitGame.png
 /importer:TextureImporter
@@ -1336,6 +1426,24 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SetName.png
+
+#begin StarWarsCloneTheme.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:StarWarsCloneTheme.mp3
+
+#begin StarWarsMainTheme.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:StarWarsMainTheme.mp3
+
+#begin StarWarsTheImperialMarch.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:StarWarsTheImperialMarch.mp3
 
 #begin StopViewing.png
 /importer:TextureImporter

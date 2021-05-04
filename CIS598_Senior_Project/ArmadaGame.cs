@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using CIS598_Senior_Project.Screens;
 using CIS598_Senior_Project.StateManagement;
 
@@ -15,6 +16,11 @@ namespace CIS598_Senior_Project
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private readonly ScreenManager _screenManager;
+
+        private Song _mainTheme;
+        private Song _imperialMarch;
+        private Song _cloneWars;
+        private Song _cantinaBand;
 
         public ArmadaGame()
         {
@@ -32,13 +38,21 @@ namespace CIS598_Senior_Project
             _screenManager = new ScreenManager(this);
             Components.Add(_screenManager);
 
+            _mainTheme = Content.Load<Song>("StarWarsMainTheme");
+            _imperialMarch = Content.Load<Song>("StarWarsTheImperialMarch");
+            _cloneWars = Content.Load<Song>("StarWarsCloneTheme");
+            _cantinaBand = Content.Load<Song>("CantinaBand");
+
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(_mainTheme);
+
             AddInitialScreens();
         }
 
         private void AddInitialScreens()
         {
             _screenManager.AddScreen(new BackgroundScreen(), null);
-            _screenManager.AddScreen(new MainMenuScreen(this, new List<float>() { 0.2f, 0.2f, 0.5f}), null);
+            _screenManager.AddScreen(new MainMenuScreen(this, new List<float>() { 0.2f, 0.2f, 0.5f, 0}), null);
         }
 
         protected override void Initialize()

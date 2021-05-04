@@ -22,6 +22,7 @@ namespace CIS598_Senior_Project.Screens
         private ContentManager _content;
 
         private Texture2D _background;
+        private Texture2D _logo;
         private Texture2D _texture;
         private Texture2D _label;
 
@@ -87,6 +88,9 @@ namespace CIS598_Senior_Project.Screens
             _buttons[2].Texture = _content.Load<Texture2D>("QuitGame");
 
             _label = _content.Load<Texture2D>("MainMenuLabel");
+
+            _background = _content.Load<Texture2D>("MainMenuBackground");
+            _logo = _content.Load<Texture2D>("ArmadaLogo");
 
             _button1 = _content.Load<SoundEffect>("Button1");
             _button2 = _content.Load<SoundEffect>("Button2");
@@ -203,6 +207,9 @@ namespace CIS598_Senior_Project.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
+            spriteBatch.Draw(_background, Vector2.Zero, Color.White);
+
+            spriteBatch.Draw(_logo, new Vector2(_widthIncrement * 28, 2 * _heightIncrement), Color.White);
 
             spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34.2f, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 72), Color.White);
 

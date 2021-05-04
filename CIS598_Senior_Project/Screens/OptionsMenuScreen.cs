@@ -41,7 +41,19 @@ namespace CIS598_Senior_Project.Screens
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
 
+        private SoundEffect _button1;
+        private SoundEffect _button2;
+        private SoundEffect _button3;
+        private SoundEffect _button4;
+
+        private Song _mainTheme;
+        private Song _imperialMarch;
+        private Song _cloneWars;
+        private Song _cantinaBand;
+
         private List<float> _vol;
+
+        List<Song> _songs;
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
@@ -57,9 +69,14 @@ namespace CIS598_Senior_Project.Screens
             _musicDisplay = "";
             _sfxDisplay = "";
 
+            _sfx = (double)_vol[0];
             _music = (double)_vol[1];
             _master = (double)_vol[2];
-            _sfx = (double)_vol[0];
+
+            SoundEffect.MasterVolume = (float)_sfx * (float)_master;
+            MediaPlayer.Volume = (float)_music * (float)_master;
+
+            _songs = new List<Song>();
 
             _widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
             _heightIncrement = _game.GraphicsDevice.Viewport.Height / 100;
@@ -75,6 +92,9 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(6, new Rectangle(_widthIncrement * 65, 55 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));                                    //increase sfx volume
 
             _buttons.Add(new CustButton(7, new Rectangle(_widthIncrement, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 34, _widthIncrement * 10, _heightIncrement * 15), true));             //reset to defaults
+
+            _buttons.Add(new CustButton(8, new Rectangle(_widthIncrement * 25, 75 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));
+            _buttons.Add(new CustButton(9, new Rectangle(_widthIncrement * 65, 75 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));
         }
 
         /// <summary>
@@ -96,8 +116,26 @@ namespace CIS598_Senior_Project.Screens
             _buttons[5].Texture = _content.Load<Texture2D>("Decrease");
             _buttons[6].Texture = _content.Load<Texture2D>("Increase");
             _buttons[7].Texture = _content.Load<Texture2D>("Defaults");
+            _buttons[8].Texture = _content.Load<Texture2D>("PreviousSong");
+            _buttons[9].Texture = _content.Load<Texture2D>("NextSong");
 
+            _button1 = _content.Load<SoundEffect>("Button1");
+            _button2 = _content.Load<SoundEffect>("Button2");
+            _button3 = _content.Load<SoundEffect>("Button3");
+            _button4 = _content.Load<SoundEffect>("Button4");
+
+            _mainTheme = _content.Load<Song>("StarWarsMainTheme");
+            _imperialMarch = _content.Load<Song>("StarWarsTheImperialMarch");
+            _cloneWars = _content.Load<Song>("StarWarsCloneTheme");
+            _cantinaBand = _content.Load<Song>("CantinaBand");
+
+            _songs.Add(_mainTheme);
+            _songs.Add(_imperialMarch);
+            _songs.Add(_cloneWars);
+            _songs.Add(_cantinaBand);
+            
             _label = _content.Load<Texture2D>("OptionsMenuLabel");
+            _background = _content.Load<Texture2D>("OptionsMenuBackground");
 
             foreach (var button in _buttons)
             {
@@ -134,15 +172,19 @@ namespace CIS598_Senior_Project.Screens
             _previousMouseState = _currentMouseState;
             _currentMouseState = Mouse.GetState();
 
+            //_vol[0] = (float)_sfx;
+            //_vol[1] = (float)_music;
+            //_vol[2] = (float)_master;
+
+            _music = (double)_vol[1];
+            _master = (double)_vol[2];
+            _sfx = (double)_vol[0];
+
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
                 _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
             else
                 _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
-
-            //_vol[0] = (float)_sfx;
-            //_vol[1] = (float)_music;
-            //_vol[2] = (float)_master;
 
             if (IsActive)
             {
@@ -176,8 +218,8 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
 
-            SoundEffect.MasterVolume = (float)_music * (float)_master;
-            MediaPlayer.Volume = (float)_sfx * (float)_master;
+            SoundEffect.MasterVolume = (float)_sfx * (float)_master;
+            MediaPlayer.Volume = (float)_music * (float)_master;
 
             _masterDisplay = "";
             _musicDisplay = "";
@@ -232,6 +274,7 @@ namespace CIS598_Senior_Project.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
+            spriteBatch.Draw(_background, Vector2.Zero, Color.White);
 
             spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _heightIncrement * -7), Color.White);
 
@@ -243,6 +286,8 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.DrawString(_descriptor, "Sound Effects Volume", new Vector2(_widthIncrement * 36, 58 * _heightIncrement), Color.White);
             spriteBatch.DrawString(_descriptor, _sfxDisplay, new Vector2(_widthIncrement * 36, 63 * _heightIncrement), Color.White);
+
+            spriteBatch.DrawString(_descriptor, _songs[(int)_vol[3]].Name, new Vector2(_widthIncrement * 36, 80 * _heightIncrement), Color.White);
 
             for (int i = 0; i < _buttons.Count; i++)
             {
@@ -274,6 +319,7 @@ namespace CIS598_Senior_Project.Screens
             switch (button.Id)
             {
                 case 0: //back button
+                    _button4.Play();
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
                         Thread.Sleep(200);
@@ -286,6 +332,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 1: //decrease master
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     if (_master >= 0.02)
                     {
                         _master -= 0.01;
@@ -298,6 +345,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 2: //increase master
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     if (_master <= 0.98)
                     {
                         _master += 0.01;
@@ -310,6 +358,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 3: //decrease music
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     if (_music >= 0.02)
                     {
                         _music -= 0.01;
@@ -322,6 +371,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 4: //increase music
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     if (_music <= 0.98)
                     {
                         _music += 0.01;
@@ -334,6 +384,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 5: //decrease sfx
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     if (_sfx >= 0.02)
                     {
                         _sfx-= 0.01;
@@ -346,6 +397,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 6: //increase sfx
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     if (_sfx <= 0.98)
                     {
                         _sfx += 0.01;
@@ -358,12 +410,42 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 7:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button3.Play();
                     _master = 0.5;
                     _music = 0.2;
                     _sfx = 0.2;
                     _vol[2] = (float)_master;
                     _vol[1] = (float)_music;
                     _vol[0] = (float)_sfx;
+                    break;
+                case 8:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        MediaPlayer.Stop();
+                        _vol[3]--;
+                        if (_vol[3] < 0)
+                        {
+                            _vol[3] = 3;
+                        }
+                        MediaPlayer.Play(_songs[(int)_vol[3]]);
+                        MediaPlayer.IsRepeating = true;
+                    }
+                    break;
+                case 9:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button1.Play();
+
+                        MediaPlayer.Stop();
+                        _vol[3]++;
+                        if (_vol[3] > 3)
+                        {
+                            _vol[3] = 0;
+                        }
+                        MediaPlayer.Play(_songs[(int)_vol[3]]);
+                        MediaPlayer.IsRepeating = true;
+                    }
                     break;
             }
         }

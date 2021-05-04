@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using CIS598_Senior_Project.FleetObjects;
 using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
@@ -70,6 +71,11 @@ namespace CIS598_Senior_Project.Screens
         private MouseState _currentMouseState;
         private KeyboardState _previousKeyState;
         private KeyboardState _currentKeyState;
+
+        private SoundEffect _button1;
+        private SoundEffect _button2;
+        private SoundEffect _button3;
+        private SoundEffect _button4;
 
         private List<CustButton> _buttons;
 
@@ -423,6 +429,11 @@ namespace CIS598_Senior_Project.Screens
             _buttons[57].Texture = _content.Load<Texture2D>("StopViewing");
 
             setFleetButtons();
+
+            _button1 = _content.Load<SoundEffect>("Button1");
+            _button2 = _content.Load<SoundEffect>("Button2");
+            _button3 = _content.Load<SoundEffect>("Button3");
+            _button4 = _content.Load<SoundEffect>("Button4");
 
             foreach (var button in _buttons)
             {
@@ -801,7 +812,7 @@ namespace CIS598_Senior_Project.Screens
                 case 0: //save and exit
                     //Save fleet to .txt file
                     //FleetLoader.SaveFleet(_fleet);
-
+                    _button4.Play();
                     if(_fleet.Name != null)
                     {
                         if(!_fleet.Name.Equals(""))
@@ -844,6 +855,7 @@ namespace CIS598_Senior_Project.Screens
                     
                     break;
                 case 1: //clear fleet
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button3.Play();
                     buttonSweeper(5);
                     _fleet = new Fleet("");
                     _shipID = 0;
@@ -862,6 +874,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[57].IsActive = false;
                     break;
                 case 2: //select rebel fleet
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button3.Play();
                     buttonSweeper(5);
                     _fleet.IsRebelFleet = true;
                     _selectedSquadron = null;
@@ -874,6 +887,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[57].IsActive = false;
                     break;
                 case 3: //select imp fleet
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button3.Play();
                     buttonSweeper(5);
                     _fleet.IsRebelFleet = false;
                     _selectedSquadron = null;
@@ -886,10 +900,18 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[57].IsActive = false;
                     break;
                 case 4: //Quit without saving
-                    ScreenManager.AddScreen(new BackgroundScreen(), null);
-                    ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game, _vol), null);
+                    _button4.Play();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        Thread.Sleep(200);
+                        ScreenManager.Game.ResetElapsedTime();
+
+                        ScreenManager.AddScreen(new BackgroundScreen(), null);
+                        ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game, _vol), null);
+                    }
                     break;
                 case 5: //rebel ships
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(7);
                     _selectedSquadron = null;
                     _selectedUpgrade = null;
@@ -899,6 +921,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[11].IsActive = true;
                     break;
                 case 6: //rebel squads
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(7);
                     _selectedSquadron = null;
                     _selectedUpgrade = null;
@@ -909,6 +932,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[17].IsActive = true;
                     break;
                 case 7: //imp ships
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(9);
                     _selectedSquadron = null;
                     _selectedUpgrade = null;
@@ -917,6 +941,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[13].IsActive = true;
                     break;
                 case 8: //imp squads
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(9);
                     _selectedSquadron = null;
                     _selectedUpgrade = null;
@@ -927,6 +952,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[21].IsActive = true;
                     break;
                 case 9: //select Assault
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(14);
                     _buttons[22].IsActive = true;
                     _buttons[23].IsActive = true;
@@ -934,6 +960,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedShip = new AssaultFrigateMarkII(_shipID, _content);
                     break;
                 case 10: //select cr90
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(14);
                     _buttons[24].IsActive = true;
                     _buttons[25].IsActive = true;
@@ -941,6 +968,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedShip = new CR90Corvette(_shipID, _content);
                     break;
                 case 11: //select nebulon
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(14);
                     _buttons[26].IsActive = true;
                     _buttons[27].IsActive = true;
@@ -948,6 +976,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedShip = new NebulonBFrigate(_shipID, _content);
                     break;
                 case 12: //select gladiator
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(14);
                     _buttons[28].IsActive = true;
                     _buttons[29].IsActive = true;
@@ -955,6 +984,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedShip = new GladiatorStarDestroyer(_shipID, _content);
                     break;
                 case 13: //select victory
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     buttonSweeper(14);
                     _buttons[30].IsActive = true;
                     _buttons[31].IsActive = true;
@@ -962,6 +992,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedShip = new VictoryStarDestroyer(_shipID, _content);
                     break;
                 case 14: //a-wing
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedSquadron = new AWingSquadron(_squadronID, _content);
                     _numSquads = 0;
                     buttonSweeper(22);
@@ -970,6 +1001,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[53].IsActive = true;
                     break;
                 case 15: //b-wing
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedSquadron = new BWingSquadron(_squadronID, _content);
                     _numSquads = 0;
                     buttonSweeper(22);
@@ -978,6 +1010,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[53].IsActive = true;
                     break;
                 case 16: //x-wing
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedSquadron = new XWingSquadron(_squadronID, _content);
                     _numSquads = 0;
                     buttonSweeper(22);
@@ -986,6 +1019,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[53].IsActive = true;
                     break;
                 case 17: //y-wing
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedSquadron = new YWingSquadron(_squadronID, _content);
                     _numSquads = 0;
                     buttonSweeper(22);
@@ -994,6 +1028,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[53].IsActive = true;
                     break;
                 case 18: //tie fighter
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedSquadron = new TIEFighterSquadron(_squadronID, _content);
                     _numSquads = 0;
                     buttonSweeper(22);
@@ -1002,6 +1037,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[53].IsActive = true;
                     break;
                 case 19: //tie advanced
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedSquadron = new TIEAdvancedSquadron(_squadronID, _content);
                     _numSquads = 0;
                     buttonSweeper(22);
@@ -1010,6 +1046,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[53].IsActive = true;
                     break;
                 case 20: //tie interceptor
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedSquadron = new TIEInterceptorSquadron(_squadronID, _content);
                     _numSquads = 0;
                     buttonSweeper(22);
@@ -1018,6 +1055,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[53].IsActive = true;
                     break;
                 case 21: //tie bomber
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedSquadron = new TIEBomberSquadron(_squadronID, _content);
                     _numSquads = 0;
                     buttonSweeper(22);
@@ -1026,6 +1064,7 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[53].IsActive = true;
                     break;
                 case 22: //Assault mark 2 A
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1034,6 +1073,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 23: //Assault mark 2 B
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1042,6 +1082,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 24: //Corellian corvette A
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1050,6 +1091,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 25: //Corellian corvette B
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1058,6 +1100,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 26: //Nebulon-B Escort Frigate
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1066,6 +1109,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 27: //Nebulon-B Support Frigate
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1074,6 +1118,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 28: //Gladiator I class SD
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1082,6 +1127,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 29: //Gladiator II class SD
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1090,6 +1136,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 30: //Victory I class SD
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = true;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1098,6 +1145,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 31: //Victory II class SD
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _selectedShip.ShipTypeA = false;
                     buttonSweeper(32);
                     _buttons[49].IsActive = true;
@@ -1106,6 +1154,7 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 32: //selecting title
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1113,6 +1162,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 33: //selecting officers
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1120,6 +1170,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 34: //selecting weapons teams
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1127,6 +1178,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 35: //selecting support team
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1134,6 +1186,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 36: //selecting offensive retrofit
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1141,6 +1194,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 37: //selecting defensive retrofit
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1148,6 +1202,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 38: //selecting ion cannons
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1155,6 +1210,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 39: //selecting turbolasers
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1162,6 +1218,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 40: //selecting ordinance
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1169,6 +1226,7 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 41: //selecting commaders
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     buttonSweeper(42);
                     _buttons[49].IsActive = true;
                     _buttons[50].IsActive = true;
@@ -1176,40 +1234,49 @@ namespace CIS598_Senior_Project.Screens
                     individualUpgradeSet();
                     break;
                 case 42:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     selectingUpgrade(42);
                     upgradeShip();
                     break;
                 case 43:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     selectingUpgrade(43);
                     upgradeShip();
                     break;
                 case 44:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     selectingUpgrade(44);
                     upgradeShip();
                     break;
                 case 45:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     selectingUpgrade(45);
                     upgradeShip();
                     break;
                 case 46:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     selectingUpgrade(46);
                     upgradeShip();
                     break;
                 case 47:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     selectingUpgrade(47);
                     upgradeShip();
                     break;
                 case 48:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     selectingUpgrade(48);
                     upgradeShip();
                     break;
                 case 49: //add ship to fleet
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button3.Play();
                     _fleet.Ships.Add(_selectedShip);
                     _shipID++;
                     buttonSweeper(9);
                     _selectedUpgrade = null;
                     break;
                 case 50: //clear ship upgrades
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button4.Play();
                     _selectedShip.Commander = null;
                     _selectedShip.HasCommander = false;
                     _selectedShip.Title = null;
@@ -1220,94 +1287,120 @@ namespace CIS598_Senior_Project.Screens
                     _selectedUpgrade = null;
                     break;
                 case 51:
-                    int x = _numSquads;
-                    if(_selectedSquadron.PointCost * (x + 1) <= (400/3) - _fleet.SquadronPoints)
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
-                        _numSquads++;
+                        _button2.Play();
+                        int x = _numSquads;
+                        if (_selectedSquadron.PointCost * (x + 1) <= (400 / 3) - _fleet.SquadronPoints)
+                        {
+                            _numSquads++;
+                        }
                     }
                     break;
                 case 52:
-                    _numSquads--;
-                    if(_numSquads < 0)
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
-                        _numSquads = 0;
+                        _button2.Play();
+                        _numSquads--;
+                        if (_numSquads < 0)
+                        {
+                            _numSquads = 0;
+                        }
                     }
                     break;
                 case 53:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button3.Play();
                     addSquads();
                     _selectedSquadron = null;
                     buttonSweeper(9);
                     break;
                 case 54: //edit fleet name
+                    _button3.Play();
                     _buttons[54].IsActive = false;
                     _buttons[55].IsActive = true;
                     _fleetName = "";
                     break;
                 case 55: //set fleet name
+                    _button3.Play();
                     _fleet.Name = _fleetName;
                     if (_fleetName.Length == 0) _fleetName = "<Fleet Name>";
                     _buttons[54].IsActive = true;
                     _buttons[55].IsActive = false;
                     break;
                 case 56: //view ships/squads
+                    _button3.Play();
                     _buttons[56].IsActive = false;
                     _buttons[57].IsActive = true;
                     displayFleet();
                     break;
                 case 57: //stop viewing fleet
                     buttonSweeper(58);
+                    _button3.Play();
                     _buttons[56].IsActive = true;
                     _buttons[57].IsActive = false;
                     break;
                 case 58: //ship1
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(0);
                     displayFleet();
                     break;
                 case 59: //ship2
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(1);
                     displayFleet();
                     break;
                 case 60: //ship3
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(2);
                     displayFleet();
                     break;
                 case 61: //ship4
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(3);
                     displayFleet();
                     break;
                 case 62: //ship5
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(4);
                     displayFleet();
                     break;
                 case 63: //ship6
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(5);
                     displayFleet();
                     break;
                 case 64: //ship7
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(6);
                     displayFleet();
                     break;
                 case 65: //ship8
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(7);
                     displayFleet();
                     break;
                 case 66: //ship9
+                    _button4.Play();
                     _fleet.Ships.RemoveAt(8);
                     displayFleet();
                     break;
                 case 67: //squad type 1
+                    _button4.Play();
                     removeSquadrons(67);
                     displayFleet();
                     break;
                 case 68: //squad type 2
+                    _button4.Play();
                     removeSquadrons(68);
                     displayFleet();
                     break;
                 case 69: //squad type 3
+                    _button4.Play();
                     removeSquadrons(69);
                     displayFleet();
                     break;
                 case 70: //squad type 4
+                    _button4.Play();
                     removeSquadrons(70);
                     displayFleet();
                     break;

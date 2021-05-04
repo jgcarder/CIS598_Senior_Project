@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using CIS598_Senior_Project.MenuObjects;
 using CIS598_Senior_Project.StateManagement;
 
@@ -30,6 +31,11 @@ namespace CIS598_Senior_Project.Screens
 
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
+
+        private SoundEffect _button1;
+        private SoundEffect _button2;
+        private SoundEffect _button3;
+        private SoundEffect _button4;
 
         private List<float> _vol;
 
@@ -67,6 +73,12 @@ namespace CIS598_Senior_Project.Screens
             _buttons[2].Texture = _content.Load<Texture2D>("WideBack");
 
             _label = _content.Load<Texture2D>("FleetsMenuLabel");
+            _background = _content.Load<Texture2D>("FleetsMenuBackground");
+
+            _button1 = _content.Load<SoundEffect>("Button1");
+            _button2 = _content.Load<SoundEffect>("Button2");
+            _button3 = _content.Load<SoundEffect>("Button3");
+            _button4 = _content.Load<SoundEffect>("Button4");
 
             foreach (var button in _buttons)
             {
@@ -178,6 +190,7 @@ namespace CIS598_Senior_Project.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
+            spriteBatch.Draw(_background, new Rectangle(0, -11 * _heightIncrement, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height + _heightIncrement * 22), Color.White);
 
             spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 72), Color.White);
                 
@@ -211,6 +224,7 @@ namespace CIS598_Senior_Project.Screens
             switch(button.Id)
             {
                 case 0:
+                    _button1.Play();
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
                         Thread.Sleep(200);
@@ -221,6 +235,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 1:
+                    _button2.Play();
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
                         Thread.Sleep(200);
@@ -231,6 +246,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 2:
+                    _button4.Play();
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
                         Thread.Sleep(200);

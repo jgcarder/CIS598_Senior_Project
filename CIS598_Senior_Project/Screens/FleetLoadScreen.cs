@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 using CIS598_Senior_Project.StateManagement;
 using CIS598_Senior_Project.MenuObjects;
 using CIS598_Senior_Project.FleetObjects;
@@ -33,6 +34,11 @@ namespace CIS598_Senior_Project.Screens
 
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
+
+        private SoundEffect _button1;
+        private SoundEffect _button2;
+        private SoundEffect _button3;
+        private SoundEffect _button4;
 
         private List<string> _fleetsList;
         private List<CustButton> _buttons;
@@ -139,6 +145,11 @@ namespace CIS598_Senior_Project.Screens
                     }
                 }
             }
+
+            _button1 = _content.Load<SoundEffect>("Button1");
+            _button2 = _content.Load<SoundEffect>("Button2");
+            _button3 = _content.Load<SoundEffect>("Button3");
+            _button4 = _content.Load<SoundEffect>("Button4");
 
             foreach (var button in _buttons)
             {
@@ -399,6 +410,7 @@ namespace CIS598_Senior_Project.Screens
             switch(button.Id)
             {
                 case 0: //back button
+                    _button4.Play();
                     if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
                         Thread.Sleep(200);
@@ -409,18 +421,21 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 1: //edit fleet
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _isEdit = true;
                     _isDelete = false;
                     _buttons[3].IsActive = true;
                     _buttons[4].IsActive = true;
                     break;
                 case 2: //delete fleet
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button2.Play();
                     _isEdit = false;
                     _isDelete = true;
                     _buttons[3].IsActive = true;
                     _buttons[4].IsActive = true;
                     break;
                 case 3: //confirm
+                    _button3.Play();
                     if (_isDelete) 
                     {
                         FleetLoader.DeleteFleet(_selectedFleet);
@@ -452,81 +467,106 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[4].IsActive = false;
                     break;
                 case 4: //cancel
+                    _button3.Play();
                     _isEdit = false;
                     _isDelete = false;
                     _buttons[3].IsActive = false;
                     _buttons[4].IsActive = false;
                     break;
                 case 5:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 6:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 7:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 8:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 9:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 10:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 11:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 12:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 13:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 14:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 15:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 16:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 17:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 18:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 19:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 20:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 21:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 22:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 23:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 24:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 25:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 26:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 27:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
                 case 28:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button1.Play();
                     fleetSelect(button.Id);
                     break;
             }
