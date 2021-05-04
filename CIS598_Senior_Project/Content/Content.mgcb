@@ -212,6 +212,30 @@
 /processorParam:TextureFormat=Color
 /build:button_test.png
 
+#begin Button1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Button1.wav
+
+#begin Button2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Button2.wav
+
+#begin Button3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Button3.wav
+
+#begin Button4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Button4.wav
+
 #begin BWingCard.png
 /importer:TextureImporter
 /processor:TextureProcessor

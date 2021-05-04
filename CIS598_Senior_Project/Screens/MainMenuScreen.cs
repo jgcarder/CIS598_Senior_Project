@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using CIS598_Senior_Project.MenuObjects;
 using CIS598_Senior_Project.StateManagement;
 
@@ -31,13 +33,29 @@ namespace CIS598_Senior_Project.Screens
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
 
+        private SoundEffect _button1;
+        private SoundEffect _button2;
+        private SoundEffect _button3;
+        private SoundEffect _button4;
+
+        private List<float> _vol;
+
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
-        public MainMenuScreen(Game game)
+        /// <summary>
+        /// Constructor for the main menu
+        /// </summary>
+        /// <param name="game">The game</param>
+        /// <param name="music">part of the volume for the music</param>
+        /// <param name="sfx">part of the volume for the sfx</param>
+        /// <param name="master">the master volume</param>
+        public MainMenuScreen(Game game, List<float> vol)
         {
             _game = game;
             _buttons = new List<CustButton>();
+
+            _vol = vol;
 
             _widthIncrement = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 100; //game.GraphicsDevice.Viewport.Width / 100;
             _heightIncrement = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 100; //game.GraphicsDevice.Viewport.Height / 100;
@@ -47,7 +65,10 @@ namespace CIS598_Senior_Project.Screens
 
             _buttons.Add(new CustButton(0, new Rectangle(_widthIncrement * 35, maxH - _heightIncrement * 54, _widthIncrement * 30, _heightIncrement * 15), true));
             _buttons.Add(new CustButton(1, new Rectangle(_widthIncrement * 35, maxH - _heightIncrement * 36, _widthIncrement * 30, _heightIncrement * 15), true));
-            _buttons.Add(new CustButton(2, new Rectangle(_widthIncrement * 35, maxH - _heightIncrement * 18, _widthIncrement * 30, _heightIncrement * 15), true));            
+            _buttons.Add(new CustButton(2, new Rectangle(_widthIncrement * 35, maxH - _heightIncrement * 18, _widthIncrement * 30, _heightIncrement * 15), true));
+            
+            SoundEffect.MasterVolume = vol[0] * vol[2];
+            MediaPlayer.Volume = vol[1] * vol[2];
         }
 
         /// <summary>
@@ -66,6 +87,11 @@ namespace CIS598_Senior_Project.Screens
             _buttons[2].Texture = _content.Load<Texture2D>("QuitGame");
 
             _label = _content.Load<Texture2D>("MainMenuLabel");
+
+            _button1 = _content.Load<SoundEffect>("Button1");
+            _button2 = _content.Load<SoundEffect>("Button2");
+            _button3 = _content.Load<SoundEffect>("Button3");
+            _button4 = _content.Load<SoundEffect>("Button4");
 
             foreach (var button in _buttons)
             {
@@ -214,9 +240,9 @@ namespace CIS598_Senior_Project.Screens
                     {
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
-
+                        _button1.Play();
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new PlayMenuScreen(_game), null);
+                        ScreenManager.AddScreen(new PlayMenuScreen(_game, _vol), null);
                     }
                     break;
                 case 1:
@@ -224,9 +250,9 @@ namespace CIS598_Senior_Project.Screens
                     {
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
-
+                        _button2.Play();
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new OptionsMenuScreen(_game), null);
+                        ScreenManager.AddScreen(new OptionsMenuScreen(_game, _vol), null);
                     }
                     break;
                 case 2:
@@ -234,7 +260,7 @@ namespace CIS598_Senior_Project.Screens
                     {
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
-
+                        _button3.Play();
                         ScreenManager.Game.Exit();
 
                         //var confirmExitMessageBox = new MessageBoxScreen("Are you sure you want to exit?");

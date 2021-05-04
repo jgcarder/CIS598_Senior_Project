@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using CIS598_Senior_Project.Screens;
@@ -34,7 +38,7 @@ namespace CIS598_Senior_Project
         private void AddInitialScreens()
         {
             _screenManager.AddScreen(new BackgroundScreen(), null);
-            _screenManager.AddScreen(new MainMenuScreen(this), null);
+            _screenManager.AddScreen(new MainMenuScreen(this, new List<float>() { 0.2f, 0.2f, 0.5f}), null);
         }
 
         protected override void Initialize()

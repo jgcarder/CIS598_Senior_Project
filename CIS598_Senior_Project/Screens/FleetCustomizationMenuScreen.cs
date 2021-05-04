@@ -31,13 +31,17 @@ namespace CIS598_Senior_Project.Screens
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
 
+        private List<float> _vol;
+
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
-        public FleetCustomizationMenuScreen(Game game)
+        public FleetCustomizationMenuScreen(Game game, List<float> vol)
         {
             _game = game;
             _buttons = new List<CustButton>();
+
+            _vol = vol;
 
             _widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
             _heightIncrement = _game.GraphicsDevice.Viewport.Height/ 100;
@@ -213,7 +217,7 @@ namespace CIS598_Senior_Project.Screens
                         ScreenManager.Game.ResetElapsedTime();
 
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new FleetCustomizationScreen(_game), null);
+                        ScreenManager.AddScreen(new FleetCustomizationScreen(_game, _vol), null);
                     }
                     break;
                 case 1:
@@ -223,7 +227,7 @@ namespace CIS598_Senior_Project.Screens
                         ScreenManager.Game.ResetElapsedTime();
 
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new FleetLoadScreen(_game), null);
+                        ScreenManager.AddScreen(new FleetLoadScreen(_game, _vol), null);
                     }
                     break;
                 case 2:
@@ -233,7 +237,7 @@ namespace CIS598_Senior_Project.Screens
                         ScreenManager.Game.ResetElapsedTime();
 
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new PlayMenuScreen(_game), null);
+                        ScreenManager.AddScreen(new PlayMenuScreen(_game, _vol), null);
                     }
                     break;
             }

@@ -44,13 +44,17 @@ namespace CIS598_Senior_Project.Screens
         private Texture2D _gradient;
         private Texture2D _texture;
 
+        private List<float> _vol;
+
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
-        public FleetLoadScreen(Game game)
+        public FleetLoadScreen(Game game, List<float> vol)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            _vol = vol;
 
             _buttons = new List<CustButton>();
 
@@ -401,7 +405,7 @@ namespace CIS598_Senior_Project.Screens
                         ScreenManager.Game.ResetElapsedTime();
 
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                        ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game, _vol), null);
                     }
                     break;
                 case 1: //edit fleet
@@ -441,7 +445,7 @@ namespace CIS598_Senior_Project.Screens
                             ScreenManager.Game.ResetElapsedTime();
 
                             ScreenManager.AddScreen(new BackgroundScreen(), null);
-                            ScreenManager.AddScreen(new FleetCustomizationScreen(_game, fleet), null);
+                            ScreenManager.AddScreen(new FleetCustomizationScreen(_game, fleet, _vol), null);
                         }
                     }
                     _buttons[3].IsActive = false;

@@ -41,21 +41,25 @@ namespace CIS598_Senior_Project.Screens
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
 
+        private List<float> _vol;
+
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
-        public OptionsMenuScreen(Game game)
+        public OptionsMenuScreen(Game game, List<float> vol)
         {
             _game = game;
             _buttons = new List<CustButton>();
+
+            _vol = vol;
 
             _masterDisplay = "";
             _musicDisplay = "";
             _sfxDisplay = "";
 
-            _music = 0.2;
-            _master = 0.5;
-            _sfx = 0.2;
+            _music = (double)_vol[1];
+            _master = (double)_vol[2];
+            _sfx = (double)_vol[0];
 
             _widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
             _heightIncrement = _game.GraphicsDevice.Viewport.Height / 100;
@@ -135,6 +139,10 @@ namespace CIS598_Senior_Project.Screens
                 _pauseAlpha = Math.Min(_pauseAlpha + 1f / 32, 1);
             else
                 _pauseAlpha = Math.Max(_pauseAlpha - 1f / 32, 0);
+
+            //_vol[0] = (float)_sfx;
+            //_vol[1] = (float)_music;
+            //_vol[2] = (float)_master;
 
             if (IsActive)
             {
@@ -270,48 +278,94 @@ namespace CIS598_Senior_Project.Screens
                     {
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
-
+                        _vol[0] = (float)_sfx;
+                        _vol[1] = (float)_music;
+                        _vol[2] = (float)_master;
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new MainMenuScreen(_game), null);
+                        ScreenManager.AddScreen(new MainMenuScreen(_game, _vol), null);
                     }
                     break;
                 case 1: //decrease master
-
-                    if (_master >= 0.02) _master -= 0.01;
-                    else _master = 0;
+                    if (_master >= 0.02)
+                    {
+                        _master -= 0.01;
+                        _vol[2] -= 0.01f;
+                    }
+                    else
+                    {
+                        _master = 0;
+                        _vol[2] = 0;
+                    }
                     break;
                 case 2: //increase master
-                    if (_master <= 0.98) _master += 0.01;
-                    else _master = 1;
+                    if (_master <= 0.98)
+                    {
+                        _master += 0.01;
+                        _vol[2] += 0.01f;
+                    }
+                    else
+                    {
+                        _master = 1;
+                        _vol[2] = 1;
+                    }
                     break;
                 case 3: //decrease music
-                    if (_music >= 0.02) _music -= 0.01;
-                    else _music = 0;
+                    if (_music >= 0.02)
+                    {
+                        _music -= 0.01;
+                        _vol[1] -= 0.01f;
+                    }
+                    else
+                    {
+                        _music = 0;
+                        _vol[1] = 0;
+                    }
                     break;
                 case 4: //increase music
-                    if (_music <= 0.98) _music += 0.01;
-                    else _music = 1;
+                    if (_music <= 0.98)
+                    {
+                        _music += 0.01;
+                        _vol[1] += 0.01f;
+                    }
+                    else
+                    {
+                        _music = 1;
+                        _vol[1] = 1;
+                    }
                     break;
                 case 5: //decrease sfx
-                    if (_sfx >= 0.02) _sfx -= 0.01;
-                    else _sfx = 0;
+                    if (_sfx >= 0.02)
+                    {
+                        _sfx-= 0.01;
+                        _vol[0] -= 0.01f;
+                    }
+                    else
+                    {
+                        _sfx = 0;
+                        _vol[0] = 0;
+                    }
                     break;
                 case 6: //increase sfx
-                    if (_sfx <= 0.98) _sfx += 0.01;
-                    else _sfx = 1;
+                    if (_sfx <= 0.98)
+                    {
+                        _sfx += 0.01;
+                        _vol[0] += 0.01f;
+                    }
+                    else
+                    {
+                        _sfx = 1;
+                        _vol[0] = 1;
+                    }
                     break;
                 case 7:
                     _master = 0.5;
                     _music = 0.2;
                     _sfx = 0.2;
+                    _vol[2] = (float)_master;
+                    _vol[1] = (float)_music;
+                    _vol[0] = (float)_sfx;
                     break;
             }
         }
-
-        private void OnBack(object sender, PlayerIndexEventArgs e)
-        {
-            ScreenManager.AddScreen(new MainMenuScreen(_game), 0);
-        }
-
     }
 }

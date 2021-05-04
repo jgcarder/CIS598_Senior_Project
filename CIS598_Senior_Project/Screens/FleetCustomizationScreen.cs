@@ -82,6 +82,8 @@ namespace CIS598_Senior_Project.Screens
         private SpriteFont _galbasic;
         private SpriteFont _descriptor;
 
+        private List<float> _vol;
+
         private SelectedUpgradeType _selectedUpgradeType;
 
         private GraphicsDevice _graphics;
@@ -92,10 +94,12 @@ namespace CIS598_Senior_Project.Screens
         /// The Screen's constructor
         /// </summary>
         /// <param name="game">The game the screen takes place in</param>
-        public FleetCustomizationScreen(Game game)
+        public FleetCustomizationScreen(Game game, List<float> vol)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            _vol = vol;
 
             _numSquads = 0;
             _shipID = 0;
@@ -214,10 +218,12 @@ namespace CIS598_Senior_Project.Screens
         /// </summary>
         /// <param name="game">The game</param>
         /// <param name="fleet">The fleet to edit</param>
-        public FleetCustomizationScreen(Game game, Fleet fleet)
+        public FleetCustomizationScreen(Game game, Fleet fleet, List<float> vol)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            _vol = vol;
 
             _numSquads = 0;
             _shipID = 0;
@@ -821,7 +827,7 @@ namespace CIS598_Senior_Project.Screens
 
                                         FleetLoader.SaveFleet(_fleet);
                                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                                        ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                                        ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game, _vol), null);
                                     }
                                 }
                             }
@@ -881,7 +887,7 @@ namespace CIS598_Senior_Project.Screens
                     break;
                 case 4: //Quit without saving
                     ScreenManager.AddScreen(new BackgroundScreen(), null);
-                    ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game), null);
+                    ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game, _vol), null);
                     break;
                 case 5: //rebel ships
                     buttonSweeper(7);
