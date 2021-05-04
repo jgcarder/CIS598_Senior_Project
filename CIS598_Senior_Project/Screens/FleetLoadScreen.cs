@@ -432,8 +432,8 @@ namespace CIS598_Senior_Project.Screens
 
                             bool result = FleetLoader.DeleteFleet(_selectedFleet);
 
-                            _buttons[_fleetsList.IndexOf(_selectedFleet)].IsActive = false;
-                            _fleetsList.Remove(_selectedFleet);
+                            _buttons[_fleetsList.IndexOf(_selectedFleet) + 5].IsActive = false;
+                            //_fleetsList.Remove(_selectedFleet);
 
                             _selectedFleet = null;
 
