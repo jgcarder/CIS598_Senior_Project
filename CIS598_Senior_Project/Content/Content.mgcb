@@ -302,6 +302,18 @@
 /processorParam:TextureFormat=Color
 /build:ClearFleet.png
 
+#begin ClearSelected.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ClearSelected.png
+
 #begin ClearUpgrades.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -349,6 +361,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Confirm.png
+
+#begin ConfirmSelection.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ConfirmSelection.png
 
 #begin CorrupterCard.png
 /importer:TextureImporter
@@ -1426,6 +1450,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SetName.png
+
+#begin SetPlayer1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SetPlayer1.png
+
+#begin SetPlayer2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SetPlayer2.png
 
 #begin StarWarsCloneTheme.mp3
 /importer:Mp3Importer
