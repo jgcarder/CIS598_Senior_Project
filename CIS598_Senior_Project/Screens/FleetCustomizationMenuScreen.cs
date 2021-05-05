@@ -242,7 +242,7 @@ namespace CIS598_Senior_Project.Screens
                         ScreenManager.Game.ResetElapsedTime();
 
                         ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new FleetLoadScreen(_game, _vol), null);
+                        ScreenManager.AddScreen(new FleetLoadScreen(_game, _vol, false), null);
                     }
                     break;
                 case 2:

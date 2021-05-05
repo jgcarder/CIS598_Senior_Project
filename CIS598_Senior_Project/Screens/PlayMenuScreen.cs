@@ -197,7 +197,7 @@ namespace CIS598_Senior_Project.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
-            spriteBatch.Draw(_background, Vector2.Zero, Color.White);
+            spriteBatch.Draw(_background, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height + _heightIncrement * 3), Color.White);
 
             spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.White);
 
@@ -232,10 +232,17 @@ namespace CIS598_Senior_Project.Screens
             {
                 case 0: //dual
                     _button1.Play();
-                        break;
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        Thread.Sleep(200);
+                        ScreenManager.Game.ResetElapsedTime();
+
+                        ScreenManager.AddScreen(new DuelFleetSelectionScreen(_game, _vol, null,null), null);
+                    }
+                    break;
                 case 1: //campaign, might remove
                     _button2.Play();
-                        break;
+                    break;
                 case 2: //Fleet customizations
                     _button3.Play();
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)

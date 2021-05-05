@@ -62,7 +62,12 @@ namespace CIS598_Senior_Project.Screens
         private float _pauseAlpha;
         //private readonly InputAction _pauseAction;
 
-        public FleetLoadScreen(Game game, List<float> vol)
+        /// <summary>
+        /// Fleet load screenconstructor
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="vol"></param>
+        public FleetLoadScreen(Game game, List<float> vol, bool altLoad)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
@@ -75,7 +80,7 @@ namespace CIS598_Senior_Project.Screens
 
             _isDelete = false;
             _isEdit = false;
-            _duelLoad = true;
+            _duelLoad = altLoad;
 
             _widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
             _heightIncrement = _game.GraphicsDevice.Viewport.Height / 100;
@@ -120,7 +125,9 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(32, new Rectangle(_widthIncrement, 52 * _heightIncrement, 10 * _widthIncrement, 15 * _heightIncrement), false));        //make selections
         }
     
-
+        /// <summary>
+        /// Activates the screen
+        /// </summary>
         public override void Activate()
         {
             if (_content == null)
@@ -174,16 +181,28 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// Deactivates the screen
+        /// </summary>
         public override void Deactivate()
         {
             base.Deactivate();
         }
 
+        /// <summary>
+        /// Unloads the screens content
+        /// </summary>
         public override void Unload()
         {
             base.Unload();
         }
 
+        /// <summary>
+        /// Updates the screen
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
+        /// <param name="otherScreenHasFocus">If another screen is the focus</param>
+        /// <param name="coveredByOtherScreen">if it's covered by another screen</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -672,8 +691,11 @@ namespace CIS598_Senior_Project.Screens
                             ScreenManager.AddScreen(new BackgroundScreen(), null);
                             ScreenManager.AddScreen(new DuelFleetSelectionScreen(_game, _vol, p1, p2), null);
                         }
-                        ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game, _vol), null);
+                        else
+                        {
+                            ScreenManager.AddScreen(new BackgroundScreen(), null);
+                            ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game, _vol), null);
+                        }
                     }
                     break;
                 case 1: //edit fleet
@@ -979,13 +1001,16 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 32: //confirm selection
-                    Fleet p11 = FleetLoader.LoadFleet(_selectedFleet1.Split(',')[0], _content);
-                    Fleet p21 = FleetLoader.LoadFleet(_selectedFleet2.Split(',')[0], _content);
-                    _button4.Play();
-                    Thread.Sleep(200);
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
+                    {
+                        Fleet p11 = FleetLoader.LoadFleet(_selectedFleet1.Split(',')[0], _content);
+                        Fleet p21 = FleetLoader.LoadFleet(_selectedFleet2.Split(',')[0], _content);
+                        _button4.Play();
+                        Thread.Sleep(200);
 
-                    ScreenManager.AddScreen(new BackgroundScreen(), null);
-                    ScreenManager.AddScreen(new DuelFleetSelectionScreen(_game, _vol, p11, p21), null);
+                        ScreenManager.AddScreen(new BackgroundScreen(), null);
+                        ScreenManager.AddScreen(new DuelFleetSelectionScreen(_game, _vol, p11, p21), null);
+                    }
                     break;
             }
         }
