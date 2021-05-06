@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: HotseatDuelScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using CIS598_Senior_Project.StateManagement;
@@ -20,6 +24,46 @@ namespace CIS598_Senior_Project.Screens
 {
     public class HotseatDuelScreen : GameScreen
     {
+        enum SetupState
+        {
+            SelectFirst,
+            Placement,
+            SetupDone
+        }
+
+        enum ShipState
+        {
+            ActivateShip,
+            RevealDial,
+            Attack,
+            ExecuteManuver
+        }
+            enum AttackState
+            {
+                DeclareTarget,
+                RollDice,
+                ModifyDice,
+                SpendAccuracies,
+                SpendDefenseTokens,
+                ResolveDamage
+            }
+        
+        enum SquadronState
+        {
+            ActivateSquad,
+            Move,
+            Attack
+        }
+
+        enum SquadronCommand
+        {
+            UseToken,
+            UseDial,
+            ActivateSquadron,
+            Move,
+            Attack
+        }
+
         private Game _game;
 
         private Fleet _player1;
@@ -32,14 +76,20 @@ namespace CIS598_Senior_Project.Screens
         private Texture2D _background;
         private Texture2D _texture;
         private Texture2D _label;
+        private Texture2D _gradient;
 
         private SpriteFont _descriptor;
+        private SpriteFont _galbasic;
 
         private int _widthIncrement;
         private int _heightIncrement;
         private int _roundNum;
 
+        private string _selectingPlayer;
+
         private bool _player1Turn;
+        private bool _player1Start;
+        private bool _player1Placing;
 
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
@@ -52,6 +102,7 @@ namespace CIS598_Senior_Project.Screens
         private List<float> _vol;
 
         private GameEnum _state;
+        private SetupState _setupState;
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
@@ -72,6 +123,26 @@ namespace CIS598_Senior_Project.Screens
 
             _buttons = new List<CustButton>();
             //Buttons go here
+            _buttons.Add(new CustButton(0, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 11, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 16, _widthIncrement * 10, _heightIncrement * 15), true));    //Quit game
+
+            _buttons.Add(new CustButton(1, new Rectangle(_widthIncrement * 38, 50 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));         //lowest player wants to go first
+            _buttons.Add(new CustButton(2, new Rectangle(_widthIncrement * 52, 50 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));         //lowest player wants to go second
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
         /// <summary>
@@ -82,8 +153,11 @@ namespace CIS598_Senior_Project.Screens
             if (_content == null)
                 _content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            _descriptor = _content.Load<SpriteFont>("galbasic");
+            _descriptor = _content.Load<SpriteFont>("descriptor");
+            _galbasic = _content.Load<SpriteFont>("galbasic");
+
             _texture = _content.Load<Texture2D>("MetalBackground");
+            _gradient = _content.Load<Texture2D>("MenuGradient2");
 
             //Load button textures here
             _buttons[0].Texture = _content.Load<Texture2D>("");
@@ -136,6 +210,8 @@ namespace CIS598_Senior_Project.Screens
             switch(_state) {
                 case GameEnum.Setup:
                     //Determine who goes first
+                    if(_player1.TotalPoints <= _player2.TotalPoints) _selectingPlayer = "Player 1";
+                    else _selectingPlayer = "Player 2";
                         //lowest fleet picks who goes first - 2
                     //placing your ships/squads
                         //take turns placing ships
@@ -177,7 +253,7 @@ namespace CIS598_Senior_Project.Screens
                                 //click move button - 1
                     break;
                 case GameEnum.Squadron_Phase:
-                    //activateing anf either moving or attacking with them
+                    //activateing and either moving or attacking with them
                         //if engaged it cannot move and must attack the other squadron
                         //otherwise move
                         //otherwise attack
@@ -304,6 +380,8 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
 
+            spriteBatch.DrawString(_galbasic, _selectingPlayer + ": Who Goes First?", new Vector2(_widthIncrement * 38, 40 * _heightIncrement), Color.Gold);
+
             spriteBatch.End();
         }
 
@@ -333,22 +411,24 @@ namespace CIS598_Senior_Project.Screens
                     _button1.Play();
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
-                        Thread.Sleep(200);
-                        ScreenManager.Game.ResetElapsedTime();
+                        if (_selectingPlayer.Equals("Player 1")) _player1Start = true;
+                        else _player1Start = false;
 
-                        ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        ScreenManager.AddScreen(new FleetLoadScreen(_game, _vol, true), null);
+                        _buttons[1].IsActive = false;
+                        _buttons[2].IsActive = false;
+                        _selectingPlayer = "";
                     }
                     break;
                 case 2:
-                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    _button2.Play();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
-                        _button2.Play();
-                        Thread.Sleep(200);
-                        _player1 = null;
-                        _player2 = null;
+                        if (_selectingPlayer.Equals("Player 1")) _player1Start = false;
+                        else _player1Start = true;
+
+                        _buttons[1].IsActive = false;
                         _buttons[2].IsActive = false;
-                        _buttons[3].IsActive = false;
+                        _selectingPlayer = "";
                     }
                     break;
                 case 3:
