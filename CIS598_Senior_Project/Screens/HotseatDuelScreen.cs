@@ -39,6 +39,8 @@ namespace CIS598_Senior_Project.Screens
         private int _heightIncrement;
         private int _roundNum;
 
+        private bool _player1Turn;
+
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
 
@@ -133,14 +135,55 @@ namespace CIS598_Senior_Project.Screens
 
             switch(_state) {
                 case GameEnum.Setup:
+                    //Determine who goes first
+                        //lowest fleet picks who goes first - 2
+                    //placing your ships/squads
+                        //take turns placing ships
+                        //or 2 squads at a time
+                            //if you have an odd number of squads you must finish ships first
                     break;
                 case GameEnum.Command_Phase:
+                    //Setting your command dials
+                        //queue up a dial - 5
                     break;
                 case GameEnum.Ship_Phase:
+                    //Taking turns activating ships ~
+                        //Reveal command dial
+                            //spend dial - 1
+                                //greater immediate effect
+                            //convert to token - 5
+                                //use later
+                        //Attack
+                            //Declare target ~ 
+                                //if a squadron they must be within distance 1
+                            //Roll dice
+                                //if squadrin, use anti squadron dice
+                            //Resolve attack effects
+                                //modify dice
+                                    //reroll
+                                    //add
+                                    //change ~
+                                    //spend
+                                    //cancel ~
+                                //Spend Accuracy icons - 4
+                                //Defense spends defense tokens - 4
+                                //Resolve damage
+                                    //if a squadron only hits count
+                                    //if a ship hits and crits count
+                        //Execute manuver
+                            //Determine course
+                                //consult card and buttons for speed - 10
+                            //Move ship
+                                //click move button - 1
                     break;
                 case GameEnum.Squadron_Phase:
+                    //activateing anf either moving or attacking with them
+                        //if engaged it cannot move and must attack the other squadron
+                        //otherwise move
+                        //otherwise attack
                     break;
                 case GameEnum.Status_Phase:
+                    //reset defense tokens
                     break;
             }
 
