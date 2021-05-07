@@ -237,6 +237,7 @@ namespace CIS598_Senior_Project.Screens
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
 
+                        ScreenManager.AddScreen(new BackgroundScreen(), null);
                         ScreenManager.AddScreen(new DuelFleetSelectionScreen(_game, _vol, null,null), null);
                     }
                     break;
@@ -250,6 +251,7 @@ namespace CIS598_Senior_Project.Screens
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
 
+                        ScreenManager.AddScreen(new BackgroundScreen(), null);
                         ScreenManager.AddScreen(new FleetCustomizationMenuScreen(_game, _vol), null);
                     }
                     break;
@@ -260,6 +262,7 @@ namespace CIS598_Senior_Project.Screens
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
 
+                        ScreenManager.AddScreen(new BackgroundScreen(), null);
                         ScreenManager.AddScreen(new MainMenuScreen(_game, _vol), null);
                     }
                     break;

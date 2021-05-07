@@ -493,8 +493,8 @@ namespace CIS598_Senior_Project.Screens
                         Thread.Sleep(200);
                         ScreenManager.Game.ResetElapsedTime();
 
-                        //ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        //ScreenManager.AddScreen(new FleetLoadScreen(_game, _vol, true), null);
+                        ScreenManager.AddScreen(new BackgroundScreen(), null);
+                        ScreenManager.AddScreen(new HotseatDuelScreen(_game, _vol, _player1, _player2), null);
                     }
                     break;
             }

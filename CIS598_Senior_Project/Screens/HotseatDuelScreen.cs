@@ -146,7 +146,7 @@ namespace CIS598_Senior_Project.Screens
 
             _buttons = new List<CustButton>();
             //Buttons go here
-            _buttons.Add(new CustButton(0, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 11, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 8, _widthIncrement * 10, _heightIncrement * 7), true));    //Quit game
+            _buttons.Add(new CustButton(0, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 8, _widthIncrement * 18, _heightIncrement * 7), true));    //Quit game
 
             _buttons.Add(new CustButton(1, new Rectangle(_widthIncrement * 38, 50 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));         //lowest player wants to go first
             _buttons.Add(new CustButton(2, new Rectangle(_widthIncrement * 52, 50 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));         //lowest player wants to go second
@@ -183,13 +183,13 @@ namespace CIS598_Senior_Project.Screens
             _gradient = _content.Load<Texture2D>("MenuGradient2");
 
             //Load button textures here
-            _buttons[0].Texture = _content.Load<Texture2D>("");
-            _buttons[1].Texture = _content.Load<Texture2D>("");
-            _buttons[2].Texture = _content.Load<Texture2D>("");
-            _buttons[3].Texture = _content.Load<Texture2D>("");
+            _buttons[0].Texture = _content.Load<Texture2D>("QuitGame");
+            _buttons[1].Texture = _content.Load<Texture2D>("GoFirst");
+            _buttons[2].Texture = _content.Load<Texture2D>("GoSecond");
+            //_buttons[3].Texture = _content.Load<Texture2D>("");
 
-            _label = _content.Load<Texture2D>("");
-            _background = _content.Load<Texture2D>("");
+            //_label = _content.Load<Texture2D>("");
+            _background = _content.Load<Texture2D>("SpaceBackground1");
 
             _button1 = _content.Load<SoundEffect>("Button1");
             _button2 = _content.Load<SoundEffect>("Button2");
@@ -441,9 +441,9 @@ namespace CIS598_Senior_Project.Screens
             var spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin();
-            spriteBatch.Draw(_background, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height + _heightIncrement * 3), Color.White);
+            spriteBatch.Draw(_background, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height + _heightIncrement * 4), Color.White);
 
-            spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.White);
+            //spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.White);
 
             for (int i = 0; i < _buttons.Count; i++)
             {
@@ -460,7 +460,10 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
 
-            spriteBatch.DrawString(_galbasic, _selectingPlayer + ": Who Goes First?", new Vector2(_widthIncrement * 38, 40 * _heightIncrement), Color.Gold);
+            if(_setupState == SetupState.SelectFirst && _state == GameEnum.Setup)
+            {
+                spriteBatch.DrawString(_galbasic, _selectingPlayer + ": What do you want to do?", new Vector2(_widthIncrement * 34, 40 * _heightIncrement), Color.Gold);
+            }
 
             spriteBatch.End();
         }
