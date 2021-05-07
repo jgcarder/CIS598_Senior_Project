@@ -69,6 +69,13 @@ namespace CIS598_Senior_Project.Screens
         private Fleet _player1;
         private Fleet _player2;
 
+        private List<Ship> _shipPlace1;
+        private List<Ship> _shipPlace2;
+        private List<Squadron> _squadPlace1;
+        private List<Squadron> _squadPlace2;
+        private int[] _squadTypeAmounts1;
+        private int[] _squadTypeAmounts2;
+
         private List<CustButton> _buttons;
 
         private ContentManager _content;
@@ -103,6 +110,10 @@ namespace CIS598_Senior_Project.Screens
 
         private GameEnum _state;
         private SetupState _setupState;
+        private ShipState _shipState;
+        private AttackState _attackState;
+        private SquadronState _squadState;
+        private SquadronCommand _squadCommand;
 
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
@@ -114,7 +125,19 @@ namespace CIS598_Senior_Project.Screens
             _player1 = player1;
             _player2 = player2;
 
+            _shipPlace1 = _player1.Ships;
+            _shipPlace2 = _player2.Ships;
+            _squadPlace1 = _player1.Squadrons;
+            _squadPlace2 = _player2.Squadrons;
+            _squadTypeAmounts1 = returnSquads(_player1.Squadrons, _player1.IsRebelFleet);
+            _squadTypeAmounts2 = returnSquads(_player2.Squadrons, _player2.IsRebelFleet);
+
             _state = GameEnum.Setup;
+            _setupState = SetupState.SelectFirst;
+            _shipState = ShipState.ActivateShip;
+            _attackState = AttackState.DeclareTarget;
+            _squadState = SquadronState.ActivateSquad;
+            _squadCommand = SquadronCommand.ActivateSquadron;
 
             _roundNum = 0;
 
@@ -123,25 +146,25 @@ namespace CIS598_Senior_Project.Screens
 
             _buttons = new List<CustButton>();
             //Buttons go here
-            _buttons.Add(new CustButton(0, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 11, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 16, _widthIncrement * 10, _heightIncrement * 15), true));    //Quit game
+            _buttons.Add(new CustButton(0, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 11, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 8, _widthIncrement * 10, _heightIncrement * 7), true));    //Quit game
 
             _buttons.Add(new CustButton(1, new Rectangle(_widthIncrement * 38, 50 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));         //lowest player wants to go first
             _buttons.Add(new CustButton(2, new Rectangle(_widthIncrement * 52, 50 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));         //lowest player wants to go second
 
+            _buttons.Add(new CustButton(3, new Rectangle(), false)); //-----------------
+            _buttons.Add(new CustButton(4, new Rectangle(), false));
+            _buttons.Add(new CustButton(5, new Rectangle(), false));
+            _buttons.Add(new CustButton(6, new Rectangle(), false));
+            _buttons.Add(new CustButton(7, new Rectangle(), false)); //Ship placement buttons
+            _buttons.Add(new CustButton(8, new Rectangle(), false));
+            _buttons.Add(new CustButton(9, new Rectangle(), false));
+            _buttons.Add(new CustButton(10, new Rectangle(), false));
+            _buttons.Add(new CustButton(11, new Rectangle(), false)); //-----------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+            _buttons.Add(new CustButton(12, new Rectangle(), false)); //-----------------
+            _buttons.Add(new CustButton(13, new Rectangle(), false));
+            _buttons.Add(new CustButton(14, new Rectangle(), false)); //Squadron placement buttons
+            _buttons.Add(new CustButton(15, new Rectangle(), false)); //----------------
 
         }
 
@@ -209,9 +232,66 @@ namespace CIS598_Senior_Project.Screens
 
             switch(_state) {
                 case GameEnum.Setup:
+
+                    switch(_setupState)
+                    {
+                        case SetupState.SelectFirst:
+                            if (_player1.TotalPoints <= _player2.TotalPoints) _selectingPlayer = "Player 1";
+                            else _selectingPlayer = "Player 2";
+                            break;
+                        case SetupState.Placement:
+                            if (_shipPlace1.Count == 0 && _shipPlace2.Count == 0 && _squadPlace1.Count == 0 && _squadPlace2.Count == 0)
+                            {
+                                _setupState = SetupState.SetupDone;
+                            }
+                            else
+                            {
+                                if (_player1Placing)
+                                {
+                                    for(int i = 0; i < _shipPlace1.Count; i++)
+                                    {
+                                        _buttons[i + 3].IsActive = true;
+                                    }
+                                    setFleetShipButtons(_shipPlace1);
+
+
+                                    int numDiff = 0;
+                                    for(int i = 0; i < _squadTypeAmounts1.Length; i++)
+                                    {
+                                        if (_squadTypeAmounts1[i] > 0) numDiff++;
+                                    }
+
+                                    for(int i = 0; i < numDiff; i++)
+                                    {
+                                        _buttons[i + 12].IsActive = true;
+                                    }
+
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < _shipPlace2.Count; i++)
+                                    {
+                                        _buttons[i + 3].IsActive = true;
+                                        setFleetShipButtons(_shipPlace2);
+                                    }
+
+                                    int numDiff = 0;
+                                    for (int i = 0; i < _squadTypeAmounts2.Length; i++)
+                                    {
+                                        if (_squadTypeAmounts2[i] > 0) numDiff++;
+                                    }
+
+                                    for (int i = 0; i < numDiff; i++)
+                                    {
+                                        _buttons[i + 12].IsActive = true;
+                                    }
+                                }
+                            }
+                            break;
+                        case SetupState.SetupDone:
+                            break;
+                    }
                     //Determine who goes first
-                    if(_player1.TotalPoints <= _player2.TotalPoints) _selectingPlayer = "Player 1";
-                    else _selectingPlayer = "Player 2";
                         //lowest fleet picks who goes first - 2
                     //placing your ships/squads
                         //take turns placing ships
@@ -407,41 +487,302 @@ namespace CIS598_Senior_Project.Screens
                         ScreenManager.AddScreen(new PlayMenuScreen(_game, _vol), null);
                     }
                     break;
-                case 1:
+                case 1: //selecting player wants to go first
                     _button1.Play();
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
                         if (_selectingPlayer.Equals("Player 1")) _player1Start = true;
                         else _player1Start = false;
 
+                        _player1Placing = _player1Start;
+
                         _buttons[1].IsActive = false;
                         _buttons[2].IsActive = false;
                         _selectingPlayer = "";
+
+                        _setupState = SetupState.Placement;
                     }
                     break;
-                case 2:
+                case 2: //selecting player wants to go second
                     _button2.Play();
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
                     {
                         if (_selectingPlayer.Equals("Player 1")) _player1Start = false;
                         else _player1Start = true;
 
+                        _player1Placing = _player1Start;
+
                         _buttons[1].IsActive = false;
                         _buttons[2].IsActive = false;
                         _selectingPlayer = "";
+
+                        _setupState = SetupState.Placement;
                     }
                     break;
                 case 3:
-                    _button3.Play();
-                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Pressed)
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
-                        Thread.Sleep(200);
-                        ScreenManager.Game.ResetElapsedTime();
-
-                        //ScreenManager.AddScreen(new BackgroundScreen(), null);
-                        //ScreenManager.AddScreen(new FleetLoadScreen(_game, _vol, true), null);
+                        _button3.Play();
+                        //store selected ship, apply it to the mouse coords within the placement bounds
+                            //once clicked a second time in the bounds, will place object and remove button.
                     }
                     break;
+                case 4:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 5:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 6:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 7:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 8:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 9:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 10:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 11:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 12:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 13:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 14:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+                case 15:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+
+                    }
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Draws the fleet in a readable manner
+        /// </summary>
+        /// <param name="fleet">The fleet to be drawn</param>
+        /// <param name="sb">The sprite batch used to draw the fleet</param>
+        private void drawFleetInfo(Fleet fleet, SpriteBatch sb)
+        {
+
+            double heightoffset = 1;//to be set
+            sb.DrawString(_descriptor, "FLEET: " + fleet.Name + "--" + fleet.TotalPoints + " total points", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (int)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+
+            heightoffset += 1.5;
+            foreach (var ship in fleet.Ships)
+            {
+                if (ship != null)
+                {
+                    if (ship.ShipTypeA)
+                    {
+                        sb.DrawString(_descriptor, " >" + ship.Name + "(A): " + ship.PointCost + "---------------", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                    }
+                    else
+                    {
+                        sb.DrawString(_descriptor, " >" + ship.Name + "(B): " + ship.PointCost + "---------------", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                    }
+                    heightoffset += 1.5;
+
+                    if (ship.Commander != null)
+                    {
+                        sb.DrawString(_descriptor, "   -" + "Commander " + ship.Commander.Name + ": " + ship.Commander.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+
+                    if (ship.Title != null)
+                    {
+                        sb.DrawString(_descriptor, "   -" + "Title " + ship.Title.Name + ": " + ship.Title.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+
+                    foreach (var upgrade in ship.Upgrades)
+                    {
+                        if (upgrade != null)
+                        {
+                            sb.DrawString(_descriptor, "   -" + upgrade.CardType.ToString() + " " + upgrade.Name + ": " + upgrade.PointCost, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                            heightoffset += 1.5;
+                        }
+                    }
+                }
+            }
+
+            if (fleet.Squadrons.Count > 0)
+            {
+                int[] sq = returnSquads(fleet.Squadrons, fleet.IsRebelFleet);
+                if (fleet.IsRebelFleet)
+                {
+                    if (sq[0] > 0)
+                    {
+                        sb.DrawString(_descriptor, "   -A-Wing Squadron(11): x" + sq[0] + " => " + sq[0] * 11, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[1] > 0)
+                    {
+                        sb.DrawString(_descriptor, "   -B-Wing Squadron(14): x" + sq[1] + " => " + sq[1] * 14, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[2] > 0)
+                    {
+                        sb.DrawString(_descriptor, "   -X-Wing Squadron(13): x" + sq[2] + " => " + sq[2] * 13, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[3] > 0)
+                    {
+                        sb.DrawString(_descriptor, "   -Y-Wing Squadron(10): x" + sq[3] + " => " + sq[3] * 10, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                }
+                else
+                {
+                    if (sq[0] > 0)
+                    {
+                        sb.DrawString(_descriptor, "   -TIE Fighter Squadron(8): x" + sq[0] + " => " + sq[0] * 8, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[1] > 0)
+                    {
+                        sb.DrawString(_descriptor, "   -TIE Advanced Squadron(12): x" + sq[1] + " => " + sq[1] * 12, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[2] > 0)
+                    {
+                        sb.DrawString(_descriptor, "   -TIE Interceptor Squadron(11): x" + sq[2] + " => " + sq[2] * 11, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                    if (sq[3] > 0)
+                    {
+                        sb.DrawString(_descriptor, "   -TIE Bomber Squadron(9): x" + sq[3] + " => " + sq[3] * 9, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 17, (float)(heightoffset * _heightIncrement)), Color.AntiqueWhite);
+                        heightoffset += 1.5;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// gets the number of squads of each type
+        /// </summary>
+        /// <returns>the list of number of squads by type</returns>
+        private int[] returnSquads(List<Squadron> squad, bool isRebelFleet)
+        {
+            int[] result = new int[4];
+            if (isRebelFleet)
+            {
+                result[0] += squad.FindAll(x => x.Name == "A-Wing Squadron").Count;
+                result[1] += squad.FindAll(x => x.Name == "B-Wing Squadron").Count;
+                result[2] += squad.FindAll(x => x.Name == "X-Wing Squadron").Count;
+                result[3] += squad.FindAll(x => x.Name == "Y-Wing Squadron").Count;
+            }
+            else
+            {
+                result[0] += squad.FindAll(x => x.Name == "TIE Fighter Squadron").Count;
+                result[1] += squad.FindAll(x => x.Name == "TIE Advanced Squadron").Count;
+                result[2] += squad.FindAll(x => x.Name == "TIE Interceptor Squadron").Count;
+                result[3] += squad.FindAll(x => x.Name == "TIE Bomber Squadron").Count;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Sets the images for the fleet remover buttons.
+        /// </summary>
+        private void setFleetShipButtons(List<Ship> ships)
+        {
+            for (int i = 0; i < ships.Count; i++)
+            {                                               //Adjust button numbers
+                if (ships[i] is AssaultFrigateMarkII) _buttons[i + 3].Texture = _content.Load<Texture2D>("AssaultFrigate");
+                else if (ships[i] is CR90Corvette) _buttons[i + 3].Texture = _content.Load<Texture2D>("CR90Corvette");
+                else if (ships[i] is NebulonBFrigate) _buttons[i + 3].Texture = _content.Load<Texture2D>("NebulonB");
+                else if (ships[i] is GladiatorStarDestroyer) _buttons[i + 3].Texture = _content.Load<Texture2D>("GladiatorSD");
+                else if (ships[i] is VictoryStarDestroyer) _buttons[i + 3].Texture = _content.Load<Texture2D>("VictorySD");
+            }
+        }
+
+        /// <summary>
+        /// Sets the squadrons in the 
+        /// </summary>
+        /// <param name="fleet"></param>
+        private void setFleetSquadronButtons(List<Squadron> squads, bool isRebelFleet)
+        {
+            int x = 0;
+            int[] s = returnSquads(squads, isRebelFleet);
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] > 0)
+                {                               //update the buttons numbers
+                    if (isRebelFleet)
+                    {
+                        if (i == 0) _buttons[x + 12].Texture = _content.Load<Texture2D>("AWings");
+                        if (i == 1) _buttons[x + 13].Texture = _content.Load<Texture2D>("BWings");
+                        if (i == 2) _buttons[x + 14].Texture = _content.Load<Texture2D>("XWings");
+                        if (i == 3) _buttons[x + 15].Texture = _content.Load<Texture2D>("YWings");
+                    }
+                    else
+                    {
+                        if (i == 0) _buttons[x + 12].Texture = _content.Load<Texture2D>("TIEFighters");
+                        if (i == 1) _buttons[x + 13].Texture = _content.Load<Texture2D>("TIEAdvanced");
+                        if (i == 2) _buttons[x + 14].Texture = _content.Load<Texture2D>("TIEInterceptor");
+                        if (i == 3) _buttons[x + 15].Texture = _content.Load<Texture2D>("TIEBombers");
+                    }
+                    x++;
+                }
             }
         }
     }

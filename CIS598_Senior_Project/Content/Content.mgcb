@@ -169,6 +169,18 @@
 /processorParam:TextureFormat=Color
 /build:AWings.png
 
+#begin AWingToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AWingToken.png
+
 #begin Back.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -271,6 +283,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:BWings.png
+
+#begin BWingToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BWingToken.png
 
 #begin Cancel.png
 /importer:TextureImporter
@@ -1283,6 +1307,30 @@
 /processorParam:TextureFormat=Color
 /build:PlayCampaign.png
 
+#begin Player1PlacementArea.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Player1PlacementArea.png
+
+#begin Player2PlacementArea.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Player2PlacementArea.png
+
 #begin PlayGame.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1601,6 +1649,18 @@
 /processorParam:TextureFormat=Color
 /build:TIEAdvancedCard.png
 
+#begin TIEAdvancedToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TIEAdvancedToken.png
+
 #begin TIEBomberCard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1624,6 +1684,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TIEBombers.png
+
+#begin TIEBomberToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TIEBomberToken.png
 
 #begin TIEFighterCard.png
 /importer:TextureImporter
@@ -1649,6 +1721,18 @@
 /processorParam:TextureFormat=Color
 /build:TIEFighters.png
 
+#begin TIEFighterToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TIEFighterToken.png
+
 #begin TIEInterceptor.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1672,6 +1756,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TIEInterceptorCard.png
+
+#begin TIEInterceptorToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TIEInterceptorToken.png
 
 #begin Title.png
 /importer:TextureImporter
@@ -1853,6 +1949,18 @@
 /processorParam:TextureFormat=Color
 /build:XWings.png
 
+#begin XWingToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:XWingToken.png
+
 #begin XX9TurbolasersCard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1900,4 +2008,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:YWings.png
+
+#begin YWingToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:YWingToken.png
 

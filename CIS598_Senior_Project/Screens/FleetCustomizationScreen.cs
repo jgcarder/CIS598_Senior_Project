@@ -1416,9 +1416,9 @@ namespace CIS598_Senior_Project.Screens
             {
                 if (_fleet.Ships[i] is AssaultFrigateMarkII) _buttons[i + 58].Texture = _content.Load<Texture2D>("AssaultFrigate");
                 else if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("CR90Corvette");
-                else if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("NebulonB");
-                else if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("GladiatorSD");
-                else if (_fleet.Ships[i] is CR90Corvette) _buttons[i + 58].Texture = _content.Load<Texture2D>("VictorySD");
+                else if (_fleet.Ships[i] is NebulonBFrigate) _buttons[i + 58].Texture = _content.Load<Texture2D>("NebulonB");
+                else if (_fleet.Ships[i] is GladiatorStarDestroyer) _buttons[i + 58].Texture = _content.Load<Texture2D>("GladiatorSD");
+                else if (_fleet.Ships[i] is VictoryStarDestroyer) _buttons[i + 58].Texture = _content.Load<Texture2D>("VictorySD");
             }
 
             int x = 0;
