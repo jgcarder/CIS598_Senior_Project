@@ -84,6 +84,8 @@ namespace CIS598_Senior_Project.Screens
         private Texture2D _texture;
         private Texture2D _label;
         private Texture2D _gradient;
+        private Texture2D _player1Zone;
+        private Texture2D _player2Zone;
 
         private SpriteFont _descriptor;
         private SpriteFont _galbasic;
@@ -151,20 +153,20 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(1, new Rectangle(_widthIncrement * 38, 50 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));         //lowest player wants to go first
             _buttons.Add(new CustButton(2, new Rectangle(_widthIncrement * 52, 50 * _heightIncrement, _widthIncrement * 10, _heightIncrement * 15), true));         //lowest player wants to go second
 
-            _buttons.Add(new CustButton(3, new Rectangle(), false)); //-----------------
-            _buttons.Add(new CustButton(4, new Rectangle(), false));
-            _buttons.Add(new CustButton(5, new Rectangle(), false));
-            _buttons.Add(new CustButton(6, new Rectangle(), false));
-            _buttons.Add(new CustButton(7, new Rectangle(), false)); //Ship placement buttons
-            _buttons.Add(new CustButton(8, new Rectangle(), false));
-            _buttons.Add(new CustButton(9, new Rectangle(), false));
-            _buttons.Add(new CustButton(10, new Rectangle(), false));
-            _buttons.Add(new CustButton(11, new Rectangle(), false)); //-----------------
+            _buttons.Add(new CustButton(3, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false)); //-----------------
+            _buttons.Add(new CustButton(4, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));
+            _buttons.Add(new CustButton(5, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 9 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));
+            _buttons.Add(new CustButton(6, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 9 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));
+            _buttons.Add(new CustButton(7, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 17 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false)); //Ship placement buttons
+            _buttons.Add(new CustButton(8, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 17 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));
+            _buttons.Add(new CustButton(9, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 25 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));
+            _buttons.Add(new CustButton(10, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 25 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));
+            _buttons.Add(new CustButton(11, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 37 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false)); //-----------------
 
-            _buttons.Add(new CustButton(12, new Rectangle(), false)); //-----------------
-            _buttons.Add(new CustButton(13, new Rectangle(), false));
-            _buttons.Add(new CustButton(14, new Rectangle(), false)); //Squadron placement buttons
-            _buttons.Add(new CustButton(15, new Rectangle(), false)); //----------------
+            _buttons.Add(new CustButton(12, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 40 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //-----------------
+            _buttons.Add(new CustButton(13, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 51 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false));
+            _buttons.Add(new CustButton(14, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Squadron placement buttons
+            _buttons.Add(new CustButton(15, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 73 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //----------------
 
         }
 
@@ -190,6 +192,8 @@ namespace CIS598_Senior_Project.Screens
 
             //_label = _content.Load<Texture2D>("");
             _background = _content.Load<Texture2D>("SpaceBackground1");
+            _player1Zone = _content.Load<Texture2D>("Player1PlacementArea");
+            _player2Zone = _content.Load<Texture2D>("Player2PlacementArea");
 
             _button1 = _content.Load<SoundEffect>("Button1");
             _button2 = _content.Load<SoundEffect>("Button2");
@@ -265,7 +269,7 @@ namespace CIS598_Senior_Project.Screens
                                     {
                                         _buttons[i + 12].IsActive = true;
                                     }
-
+                                    setFleetSquadronButtons(_player1.Squadrons, _player1.IsRebelFleet);
                                 }
                                 else
                                 {
@@ -285,6 +289,7 @@ namespace CIS598_Senior_Project.Screens
                                     {
                                         _buttons[i + 12].IsActive = true;
                                     }
+                                    setFleetSquadronButtons(_player2.Squadrons, _player2.IsRebelFleet);
                                 }
                             }
                             break;
@@ -443,8 +448,6 @@ namespace CIS598_Senior_Project.Screens
             spriteBatch.Begin();
             spriteBatch.Draw(_background, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height + _heightIncrement * 4), Color.White);
 
-            //spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.White);
-
             for (int i = 0; i < _buttons.Count; i++)
             {
                 if (_buttons[i].IsActive)
@@ -459,6 +462,41 @@ namespace CIS598_Senior_Project.Screens
                     }
                 }
             }
+
+
+            if (_state == GameEnum.Setup && _setupState == SetupState.Placement)
+            {
+                if (_player1Placing) spriteBatch.Draw(_player1Zone, new Rectangle(0, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 25, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
+                else spriteBatch.Draw(_player2Zone, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
+
+                if(_player1Placing)
+                {
+                    int hOffset = 43;
+                    for(int i = 0; i < _squadTypeAmounts1.Length; i++)
+                    {
+                        if(_squadTypeAmounts1[i] > 0)
+                        {
+                            spriteBatch.DrawString(_galbasic, "X " + _squadTypeAmounts1[i], new Vector2(_widthIncrement * 92, hOffset * _heightIncrement), Color.White);
+                            hOffset += 11;
+                        }
+                    }
+                }
+                else
+                {
+                    int hOffset = 43;
+                    for (int i = 0; i < _squadTypeAmounts2.Length; i++)
+                    {
+                        if (_squadTypeAmounts2[i] > 0)
+                        {
+                            spriteBatch.DrawString(_galbasic, "X " + _squadTypeAmounts1[i], new Vector2(_widthIncrement * 92, hOffset * _heightIncrement), Color.White);
+                            hOffset += 11;
+                        }
+                    }
+                }
+            }
+
+            //spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.White);
+
 
             if(_setupState == SetupState.SelectFirst && _state == GameEnum.Setup)
             {
@@ -773,16 +811,16 @@ namespace CIS598_Senior_Project.Screens
                     if (isRebelFleet)
                     {
                         if (i == 0) _buttons[x + 12].Texture = _content.Load<Texture2D>("AWings");
-                        if (i == 1) _buttons[x + 13].Texture = _content.Load<Texture2D>("BWings");
-                        if (i == 2) _buttons[x + 14].Texture = _content.Load<Texture2D>("XWings");
-                        if (i == 3) _buttons[x + 15].Texture = _content.Load<Texture2D>("YWings");
+                        if (i == 1) _buttons[x + 12].Texture = _content.Load<Texture2D>("BWings");
+                        if (i == 2) _buttons[x + 12].Texture = _content.Load<Texture2D>("XWings");
+                        if (i == 3) _buttons[x + 12].Texture = _content.Load<Texture2D>("YWings");
                     }
                     else
                     {
                         if (i == 0) _buttons[x + 12].Texture = _content.Load<Texture2D>("TIEFighters");
-                        if (i == 1) _buttons[x + 13].Texture = _content.Load<Texture2D>("TIEAdvanced");
-                        if (i == 2) _buttons[x + 14].Texture = _content.Load<Texture2D>("TIEInterceptor");
-                        if (i == 3) _buttons[x + 15].Texture = _content.Load<Texture2D>("TIEBombers");
+                        if (i == 1) _buttons[x + 12].Texture = _content.Load<Texture2D>("TIEAdvanced");
+                        if (i == 2) _buttons[x + 12].Texture = _content.Load<Texture2D>("TIEInterceptor");
+                        if (i == 3) _buttons[x + 12].Texture = _content.Load<Texture2D>("TIEBombers");
                     }
                     x++;
                 }
