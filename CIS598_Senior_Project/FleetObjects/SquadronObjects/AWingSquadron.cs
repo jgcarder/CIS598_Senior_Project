@@ -51,7 +51,7 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 
         public override Vector2 Origin { get { return new Vector2(25, 25); } }
         
-        public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X + Origin.X, Position.Y + Origin.Y), 25); } }
+        public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 25); } }
 
         public AWingSquadron(int id, ContentManager content)
         {

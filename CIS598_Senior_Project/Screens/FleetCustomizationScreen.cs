@@ -1341,69 +1341,108 @@ namespace CIS598_Senior_Project.Screens
                     _buttons[57].IsActive = false;
                     break;
                 case 58: //ship1
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(0);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(0);
+                        displayFleet();
+                    }
                     break;
                 case 59: //ship2
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(1);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(1);
+                        displayFleet();
+                    }
                     break;
                 case 60: //ship3
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(2);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(2);
+                        displayFleet();
+                    }
                     break;
                 case 61: //ship4
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(3);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(3);
+                        displayFleet();
+                    }
                     break;
                 case 62: //ship5
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(4);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(4);
+                        displayFleet();
+                    }
                     break;
                 case 63: //ship6
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(5);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(5);
+                        displayFleet();
+                    }
                     break;
                 case 64: //ship7
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(6);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(6);
+                        displayFleet();
+                    }
                     break;
                 case 65: //ship8
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(7);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(7);
+                        displayFleet();
+                    }
                     break;
                 case 66: //ship9
-                    _button4.Play();
-                    _fleet.Ships.RemoveAt(8);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _fleet.Ships.RemoveAt(8);
+                        displayFleet();
+                    }
                     break;
                 case 67: //squad type 1
-                    _button4.Play();
-                    removeSquadrons(67);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        removeSquadrons(67);
+                        displayFleet();
+                    }
                     break;
                 case 68: //squad type 2
-                    _button4.Play();
-                    removeSquadrons(68);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        removeSquadrons(68);
+                        displayFleet();
+                    }
                     break;
                 case 69: //squad type 3
-                    _button4.Play();
-                    removeSquadrons(69);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        removeSquadrons(69);
+                        displayFleet();
+                    }
                     break;
                 case 70: //squad type 4
-                    _button4.Play();
-                    removeSquadrons(70);
-                    displayFleet();
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        removeSquadrons(70);
+                        displayFleet();
+                    }
                     break;
             }
         }

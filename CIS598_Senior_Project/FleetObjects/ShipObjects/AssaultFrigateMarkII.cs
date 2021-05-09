@@ -170,7 +170,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override Vector2 Origin { get { return new Vector2(75, 101); } }
 
-        public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X + Origin.X, Position.Y + Origin.Y), 62); } }
+        public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 62); } }
 
         public override BoundingCircle SternBounds { get; }
 

@@ -293,7 +293,7 @@ namespace CIS598_Senior_Project.Screens
                                     //placing ship
                                     if(_selectedShip != null)
                                     {
-                                        if (_currentMouseState.X >= 80 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - 80 && _currentMouseState.Y >= (_game.GraphicsDevice.Viewport.Height - _heightIncrement * 25) + 105 && _currentMouseState.Y <= _game.GraphicsDevice.Viewport.Height - 105)
+                                        if (_currentMouseState.X >= _selectedShip.Image.Width / 2 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - _selectedShip.Image.Width / 2 && _currentMouseState.Y >= (_game.GraphicsDevice.Viewport.Height - _heightIncrement * 25) + _selectedShip.Image.Height / 2 && _currentMouseState.Y <= _game.GraphicsDevice.Viewport.Height - _selectedShip.Image.Height / 2)
                                         {
                                             if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                                             {
@@ -318,12 +318,40 @@ namespace CIS598_Senior_Project.Screens
                                         if(_currentMouseState.X >= 30 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - 30 && _currentMouseState.Y >= (_game.GraphicsDevice.Viewport.Height - _heightIncrement * 25) + 30 && _currentMouseState.Y <= _game.GraphicsDevice.Viewport.Height - 30)
                                         {
                                             if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
-                                            {   
-                                                if(isPlacedTooCLose(false))
+                                            {
+                                                if (isPlacedTooCLose(false))
                                                 {
                                                     _selectedSquad.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
-                                                    _squadToPlace1.Remove(_selectedSquad);
-                                                    _squadsPlaced1.Add(_selectedSquad);
+                                                    Squadron s = _selectedSquad;
+                                                    if (_squadToPlace1.Count >= 2) 
+                                                    {
+                                                        if(_selectedSquad is TIEFighterSquadron || _selectedSquad is AWingSquadron)
+                                                        {
+                                                            if(_squadTypeAmounts1[0] >= 2) _selectedSquad = _squadToPlace1[_squadToPlace1.IndexOf(_selectedSquad) + 1];
+                                                        }
+                                                        else if (_selectedSquad is TIEAdvancedSquadron || _selectedSquad is BWingSquadron)
+                                                        {
+                                                            if (_squadTypeAmounts1[1] >= 2) _selectedSquad = _squadToPlace1[_squadToPlace1.IndexOf(_selectedSquad) + 1];
+                                                        }
+                                                        else if (_selectedSquad is TIEInterceptorSquadron || _selectedSquad is XWingSquadron)
+                                                        {
+                                                            if (_squadTypeAmounts1[2] >= 2) _selectedSquad = _squadToPlace1[_squadToPlace1.IndexOf(_selectedSquad) + 1];
+                                                        }
+                                                        else if (_selectedSquad is TIEBomberSquadron || _selectedSquad is YWingSquadron)
+                                                        {
+                                                            if (_squadTypeAmounts1[3] >= 2) _selectedSquad = _squadToPlace1[_squadToPlace1.IndexOf(_selectedSquad) + 1];
+                                                        }
+                                                    }
+                                                    
+
+                                                    _squadToPlace1.Remove(s);
+                                                    _squadsPlaced1.Add(s);
+
+                                                    if (_selectedSquad is TIEFighterSquadron || _selectedSquad is AWingSquadron) _squadTypeAmounts1[0]--;
+                                                    if (_selectedSquad is TIEAdvancedSquadron || _selectedSquad is BWingSquadron) _squadTypeAmounts1[1]--;
+                                                    if (_selectedSquad is TIEInterceptorSquadron || _selectedSquad is XWingSquadron) _squadTypeAmounts1[2]--;
+                                                    if (_selectedSquad is TIEBomberSquadron || _selectedSquad is YWingSquadron) _squadTypeAmounts1[3]--;
+
                                                     _numToPlace--;
                                                     if (_numToPlace <= 0) 
                                                     {
@@ -360,7 +388,7 @@ namespace CIS598_Senior_Project.Screens
                                     //placing ship
                                     if (_selectedShip != null)
                                     {
-                                        if (_currentMouseState.X >= 80 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - 80 && _currentMouseState.Y >= 105 && _currentMouseState.Y <= (_game.GraphicsDevice.Viewport.Height / 4) - 105)
+                                        if (_currentMouseState.X >= _selectedShip.Image.Width / 2 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - _selectedShip.Image.Width / 2 && _currentMouseState.Y >= _selectedShip.Image.Height / 2 && _currentMouseState.Y <= (_game.GraphicsDevice.Viewport.Height / 4) - _selectedShip.Image.Height / 2)
                                         {
                                             if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                                             {
@@ -390,8 +418,34 @@ namespace CIS598_Senior_Project.Screens
                                                 if (isPlacedTooCLose(false))
                                                 {
                                                     _selectedSquad.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
-                                                    _squadToPlace2.Remove(_selectedSquad);
-                                                    _squadsPlaced2.Add(_selectedSquad);
+                                                    Squadron s = _selectedSquad;
+                                                    if (_squadToPlace2.Count >= 2)
+                                                    {
+                                                        if (_selectedSquad is TIEFighterSquadron || _selectedSquad is AWingSquadron)
+                                                        {
+                                                            if (_squadTypeAmounts2[0] >= 2) _selectedSquad = _squadToPlace2[_squadToPlace2.IndexOf(_selectedSquad) + 1];
+                                                        }
+                                                        else if (_selectedSquad is TIEAdvancedSquadron || _selectedSquad is BWingSquadron)
+                                                        {
+                                                            if (_squadTypeAmounts2[1] >= 2) _selectedSquad = _squadToPlace2[_squadToPlace2.IndexOf(_selectedSquad) + 1];
+                                                        }
+                                                        else if (_selectedSquad is TIEInterceptorSquadron || _selectedSquad is XWingSquadron)
+                                                        {
+                                                            if (_squadTypeAmounts2[2] >= 2) _selectedSquad = _squadToPlace2[_squadToPlace2.IndexOf(_selectedSquad) + 1];
+                                                        }
+                                                        else if (_selectedSquad is TIEBomberSquadron || _selectedSquad is YWingSquadron)
+                                                        {
+                                                            if (_squadTypeAmounts2[3] >= 2) _selectedSquad = _squadToPlace2[_squadToPlace2.IndexOf(_selectedSquad) + 1];
+                                                        }
+                                                    }
+                                                    _squadToPlace2.Remove(s);
+                                                    _squadsPlaced2.Add(s);
+
+                                                    if (_selectedSquad is TIEFighterSquadron || _selectedSquad is AWingSquadron) _squadTypeAmounts2[0]--;
+                                                    if (_selectedSquad is TIEAdvancedSquadron || _selectedSquad is BWingSquadron) _squadTypeAmounts2[1]--;
+                                                    if (_selectedSquad is TIEInterceptorSquadron || _selectedSquad is XWingSquadron) _squadTypeAmounts2[2]--;
+                                                    if (_selectedSquad is TIEBomberSquadron || _selectedSquad is YWingSquadron) _squadTypeAmounts2[3]--;
+
                                                     _numToPlace--;
                                                     if (_numToPlace <= 0)
                                                     {
@@ -588,7 +642,7 @@ namespace CIS598_Senior_Project.Screens
                 foreach (var ship in _shipsPlaced1) spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
                 foreach (var ship in _shipsPlaced2) spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
                 foreach (var squad in _squadsPlaced1) spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
-                foreach (var squad in _squadsPlaced1) spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                foreach (var squad in _squadsPlaced2) spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
 
                 if (_player1Placing)
                 {
@@ -609,7 +663,7 @@ namespace CIS598_Senior_Project.Screens
                     {
                         if (_squadTypeAmounts2[i] > 0)
                         {
-                            spriteBatch.DrawString(_galbasic, "X " + _squadTypeAmounts1[i], new Vector2(_widthIncrement * 92, hOffset * _heightIncrement), Color.White);
+                            spriteBatch.DrawString(_galbasic, "X " + _squadTypeAmounts2[i], new Vector2(_widthIncrement * 92, hOffset * _heightIncrement), Color.White);
                             hOffset += 11;
                         }
                     }
@@ -624,11 +678,6 @@ namespace CIS598_Senior_Project.Screens
                 spriteBatch.DrawString(_galbasic, _selectingPlayer + ": What do you want to do?", new Vector2(_widthIncrement * 34, 40 * _heightIncrement), Color.Gold);
             }
 
-
-
-            AWingSquadron aw = new AWingSquadron(0, _content);
-            aw.Position = new Vector2(25, 25);
-            spriteBatch.Draw(aw.Image, aw.Position, null, Color.White, MathHelper.PiOver4, aw.Origin, 1, SpriteEffects.None, 1);
 
             spriteBatch.End();
         }
@@ -690,6 +739,7 @@ namespace CIS598_Senior_Project.Screens
                 case 3:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
                         if(_player1Placing)
                         {
@@ -701,92 +751,276 @@ namespace CIS598_Senior_Project.Screens
                             _numToPlace = 1;
                             _selectedShip = _shipToPlace2[0];
                         }
-                        //store selected ship, apply it to the mouse coords within the placement bounds
-                            //once clicked a second time in the bounds, will place object and remove button.
                     }
                     break;
                 case 4:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[1];
+                        }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[1];
+                        }
                     }
                     break;
                 case 5:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[2];
+                        }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[2];
+                        }
                     }
                     break;
                 case 6:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[3];
+                        }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[3];
+                        }
                     }
                     break;
                 case 7:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[4];
+                        }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[4];
+                        }
                     }
                     break;
                 case 8:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[5];
+                        }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[5];
+                        }
                     }
                     break;
                 case 9:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[6];
+                        }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[6];
+                        }
                     }
                     break;
                 case 10:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[7];
+                        }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[7];
+                        }
                     }
                     break;
                 case 11:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        _selectedSquad = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[8];
+                        }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[8];
+                        }
                     }
                     break;
-                case 12:
-                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                case 12: //select squad to place
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released && _numToPlace == 0)
                     {
+                        _selectedShip = null;
                         _button3.Play();
-
+                        if(_player1Placing)
+                        {
+                            if(_squadTypeAmounts1[getNumNonZero(1, _squadTypeAmounts1)] >= 2)
+                            {
+                                _numToPlace = 2;
+                                _selectedSquad = _squadToPlace1[0];
+                            }
+                            else
+                            {
+                                _numToPlace = 1;
+                                _selectedSquad = _squadToPlace1[0];
+                            }
+                        }
+                        else
+                        {
+                            if (_squadTypeAmounts2[getNumNonZero(1, _squadTypeAmounts2)] >= 2)
+                            {
+                                _numToPlace = 2;
+                                _selectedSquad = _squadToPlace2[0];
+                            }
+                            else
+                            {
+                                _numToPlace = 1;
+                                _selectedSquad = _squadToPlace2[0];
+                            }
+                        }
                     }
                     break;
                 case 13:
-                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released && _numToPlace == 0)
                     {
+                        _selectedShip = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            if (_squadTypeAmounts1[getNumNonZero(2, _squadTypeAmounts1)] >= 2)
+                            {
+                                _numToPlace = 2;
+                                int temp = getNumNonZero(1, _squadTypeAmounts1);
+                                _selectedSquad = _squadToPlace1[_squadTypeAmounts1[temp]];
+                            }
+                            else
+                            {
+                                _numToPlace = 1;
+                                int temp = getNumNonZero(1, _squadTypeAmounts1);
+                                _selectedSquad = _squadToPlace1[_squadTypeAmounts1[temp]];
+                            }
+                        }
+                        else
+                        {
+                            if (_squadTypeAmounts2[getNumNonZero(2, _squadTypeAmounts2)] >= 2)
+                            {
+                                _numToPlace = 2;
+                                _selectedSquad = _squadToPlace2[_squadTypeAmounts2[getNumNonZero(1, _squadTypeAmounts2)]];
+                            }
+                            else
+                            {
+                                _numToPlace = 1;
+                                _selectedSquad = _squadToPlace2[_squadTypeAmounts2[getNumNonZero(1, _squadTypeAmounts2)]];
+                            }
+                        }
                     }
                     break;
                 case 14:
-                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released && _numToPlace == 0)
                     {
+                        _selectedShip = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            if (_squadTypeAmounts1[getNumNonZero(3, _squadTypeAmounts1)] >= 2)
+                            {
+                                _numToPlace = 2;
+                                _selectedSquad = _squadToPlace1[_squadTypeAmounts1[getNumNonZero(1, _squadTypeAmounts1)] + _squadTypeAmounts1[getNumNonZero(2, _squadTypeAmounts1)]];
+                            }
+                            else
+                            {
+                                _numToPlace = 1;
+                                _selectedSquad = _squadToPlace1[_squadTypeAmounts1[getNumNonZero(1, _squadTypeAmounts1)] + _squadTypeAmounts1[getNumNonZero(2, _squadTypeAmounts1)]];
+                            }
+                        }
+                        else
+                        {
+                            if (_squadTypeAmounts2[getNumNonZero(3, _squadTypeAmounts2)] >= 2)
+                            {
+                                _numToPlace = 2;
+                                _selectedSquad = _squadToPlace2[_squadTypeAmounts2[getNumNonZero(1, _squadTypeAmounts2)] + _squadTypeAmounts2[getNumNonZero(2, _squadTypeAmounts2)]];
+                            }
+                            else
+                            {
+                                _numToPlace = 1;
+                                _selectedSquad = _squadToPlace2[_squadTypeAmounts2[getNumNonZero(1, _squadTypeAmounts2)] + _squadTypeAmounts2[getNumNonZero(2, _squadTypeAmounts2)]];
+                            }
+                        }
                     }
                     break;
                 case 15:
-                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released && _numToPlace == 0)
                     {
+                        _selectedShip = null;
                         _button3.Play();
-
+                        if (_player1Placing)
+                        {
+                            if (_squadTypeAmounts1[getNumNonZero(4, _squadTypeAmounts1)] >= 2)
+                            {
+                                _numToPlace = 2;
+                                _selectedSquad = _squadToPlace1[_squadTypeAmounts1[getNumNonZero(1, _squadTypeAmounts1)] + _squadTypeAmounts1[getNumNonZero(2, _squadTypeAmounts1)] + _squadTypeAmounts1[getNumNonZero(3, _squadTypeAmounts1)]];
+                            }
+                            else
+                            {
+                                _numToPlace = 1;
+                                _selectedSquad = _squadToPlace1[_squadTypeAmounts1[getNumNonZero(1, _squadTypeAmounts1)] + _squadTypeAmounts1[getNumNonZero(2, _squadTypeAmounts1)] + _squadTypeAmounts1[getNumNonZero(3, _squadTypeAmounts1)]];
+                            }
+                        }
+                        else
+                        {
+                            if (_squadTypeAmounts2[getNumNonZero(4, _squadTypeAmounts2)] >= 2)
+                            {
+                                _numToPlace = 2;
+                                _selectedSquad = _squadToPlace2[_squadTypeAmounts2[getNumNonZero(1, _squadTypeAmounts2)] + _squadTypeAmounts2[getNumNonZero(2, _squadTypeAmounts2)] + _squadTypeAmounts2[getNumNonZero(3, _squadTypeAmounts2)]];
+                            }
+                            else
+                            {
+                                _numToPlace = 1;
+                                _selectedSquad = _squadToPlace2[_squadTypeAmounts2[getNumNonZero(1, _squadTypeAmounts2)] + _squadTypeAmounts2[getNumNonZero(2, _squadTypeAmounts2)] + _squadTypeAmounts2[getNumNonZero(3, _squadTypeAmounts2)]];
+                            }
+                        }
                     }
                     break;
             }
@@ -977,7 +1211,7 @@ namespace CIS598_Senior_Project.Screens
                 {
                     foreach (var squad in _squadsPlaced1)
                     {
-                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 130 && Math.Abs(_currentMouseState.X - squad.Bounds.Center.Y) < 130)
+                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 110 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 130)
                         {
                             return false;
                         }
@@ -985,7 +1219,7 @@ namespace CIS598_Senior_Project.Screens
 
                     foreach (var ship in _shipsPlaced1)
                     {
-                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 210 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 210)
+                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 155 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 210)
                         {
                             return false;
                         }
@@ -995,7 +1229,7 @@ namespace CIS598_Senior_Project.Screens
                 {
                     foreach (var squad in _squadsPlaced2)
                     {
-                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 130 && Math.Abs(_currentMouseState.X - squad.Bounds.Center.Y) < 130)
+                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 110 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 130)
                         {
                             return false;
                         }
@@ -1003,20 +1237,20 @@ namespace CIS598_Senior_Project.Screens
 
                     foreach (var ship in _shipsPlaced2)
                     {
-                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 210 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 210)
+                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 155 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 210)
                         {
                             return false;
                         }
                     }
                 }
             }
-            else
+            else //is a squad
             {
                 if(_player1Placing)
                 {
                     foreach (var squad in _squadsPlaced1)
                     {
-                        if(Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 55 && Math.Abs(_currentMouseState.X - squad.Bounds.Center.Y) < 55)
+                        if(Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 55 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 55)
                         {
                             return false;
                         }
@@ -1024,7 +1258,7 @@ namespace CIS598_Senior_Project.Screens
 
                     foreach(var ship in _shipsPlaced1)
                     {
-                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 130 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 130)
+                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 110 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 130)
                         {
                             return false;
                         }
@@ -1034,7 +1268,7 @@ namespace CIS598_Senior_Project.Screens
                 {
                     foreach (var squad in _squadsPlaced2)
                     {
-                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 55 && Math.Abs(_currentMouseState.X - squad.Bounds.Center.Y) < 55)
+                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 55 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 55)
                         {
                             return false;
                         }
@@ -1042,7 +1276,7 @@ namespace CIS598_Senior_Project.Screens
 
                     foreach (var ship in _shipsPlaced2)
                     {
-                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 130 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 130)
+                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 110 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 130)
                         {
                             return false;
                         }
@@ -1063,6 +1297,24 @@ namespace CIS598_Senior_Project.Screens
             {
                 _buttons[i].IsActive = false;
             }
+        }
+
+        /// <summary>
+        /// OUtputs the next not zero index on an int array
+        /// </summary>
+        /// <param name="num">the num'th non zero index you want</param>
+        /// <param name="array">the array to search through</param>
+        /// <returns>the right index</returns>
+        private int getNumNonZero(int num, int[] array)
+        {
+            int result = 0;
+            int output = 0;
+            for(int i = 0; i < array.Length; i++)
+            {
+                if (array[i] > 0) result++;
+                if (result == num) return i;
+            }
+            return output;
         }
     }
 }
