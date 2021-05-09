@@ -69,12 +69,23 @@ namespace CIS598_Senior_Project.Screens
         private Fleet _player1;
         private Fleet _player2;
 
-        private List<Ship> _shipPlace1;
-        private List<Ship> _shipPlace2;
-        private List<Squadron> _squadPlace1;
-        private List<Squadron> _squadPlace2;
+        private List<Ship> _shipToPlace1;
+        private List<Ship> _shipsPlaced1;
+        
+        private List<Ship> _shipToPlace2;
+        private List<Ship> _shipsPlaced2;
+
+        private List<Squadron> _squadToPlace1;
+        private List<Squadron> _squadsPlaced1;
+
+        private List<Squadron> _squadToPlace2;
+        private List<Squadron> _squadsPlaced2;
+
         private int[] _squadTypeAmounts1;
         private int[] _squadTypeAmounts2;
+
+        private Ship _selectedShip;
+        private Squadron _selectedSquad;
 
         private List<CustButton> _buttons;
 
@@ -93,6 +104,7 @@ namespace CIS598_Senior_Project.Screens
         private int _widthIncrement;
         private int _heightIncrement;
         private int _roundNum;
+        private int _numToPlace;
 
         private string _selectingPlayer;
 
@@ -127,10 +139,15 @@ namespace CIS598_Senior_Project.Screens
             _player1 = player1;
             _player2 = player2;
 
-            _shipPlace1 = _player1.Ships;
-            _shipPlace2 = _player2.Ships;
-            _squadPlace1 = _player1.Squadrons;
-            _squadPlace2 = _player2.Squadrons;
+            _shipToPlace1 = _player1.Ships;
+            _shipsPlaced1 = new List<Ship>();
+            _shipToPlace2 = _player2.Ships;
+            _shipsPlaced2 = new List<Ship>();
+            _squadToPlace1 = _player1.Squadrons;
+            _squadsPlaced1 = new List<Squadron>();
+            _squadToPlace2 = _player2.Squadrons;
+            _squadsPlaced2 = new List<Squadron>();
+
             _squadTypeAmounts1 = returnSquads(_player1.Squadrons, _player1.IsRebelFleet);
             _squadTypeAmounts2 = returnSquads(_player2.Squadrons, _player2.IsRebelFleet);
 
@@ -142,6 +159,7 @@ namespace CIS598_Senior_Project.Screens
             _squadCommand = SquadronCommand.ActivateSquadron;
 
             _roundNum = 0;
+            _numToPlace = 0;
 
             _widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
             _heightIncrement = _game.GraphicsDevice.Viewport.Height / 100;
@@ -244,7 +262,7 @@ namespace CIS598_Senior_Project.Screens
                             else _selectingPlayer = "Player 2";
                             break;
                         case SetupState.Placement:
-                            if (_shipPlace1.Count == 0 && _shipPlace2.Count == 0 && _squadPlace1.Count == 0 && _squadPlace2.Count == 0)
+                            if (_shipToPlace1.Count == 0 && _shipToPlace2.Count == 0 && _squadToPlace1.Count == 0 && _squadToPlace2.Count == 0)
                             {
                                 _setupState = SetupState.SetupDone;
                             }
@@ -252,11 +270,11 @@ namespace CIS598_Senior_Project.Screens
                             {
                                 if (_player1Placing)
                                 {
-                                    for(int i = 0; i < _shipPlace1.Count; i++)
+                                    for(int i = 0; i < _shipToPlace1.Count; i++)
                                     {
                                         _buttons[i + 3].IsActive = true;
                                     }
-                                    setFleetShipButtons(_shipPlace1);
+                                    setFleetShipButtons(_shipToPlace1);
 
 
                                     int numDiff = 0;
@@ -270,13 +288,60 @@ namespace CIS598_Senior_Project.Screens
                                         _buttons[i + 12].IsActive = true;
                                     }
                                     setFleetSquadronButtons(_player1.Squadrons, _player1.IsRebelFleet);
+
+                                    //placing ship
+                                    if(_selectedShip != null)
+                                    {
+                                        if (_currentMouseState.X >= 80 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - 80 && _currentMouseState.Y >= (_game.GraphicsDevice.Viewport.Height - _heightIncrement * 25) + 105 && _currentMouseState.Y <= _game.GraphicsDevice.Viewport.Height - 105)
+                                        {
+                                            if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                            {
+                                                if(isPlacedTooCLose(true))
+                                                {
+                                                    _selectedShip.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+                                                    _shipToPlace1.Remove(_selectedShip);
+                                                    _shipsPlaced1.Add(_selectedShip);
+                                                    _selectedShip = null;
+                                                    _numToPlace--;
+
+                                                    if (_shipToPlace2.Count > 0 || _squadToPlace2.Count > 0) _player1Placing = false;
+                                                    else _player1Placing = true;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    //placing squad
+                                    if(_selectedSquad != null)
+                                    {
+                                        if(_currentMouseState.X >= 30 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - 30 && _currentMouseState.Y >= (_game.GraphicsDevice.Viewport.Height - _heightIncrement * 25) + 30 && _currentMouseState.Y <= _game.GraphicsDevice.Viewport.Height - 30)
+                                        {
+                                            if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                            {   
+                                                if(isPlacedTooCLose(false))
+                                                {
+                                                    _selectedSquad.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+                                                    _squadToPlace1.Remove(_selectedSquad);
+                                                    _squadsPlaced1.Add(_selectedSquad);
+                                                    _numToPlace--;
+                                                    if (_numToPlace <= 0) 
+                                                    {
+                                                        _selectedSquad = null;
+
+                                                        if (_shipToPlace2.Count > 0 || _squadToPlace2.Count > 0) _player1Placing = false;
+                                                        else _player1Placing = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
-                                else
+                                else //Player 2 is placing
                                 {
-                                    for (int i = 0; i < _shipPlace2.Count; i++)
+                                    for (int i = 0; i < _shipToPlace2.Count; i++)
                                     {
                                         _buttons[i + 3].IsActive = true;
-                                        setFleetShipButtons(_shipPlace2);
+                                        setFleetShipButtons(_shipToPlace2);
                                     }
 
                                     int numDiff = 0;
@@ -290,7 +355,56 @@ namespace CIS598_Senior_Project.Screens
                                         _buttons[i + 12].IsActive = true;
                                     }
                                     setFleetSquadronButtons(_player2.Squadrons, _player2.IsRebelFleet);
+
+                                    //placing ship
+                                    if (_selectedShip != null)
+                                    {
+                                        if (_currentMouseState.X >= 80 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - 80 && _currentMouseState.Y >= 105 && _currentMouseState.Y <= (_game.GraphicsDevice.Viewport.Height / 4) - 105)
+                                        {
+                                            if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                            {
+                                                if (isPlacedTooCLose(true))
+                                                {
+                                                    _selectedShip.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+                                                    _shipToPlace2.Remove(_selectedShip);
+                                                    _shipsPlaced2.Add(_selectedShip);
+                                                    _selectedShip = null;
+                                                    _numToPlace--;
+
+                                                    if (_shipToPlace1.Count > 0 || _squadToPlace1.Count > 0) _player1Placing = true;
+                                                    else _player1Placing = false;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    //placing squad
+                                    if (_selectedSquad != null)
+                                    {
+                                        if (_currentMouseState.X >= 30 && _currentMouseState.X <= (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - 30 && _currentMouseState.Y >= 30 && _currentMouseState.Y <= (_game.GraphicsDevice.Viewport.Height / 4) - 30)
+                                        {
+                                            if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                            {
+                                                if (isPlacedTooCLose(false))
+                                                {
+                                                    _selectedSquad.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+                                                    _squadToPlace2.Remove(_selectedSquad);
+                                                    _squadsPlaced2.Add(_selectedSquad);
+                                                    _numToPlace--;
+                                                    if (_numToPlace <= 0)
+                                                    {
+                                                        _selectedSquad = null;
+
+                                                        if (_shipToPlace1.Count > 0 || _squadToPlace1.Count > 0) _player1Placing = true;
+                                                        else _player1Placing = false;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                 }
+
                             }
                             break;
                         case SetupState.SetupDone:
@@ -503,6 +617,10 @@ namespace CIS598_Senior_Project.Screens
                 spriteBatch.DrawString(_galbasic, _selectingPlayer + ": What do you want to do?", new Vector2(_widthIncrement * 34, 40 * _heightIncrement), Color.Gold);
             }
 
+            AWingSquadron aw = new AWingSquadron(0, _content);
+            aw.Position = new Vector2(25, 25);
+            spriteBatch.Draw(aw.Image, aw.Position, null, Color.White, MathHelper.PiOver4, aw.Origin, 1, SpriteEffects.None, 1);
+
             spriteBatch.End();
         }
 
@@ -564,6 +682,11 @@ namespace CIS598_Senior_Project.Screens
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button3.Play();
+                        if(_player1Placing)
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace1[0];
+                        }
                         //store selected ship, apply it to the mouse coords within the placement bounds
                             //once clicked a second time in the bounds, will place object and remove button.
                     }
@@ -825,6 +948,95 @@ namespace CIS598_Senior_Project.Screens
                     x++;
                 }
             }
+        }
+
+        /// <summary>
+        /// Tests to see if the current placement is too close to another ship or squadron
+        /// </summary>
+        /// <param name="isShip">If you're placing a ship or a squadron</param>
+        /// <returns>false if its too close or true if its good</returns>
+        private bool isPlacedTooCLose(bool isShip)
+        {
+            if(isShip)
+            {
+                if (_player1Placing)
+                {
+                    foreach (var squad in _squadsPlaced1)
+                    {
+                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 130 && Math.Abs(_currentMouseState.X - squad.Bounds.Center.Y) < 130)
+                        {
+                            return false;
+                        }
+                    }
+
+                    foreach (var ship in _shipsPlaced1)
+                    {
+                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 210 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 210)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var squad in _squadsPlaced2)
+                    {
+                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 130 && Math.Abs(_currentMouseState.X - squad.Bounds.Center.Y) < 130)
+                        {
+                            return false;
+                        }
+                    }
+
+                    foreach (var ship in _shipsPlaced2)
+                    {
+                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 210 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 210)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if(_player1Placing)
+                {
+                    foreach (var squad in _squadsPlaced1)
+                    {
+                        if(Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 55 && Math.Abs(_currentMouseState.X - squad.Bounds.Center.Y) < 55)
+                        {
+                            return false;
+                        }
+                    }
+
+                    foreach(var ship in _shipsPlaced1)
+                    {
+                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 130 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 130)
+                        {
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var squad in _squadsPlaced2)
+                    {
+                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 55 && Math.Abs(_currentMouseState.X - squad.Bounds.Center.Y) < 55)
+                        {
+                            return false;
+                        }
+                    }
+
+                    foreach (var ship in _shipsPlaced2)
+                    {
+                        if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 130 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 130)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

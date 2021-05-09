@@ -832,6 +832,18 @@
 /processorParam:TextureFormat=Color
 /build:GladiatorSD.png
 
+#begin GladiatorSDToken103x153.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GladiatorSDToken103x153.png
+
 #begin GoFirst.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1876,6 +1888,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:VictorySD.png
+
+#begin VictorySDToken153x205.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:VictorySDToken153x205.png
 
 #begin ViewFleet.png
 /importer:TextureImporter

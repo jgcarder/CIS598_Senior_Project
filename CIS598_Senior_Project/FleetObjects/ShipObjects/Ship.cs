@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
+using CIS598_Senior_Project.Collisions;
 using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.ShipObjects
@@ -69,9 +70,21 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract Rectangle Source { get; }
 
-        public abstract double Rotation { get; set; }
+        public abstract float Rotation { get; set; }
 
         public abstract Vector2 Position { get; set; }
+
+        public abstract Vector2 Origin { get; }
+
+        public abstract BoundingCircle Bounds { get; }
+
+        public abstract BoundingCircle SternBounds { get; }
+
+        public abstract BoundingCircle PortBounds { get; }
+
+        public abstract BoundingCircle StarboardBounds { get; }
+
+        public abstract BoundingCircle AftBounds { get; }
 
         public abstract void setHullDice(bool shipA);
 

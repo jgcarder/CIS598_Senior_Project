@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using Microsoft.Xna.Framework.Content;
+using CIS598_Senior_Project.Collisions;
 
 namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 {
@@ -42,8 +43,12 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 
         public abstract Rectangle Source { get; }
 
-        public abstract double Rotation { get; set; }
+        public abstract float Rotation { get; set; }
 
         public abstract Vector2 Position { get; set; }
+
+        public abstract Vector2 Origin { get; }
+
+        public abstract BoundingCircle Bounds { get; }
     }
 }

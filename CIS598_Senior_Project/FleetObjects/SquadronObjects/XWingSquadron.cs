@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
+using CIS598_Senior_Project.Collisions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
@@ -44,15 +45,21 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 
         public override Rectangle Source { get; } //To be set
 
-        public override double Rotation { get; set; } = 0.0;
+        public override float Rotation { get; set; } = 0;
 
         public override Vector2 Position { get; set; } = Vector2.Zero;
+
+        public override Vector2 Origin { get { return Vector2.Zero; } }
+
+        public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X + Origin.X, Position.Y + Origin.Y), 25); } }
 
         public XWingSquadron(int id, ContentManager content)
         {
             _hull = 5;
 
             Id = id;
+
+            Image = content.Load<Texture2D>("XWingToken");
 
             AntiShipDice = new List<Die>();
             AntiSquadronDice = new List<Die>();

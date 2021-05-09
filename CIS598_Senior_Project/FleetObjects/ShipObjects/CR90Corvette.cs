@@ -1,6 +1,7 @@
 ﻿using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
+using CIS598_Senior_Project.Collisions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -175,9 +176,21 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override Rectangle Source { get; } //to be set
 
-        public override double Rotation { get; set; } = 0; //to be set
+        public override float Rotation { get; set; } = 0; //to be set
 
         public override Vector2 Position { get; set; } //to be set
+
+        public override Vector2 Origin { get; }
+
+        public override BoundingCircle Bounds { get; }
+
+        public override BoundingCircle SternBounds { get; }
+
+        public override BoundingCircle PortBounds { get; }
+
+        public override BoundingCircle StarboardBounds { get; }
+
+        public override BoundingCircle AftBounds { get; }
 
         public override FiringArc[] Arcs { get; }
 

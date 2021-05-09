@@ -508,7 +508,7 @@ namespace CIS598_Senior_Project.Screens
                             {
                                 button.Color = Color.DarkSlateGray;
                                 button.AnAction(button, new ButtonClickedEventArgs() { Id = button.Id });
-                                if (button.Id > 21 && button.Id < 51) _selectedShip.refreshShip();
+                                //if (button.Id > 21 && button.Id < 51) 
                             }
 
                             if (_currentMouseState.LeftButton == ButtonState.Pressed)
@@ -1270,6 +1270,7 @@ namespace CIS598_Senior_Project.Screens
                     break;
                 case 49: //add ship to fleet
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released) _button3.Play();
+                    _selectedShip.refreshShip();
                     _fleet.Ships.Add(_selectedShip);
                     _shipID++;
                     buttonSweeper(9);

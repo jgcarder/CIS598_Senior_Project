@@ -1,6 +1,7 @@
 ﻿using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
+using CIS598_Senior_Project.Collisions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -174,9 +175,21 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override Rectangle Source { get; } //to be set
 
-        public override double Rotation { get; set; } = 0; //to be set
+        public override float Rotation { get; set; } = 0; //to be set
 
         public override Vector2 Position { get; set; } //to be set
+
+        public override Vector2 Origin { get { return new Vector2(75, 101); } }
+
+        public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X + Origin.X, Position.Y + Origin.Y), 62); } }
+
+        public override BoundingCircle SternBounds { get; }
+
+        public override BoundingCircle PortBounds { get; }
+
+        public override BoundingCircle StarboardBounds { get; }
+
+        public override BoundingCircle AftBounds { get; }
 
         public override FiringArc[] Arcs { get; }
 
@@ -214,6 +227,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             _blackAS = new List<BlackDie>();
 
             ShipTypeA = true;
+
+            Image = content.Load<Texture2D>("VictorySDToken153x205");
 
             _hull = 8;
             _command = 3;
