@@ -322,6 +322,7 @@ namespace CIS598_Senior_Project.Screens
                                                 if (isPlacedTooCLose(false))
                                                 {
                                                     _selectedSquad.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+                                                    _selectedSquad.Rotation = MathHelper.Pi;
                                                     Squadron s = _selectedSquad;
                                                     if (_squadToPlace1.Count >= 2) 
                                                     {
@@ -418,6 +419,7 @@ namespace CIS598_Senior_Project.Screens
                                                 if (isPlacedTooCLose(false))
                                                 {
                                                     _selectedSquad.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+                                                    _selectedSquad.Rotation = MathHelper.Pi;
                                                     Squadron s = _selectedSquad;
                                                     if (_squadToPlace2.Count >= 2)
                                                     {
@@ -639,10 +641,26 @@ namespace CIS598_Senior_Project.Screens
                 if (_player1Placing) spriteBatch.Draw(_player1Zone, new Rectangle(0, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 25, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
                 else spriteBatch.Draw(_player2Zone, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
 
-                foreach (var ship in _shipsPlaced1) spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
-                foreach (var ship in _shipsPlaced2) spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
-                foreach (var squad in _squadsPlaced1) spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
-                foreach (var squad in _squadsPlaced2) spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                foreach (var ship in _shipsPlaced1)
+                {
+                    if(_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Red, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                    else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                }
+                foreach (var ship in _shipsPlaced2)
+                {
+                    if(_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Blue, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                    else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                }
+                foreach (var squad in _squadsPlaced1)
+                {
+                    if(_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Red, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                    else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                }
+                foreach (var squad in _squadsPlaced2)
+                {
+                    if(_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Blue, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                    else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                }
 
                 if (_player1Placing)
                 {

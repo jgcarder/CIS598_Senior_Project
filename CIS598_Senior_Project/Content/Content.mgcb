@@ -145,6 +145,18 @@
 /processorParam:TextureFormat=Color
 /build:AssaultFrigate.png
 
+#begin AssaultFrigateToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AssaultFrigateToken.png
+
 #begin AWingCard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -445,6 +457,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:CR90Corvette.png
+
+#begin CR90CorvetteToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:CR90CorvetteToken.png
 
 #begin Decrease.png
 /importer:TextureImporter
@@ -1210,6 +1234,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:NebulonBSupport.png
+
+#begin NebulonBToken.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NebulonBToken.png
 
 #begin NewFleet.png
 /importer:TextureImporter

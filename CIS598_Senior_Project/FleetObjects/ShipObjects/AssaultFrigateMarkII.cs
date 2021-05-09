@@ -168,7 +168,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override Vector2 Position { get; set; } //to be set
 
-        public override Vector2 Origin { get { return new Vector2(75, 101); } }
+        public override Vector2 Origin { get { return new Vector2(75, 87); } }
 
         public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 62); } }
 
@@ -222,6 +222,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             _blackAS = new List<BlackDie>();
 
             ShipTypeA = true;
+
+            Image = content.Load<Texture2D>("AssaultFrigateToken");
 
             _hull = 6;
             _command = 3;

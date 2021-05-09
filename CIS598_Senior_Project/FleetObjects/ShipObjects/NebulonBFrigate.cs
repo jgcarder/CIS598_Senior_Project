@@ -167,9 +167,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override Vector2 Position { get; set; } //to be set
 
-        public override Vector2 Origin { get; }
+        public override Vector2 Origin { get { return new Vector2(51, 72); } }
 
-        public override BoundingCircle Bounds { get; }
+        public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 36); } }
 
         public override BoundingCircle SternBounds { get; }
 
@@ -215,6 +215,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             _blackAS = new List<BlackDie>();
 
             ShipTypeA = true;
+
+            Image = content.Load<Texture2D>("NebulonBToken");
 
             _hull = 5;
             _command = 2;
