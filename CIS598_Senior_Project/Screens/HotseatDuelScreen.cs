@@ -366,6 +366,7 @@ namespace CIS598_Senior_Project.Screens
                                                 if (isPlacedTooCLose(true))
                                                 {
                                                     _selectedShip.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+                                                    _selectedShip.Rotation = MathHelper.Pi;
                                                     _shipToPlace2.Remove(_selectedShip);
                                                     _shipsPlaced2.Add(_selectedShip);
                                                     _selectedShip = null;
@@ -583,7 +584,12 @@ namespace CIS598_Senior_Project.Screens
                 if (_player1Placing) spriteBatch.Draw(_player1Zone, new Rectangle(0, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 25, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
                 else spriteBatch.Draw(_player2Zone, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
 
-                if(_player1Placing)
+                foreach (var ship in _shipsPlaced1) spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                foreach (var ship in _shipsPlaced2) spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                foreach (var squad in _squadsPlaced1) spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                foreach (var squad in _squadsPlaced1) spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+
+                if (_player1Placing)
                 {
                     int hOffset = 43;
                     for(int i = 0; i < _squadTypeAmounts1.Length; i++)
@@ -616,6 +622,8 @@ namespace CIS598_Senior_Project.Screens
             {
                 spriteBatch.DrawString(_galbasic, _selectingPlayer + ": What do you want to do?", new Vector2(_widthIncrement * 34, 40 * _heightIncrement), Color.Gold);
             }
+
+
 
             AWingSquadron aw = new AWingSquadron(0, _content);
             aw.Position = new Vector2(25, 25);
