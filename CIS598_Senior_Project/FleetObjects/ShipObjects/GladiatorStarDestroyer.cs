@@ -167,9 +167,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override Vector2 Position { get; set; } //to be set
 
-        public override Vector2 Origin { get; }
+        public override Vector2 Origin { get { return new Vector2(51, 75); } }
 
-        public override BoundingCircle Bounds { get; }
+        public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X + Origin.X, Position.Y + Origin.Y), 36); } }
 
         public override BoundingCircle SternBounds { get; }
 

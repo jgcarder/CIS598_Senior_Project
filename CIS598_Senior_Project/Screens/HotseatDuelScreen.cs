@@ -268,6 +268,7 @@ namespace CIS598_Senior_Project.Screens
                             }
                             else
                             {
+                                buttonSweeper(3);
                                 if (_player1Placing)
                                 {
                                     for(int i = 0; i < _shipToPlace1.Count; i++)
@@ -695,6 +696,11 @@ namespace CIS598_Senior_Project.Screens
                             _numToPlace = 1;
                             _selectedShip = _shipToPlace1[0];
                         }
+                        else
+                        {
+                            _numToPlace = 1;
+                            _selectedShip = _shipToPlace2[0];
+                        }
                         //store selected ship, apply it to the mouse coords within the placement bounds
                             //once clicked a second time in the bounds, will place object and remove button.
                     }
@@ -1045,6 +1051,18 @@ namespace CIS598_Senior_Project.Screens
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// A sweeper method that moves through and switches uneeded buttons to inactive.
+        /// </summary>
+        /// <param name="index">The index to start the sweep at.</param>
+        private void buttonSweeper(int index)
+        {
+            for (int i = index; i < _buttons.Count; i++)
+            {
+                _buttons[i].IsActive = false;
+            }
         }
     }
 }
