@@ -1250,7 +1250,7 @@ namespace CIS598_Senior_Project.Screens
                 {
                     foreach (var squad in _squadsPlaced1)
                     {
-                        if(Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 55 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 55)
+                        if(Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 51 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 51)
                         {
                             return false;
                         }
@@ -1268,7 +1268,7 @@ namespace CIS598_Senior_Project.Screens
                 {
                     foreach (var squad in _squadsPlaced2)
                     {
-                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 55 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 55)
+                        if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 51 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 51)
                         {
                             return false;
                         }
