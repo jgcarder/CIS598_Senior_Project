@@ -46,6 +46,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract bool HasConcentrateFireToken { get; set; }
 
+        public abstract bool BeenActivated { get; set; }
+
         public abstract string Name { get; }
 
         public abstract Queue<CommandDialEnum> CommandDials { get; set; }

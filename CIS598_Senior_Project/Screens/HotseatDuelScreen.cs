@@ -188,11 +188,11 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(14, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Squadron placement buttons
             _buttons.Add(new CustButton(15, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 73 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //----------------
 
-            _buttons.Add(new CustButton(16, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 40 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Nav command 
-            _buttons.Add(new CustButton(17, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 40 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Eng command 
-            _buttons.Add(new CustButton(18, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 51 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Sqd command 
-            _buttons.Add(new CustButton(19, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 51 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Con command 
-            _buttons.Add(new CustButton(20, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 7), false)); //Set Dial button
+            _buttons.Add(new CustButton(16, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 54 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Nav command 
+            _buttons.Add(new CustButton(17, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 54 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Eng command 
+            _buttons.Add(new CustButton(18, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 65 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Sqd command 
+            _buttons.Add(new CustButton(19, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 65 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Con command 
+            _buttons.Add(new CustButton(20, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 76 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 7), false)); //Set Dial button
 
         }
 
@@ -520,9 +520,6 @@ namespace CIS598_Senior_Project.Screens
                             _selectedShip = nextToPlace(_player2.Ships);
                         }
                     }
-                    
-                    //Setting your command dials
-                        //queue up a dial - 5
                     break;
                 case GameEnum.Ship_Phase:
                     //Taking turns activating ships ~
@@ -561,7 +558,30 @@ namespace CIS598_Senior_Project.Screens
                         //otherwise attack
                     break;
                 case GameEnum.Status_Phase:
-                    //reset defense tokens
+                    foreach(var ship in _player1.Ships)
+                    {
+                        ship.BeenActivated = false;
+                        foreach(var dt in ship.DefenseTokens) if (dt.State == DefenseTokenStateEnum.Exhausted) dt.State = DefenseTokenStateEnum.Ready;
+                        if (ship.Title != null && ship.Title.IsExhausted) ship.Title.IsExhausted = false;
+                        if (ship.Commander != null && ship.Commander.IsExhausted) ship.Commander.IsExhausted = false;
+                        foreach(var upgrade in ship.Upgrades) if (upgrade != null && upgrade.IsExhausted) upgrade.IsExhausted = false;
+                    }
+                    foreach (var ship in _player2.Ships)
+                    {
+                        ship.BeenActivated = false;
+                        foreach (var dt in ship.DefenseTokens) if (dt.State == DefenseTokenStateEnum.Exhausted) dt.State = DefenseTokenStateEnum.Ready;
+                        if (ship.Title != null && ship.Title.IsExhausted) ship.Title.IsExhausted = false;
+                        if (ship.Commander != null && ship.Commander.IsExhausted) ship.Commander.IsExhausted = false;
+                        foreach (var upgrade in ship.Upgrades) if (upgrade != null && upgrade.IsExhausted) upgrade.IsExhausted = false;
+                    }
+                    foreach (var squad in _player1.Squadrons) if (squad.HasBeenActivated) squad.HasBeenActivated = false;
+                    foreach (var squad in _player2.Squadrons) if (squad.HasBeenActivated) squad.HasBeenActivated = false;
+
+                    _roundNum++;
+                    if (_player1Start) _player1Start = false;
+                    else _player1Start = true;
+
+                    _state = GameEnum.Command_Phase;
                     break;
             }
 
@@ -733,12 +753,44 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
 
+
+            if(_state == GameEnum.Setup)
+            {
+                spriteBatch.DrawString(_galbasic, "   <Game Setup>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+            }
             if(_state == GameEnum.Command_Phase)
             {
                 drawFleets(spriteBatch);
+                if(_selectedShip != null) drawShipInfo(spriteBatch);
+
+                spriteBatch.DrawString(_galbasic, "<Command Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
+
+                if (_player1Placing) spriteBatch.DrawString(_galbasic, "  Player 1 Setting", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
+                else spriteBatch.DrawString(_galbasic, "  Player 2 Setting", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
+
+                spriteBatch.DrawString(_galbasic, _selectedDial.ToString(), new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _heightIncrement * 50), Color.Gold);
+            }
+            if(_state == GameEnum.Ship_Phase)
+            {
+                drawFleets(spriteBatch);
+                spriteBatch.DrawString(_galbasic, "   <Ship Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
+            }
+            if(_state == GameEnum.Squadron_Phase)
+            {
+                drawFleets(spriteBatch);
+                spriteBatch.DrawString(_galbasic, "  <Squad Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
+            }
+            if(_state == GameEnum.Status_Phase)
+            {
+                drawFleets(spriteBatch);
+                spriteBatch.DrawString(_galbasic, "  <Squad Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
             }
 
-            if(_setupState == SetupState.SelectFirst && _state == GameEnum.Setup)
+            if (_setupState == SetupState.SelectFirst && _state == GameEnum.Setup)
             {
                 spriteBatch.DrawString(_galbasic, _selectingPlayer + ": What do you want to do?", new Vector2(_widthIncrement * 34, 40 * _heightIncrement), Color.Gold);
             }
@@ -1433,21 +1485,29 @@ namespace CIS598_Senior_Project.Screens
             {
                 if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Red, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
                 else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+
+                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.Bounds.Center, Color.DarkGoldenrod);
             }
             foreach (var ship in _player2.Ships)
             {
                 if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Blue, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
                 else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+
+                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.Bounds.Center, Color.DarkGoldenrod);
             }
             foreach (var squad in _player1.Squadrons)
             {
                 if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Red, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
                 else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+
+                spriteBatch.DrawString(_galbasic, "" + squad.Id, squad.Bounds.Center, Color.DarkGoldenrod);
             }
             foreach (var squad in _player2.Squadrons)
             {
                 if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Blue, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
                 else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+
+                spriteBatch.DrawString(_galbasic, "" + squad.Id, squad.Bounds.Center, Color.DarkGoldenrod);
             }
         }
 
@@ -1480,6 +1540,51 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Draws the selected ship's information for the user to see
+        /// </summary>
+        /// <param name="spriteBatch">The Spritebatch used to draw the ship's information</param>
+        private void drawShipInfo(SpriteBatch spriteBatch)
+        {
+            Texture2D image;
+            if(_selectedShip is AssaultFrigateMarkII)
+            {
+                if (_selectedShip.ShipTypeA) image = _content.Load<Texture2D>("AssaultA");
+                else image = _content.Load<Texture2D>("AssaultB");
+            }
+            else if (_selectedShip is CR90Corvette)
+            {
+                if (_selectedShip.ShipTypeA) image = _content.Load<Texture2D>("CR90A");
+                else image = _content.Load<Texture2D>("CR90B");
+            }
+            else if (_selectedShip is NebulonBFrigate)
+            {
+                if (_selectedShip.ShipTypeA) image = _content.Load<Texture2D>("NebulonBEscort");
+                else image = _content.Load<Texture2D>("NebulonBSupport");
+            }
+            else if (_selectedShip is GladiatorStarDestroyer)
+            {
+                if (_selectedShip.ShipTypeA) image = _content.Load<Texture2D>("GladiatorISD");
+                else image = _content.Load<Texture2D>("GladiatorIISD");
+            }
+            else //if (_selectedShip is VictoryStarDestroyer)
+            {
+                if (_selectedShip.ShipTypeA) image = _content.Load<Texture2D>("VictoryISD");
+                else image = _content.Load<Texture2D>("VictoryIISD");
+            }
+
+            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _heightIncrement, _widthIncrement * 18, _heightIncrement * 30), Color.White);
+
+            spriteBatch.DrawString(_descriptor, "ID: " + _selectedShip.Id + "     Current HP: " + _selectedShip.Hull + "    Commands Set: " + _selectedShip.CommandDials.Count, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 32 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Shields:   " + _selectedShip.Arcs[0].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 34 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "             " + _selectedShip.Arcs[1].Shields + "     " + _selectedShip.Arcs[2].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 37 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "                " + _selectedShip.Arcs[3].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 40 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Nav Token: " + _selectedShip.HasNavigationToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 42 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Eng Token: " + _selectedShip.HasEngineeringToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 44 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Squad Token: " + _selectedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 46 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Con. Fire Token: " + _selectedShip.HasConcentrateFireToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 48 * _heightIncrement), Color.Gold);
         }
     }
 }

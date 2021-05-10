@@ -151,6 +151,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        public override bool BeenActivated { get; set; } = false;
+
         public override string Name { get { return "Gladiator Star Destroyer"; } }
 
         public override Queue<CommandDialEnum> CommandDials { get; set; }

@@ -163,6 +163,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        public override bool BeenActivated { get; set; } = false;
+
         public override string Name { get { return "Victory Star Destroyer"; } }
 
         public override Queue<CommandDialEnum> CommandDials { get; set; }

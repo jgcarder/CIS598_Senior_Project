@@ -30,7 +30,7 @@ namespace CIS598_Senior_Project.FleetObjects.DefenseTokenObjects
 
         public override Rectangle Source { get; } //To be assigned
 
-        public override DefenseTokenStateEnum State { get { return _state; } }
+        public override DefenseTokenStateEnum State { get { return _state; } set { _state = value; } }
 
         public RedirectDefenseToken(int id)
         {

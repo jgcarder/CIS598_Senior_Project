@@ -18,7 +18,7 @@ namespace CIS598_Senior_Project.FleetObjects.DefenseTokenObjects
 
         public abstract Rectangle Source { get; }
 
-        public abstract DefenseTokenStateEnum State { get; }
+        public abstract DefenseTokenStateEnum State { get; set; }
 
         public abstract void Use();
 
