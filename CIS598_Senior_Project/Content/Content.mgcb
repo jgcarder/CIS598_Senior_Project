@@ -386,6 +386,18 @@
 /processorParam:TextureFormat=Color
 /build:Commander.png
 
+#begin ConcentrateFireCommand.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ConcentrateFireCommand.png
+
 #begin Confirm.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -644,6 +656,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:EmhancedArmamentCard.png
+
+#begin EngCommand.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:EngCommand.png
 
 #begin EngineeringTeamCard.png
 /importer:TextureImporter
@@ -1187,6 +1211,18 @@
 /processorParam:TextureFormat=Color
 /build:MonMothmaCard.png
 
+#begin NavCommand.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:NavCommand.png
+
 #begin NavTeamCard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1595,6 +1631,18 @@
 /processorParam:TextureFormat=Color
 /build:SensorTeamCard.png
 
+#begin SetCommandDial.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SetCommandDial.png
+
 #begin SetName.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1642,6 +1690,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SpaceBackground1.jpg
+
+#begin SquadCommand.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SquadCommand.png
 
 #begin Start.png
 /importer:TextureImporter

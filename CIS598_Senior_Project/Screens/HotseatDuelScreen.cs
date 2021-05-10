@@ -188,11 +188,11 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(14, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Squadron placement buttons
             _buttons.Add(new CustButton(15, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 73 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //----------------
 
-            _buttons.Add(new CustButton(16, new Rectangle(), false)); //Nav command 
-            _buttons.Add(new CustButton(17, new Rectangle(), false)); //Eng command 
-            _buttons.Add(new CustButton(18, new Rectangle(), false)); //Sqd command 
-            _buttons.Add(new CustButton(19, new Rectangle(), false)); //Con command 
-            _buttons.Add(new CustButton(20, new Rectangle(), false)); //Set Dial button
+            _buttons.Add(new CustButton(16, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 40 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Nav command 
+            _buttons.Add(new CustButton(17, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 40 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Eng command 
+            _buttons.Add(new CustButton(18, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 51 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Sqd command 
+            _buttons.Add(new CustButton(19, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 51 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Con command 
+            _buttons.Add(new CustButton(20, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 7), false)); //Set Dial button
 
         }
 
@@ -214,7 +214,13 @@ namespace CIS598_Senior_Project.Screens
             _buttons[0].Texture = _content.Load<Texture2D>("QuitGame");
             _buttons[1].Texture = _content.Load<Texture2D>("GoFirst");
             _buttons[2].Texture = _content.Load<Texture2D>("GoSecond");
-            //_buttons[3].Texture = _content.Load<Texture2D>("");
+
+            _buttons[16].Texture = _content.Load<Texture2D>("NavCommand");
+            _buttons[17].Texture = _content.Load<Texture2D>("EngCommand");
+            _buttons[18].Texture = _content.Load<Texture2D>("SquadCommand");
+            _buttons[19].Texture = _content.Load<Texture2D>("ConcentrateFireCommand");
+            _buttons[20].Texture = _content.Load<Texture2D>("SetCommandDial");
+
 
             //_label = _content.Load<Texture2D>("");
             _background = _content.Load<Texture2D>("SpaceBackground1");
@@ -1082,28 +1088,28 @@ namespace CIS598_Senior_Project.Screens
                         }
                     }
                     break;
-                case 16:
+                case 16://selecting the nav command
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
                         _selectedDial = CommandDialEnum.Navigation;
                     }
                     break;
-                case 17:
+                case 17: //selecting the engineeirng command
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
                         _selectedDial = CommandDialEnum.Engineering;
                     }
                     break;
-                case 18:
+                case 18: //select the squadron command
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
                         _selectedDial = CommandDialEnum.Squadron;
                     }
                     break;
-                case 19:
+                case 19: //select the Concentrate fire button
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
