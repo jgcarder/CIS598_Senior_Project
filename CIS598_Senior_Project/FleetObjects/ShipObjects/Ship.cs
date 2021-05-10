@@ -80,7 +80,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract BoundingCircle Bounds { get; }
 
-        public abstract BoundingCircle SternBounds { get; }
+        public abstract BoundingCircle BowBounds { get; }
 
         public abstract BoundingCircle PortBounds { get; }
 

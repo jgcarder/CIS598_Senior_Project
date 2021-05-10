@@ -522,6 +522,20 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case GameEnum.Ship_Phase:
+                    switch(_shipState)
+                    {
+                        case ShipState.ActivateShip:
+
+                            break;
+                        case ShipState.RevealDial:
+                            break;
+                        case ShipState.Attack:
+                            break;
+                        case ShipState.ExecuteManuver:
+                            break;
+                    }
+
+
                     //Taking turns activating ships ~
                         //Reveal command dial
                             //spend dial - 1

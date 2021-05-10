@@ -55,5 +55,92 @@ namespace CIS598_Senior_Project.Collisions
         /// <returns>True if colliding</returns>
         public static bool Collides(BoundingRectangle r, BoundingCircle c) => Collides(c, r);
 
+        /// <summary>
+        /// A method that dynamically sets the positions of bounding circls on the ships in the game
+        /// </summary>
+        /// <param name="center">The center point of the ship</param>
+        /// <param name="radius">The distance from the center point to the center of the new bounding circle</param>
+        /// <param name="radians">The current rotation of the ship</param>
+        /// <returns>The new center point of the bounds</returns>
+        public static Vector2 GetNewCoords(Vector2 center, int radius, float radians)
+        {
+            Vector2 result = new Vector2(0, 0);
+
+            int rot = (int)(radians / (MathHelper.PiOver4 / 2));
+
+            while (rot >= 16) radians -= 16;
+            while (rot <= 0) radians += 16;
+
+            switch (rot)
+            {
+                case 0:
+                    result.X = (radius * (1)) + center.X;
+                    result.Y = (radius * (0)) + center.Y;
+                    break;
+                case 1:
+                    result.X = (float)((radius * ( Math.Sqrt(2 + Math.Sqrt(2)) / 2 )) + center.X);
+                    result.Y = (float)((radius * (-Math.Sqrt(2 - Math.Sqrt(2)) / 2)) + center.Y);
+                    break;
+                case 2:
+                    result.X = (float)((radius * (Math.Sqrt(2) / 2)) + center.X);
+                    result.Y = (float)((radius * (-Math.Sqrt(2) / 2)) + center.Y);
+                    break;
+                case 3:
+                    result.X = (float)((radius * (Math.Sqrt(2 - Math.Sqrt(2)) / 2)) + center.X);
+                    result.Y = (float)((radius * (-Math.Sqrt(2 + Math.Sqrt(2)) / 2)) + center.Y);
+                    break;
+                case 4:
+                    result.X = (radius * (0)) + center.X;
+                    result.Y = (radius * (-1)) + center.Y;
+                    break;
+                case 5:
+                    result.X = (float)((radius * (-Math.Sqrt(2 - Math.Sqrt(2)) / 2)) + center.X);
+                    result.Y = (float)((radius * (-Math.Sqrt(2 + Math.Sqrt(2)) / 2)) + center.Y);
+                    break;
+                case 6:
+                    result.X = (float)((radius * (-Math.Sqrt(2) / 2)) + center.X);
+                    result.Y = (float)((radius * (-Math.Sqrt(2) / 2)) + center.Y);
+                    break;
+                case 7:
+                    result.X = (float)((radius * (-Math.Sqrt(2 + Math.Sqrt(2)) / 2)) + center.X);
+                    result.Y = (float)((radius * (-Math.Sqrt(2 - Math.Sqrt(2)) / 2)) + center.Y);
+                    break;
+                case 8:
+                    result.X = (radius * (-1)) + center.X;
+                    result.Y = (radius * (0)) + center.Y;
+                    break;
+                case 9:
+                    result.X = (float)((radius * (-Math.Sqrt(2 + Math.Sqrt(2)) / 2)) + center.X);
+                    result.Y = (float)((radius * (Math.Sqrt(2 - Math.Sqrt(2)) / 2)) + center.Y);
+                    break;
+                case 10:
+                    result.X = (float)((radius * (-Math.Sqrt(2) / 2)) + center.X);
+                    result.Y = (float)((radius * (Math.Sqrt(2) / 2)) + center.Y);
+                    break;
+                case 11:
+                    result.X = (float)((radius * (-Math.Sqrt(2 - Math.Sqrt(2)) / 2)) + center.X);
+                    result.Y = (float)((radius * (Math.Sqrt(2 + Math.Sqrt(2)) / 2)) + center.Y);
+                    break;
+                case 12:
+                    result.X = (radius * (0)) + center.X;
+                    result.Y = (radius * (1)) + center.Y;
+                    break;
+                case 13:
+                    result.X = (float)((radius * (Math.Sqrt(2 - Math.Sqrt(2)) / 2)) + center.X);
+                    result.Y = (float)((radius * (Math.Sqrt(2 + Math.Sqrt(2)) / 2)) + center.Y);
+                    break;
+                case 14:
+                    result.X = (float)((radius * (Math.Sqrt(2) / 2)) + center.X);
+                    result.Y = (float)((radius * (Math.Sqrt(2) / 2)) + center.Y);
+                    break;
+                case 15:
+                    result.X = (float)((radius * (Math.Sqrt(2 + Math.Sqrt(2)) / 2)) + center.X);
+                    result.Y = (float)((radius * (Math.Sqrt(2 - Math.Sqrt(2)) / 2)) + center.Y);
+                    break;
+            }
+
+            return result;
+        }
+
     }
 }

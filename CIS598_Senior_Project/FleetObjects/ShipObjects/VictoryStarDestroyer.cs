@@ -185,7 +185,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 62); } }
 
-        public override BoundingCircle SternBounds { get; }
+        public override BoundingCircle BowBounds { get; }
 
         public override BoundingCircle PortBounds { get; }
 
