@@ -173,13 +173,13 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 36); } }
 
-        public override BoundingCircle BowBounds { get; }
+        public override BoundingCircle BowBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 75, Rotation + MathHelper.PiOver2), 36); } }
 
-        public override BoundingCircle PortBounds { get; }
+        public override BoundingCircle PortBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 50, Rotation + MathHelper.Pi), 36); } }
 
-        public override BoundingCircle StarboardBounds { get; }
+        public override BoundingCircle StarboardBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 50, Rotation), 36); } }
 
-        public override BoundingCircle AftBounds { get; }
+        public override BoundingCircle AftBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 75, Rotation + 3 * MathHelper.PiOver2), 36); } }
 
         public override FiringArc[] Arcs { get; }
 

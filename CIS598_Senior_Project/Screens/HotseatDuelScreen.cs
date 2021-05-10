@@ -194,6 +194,8 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(19, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 65 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Con command 
             _buttons.Add(new CustButton(20, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 76 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 7), false)); //Set Dial button
 
+            _buttons.Add(new CustButton(21, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 54 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 10), false));     //The activate ship button
+
         }
 
         /// <summary>
@@ -220,6 +222,8 @@ namespace CIS598_Senior_Project.Screens
             _buttons[18].Texture = _content.Load<Texture2D>("SquadCommand");
             _buttons[19].Texture = _content.Load<Texture2D>("ConcentrateFireCommand");
             _buttons[20].Texture = _content.Load<Texture2D>("SetCommandDial");
+
+            _buttons[21].Texture = _content.Load<Texture2D>("ActivateShip");
 
 
             //_label = _content.Load<Texture2D>("");
@@ -525,7 +529,23 @@ namespace CIS598_Senior_Project.Screens
                     switch(_shipState)
                     {
                         case ShipState.ActivateShip:
-
+                            if(shipActivationsRemaining(_player1.Ships) == 0 && shipActivationsRemaining(_player2.Ships) == 0)
+                            {
+                                _state = GameEnum.Squadron_Phase;
+                            }
+                            else
+                            {
+                                foreach()
+                                {
+                                    //all player 1 ships and display info when clicked
+                                        //if its that player's turn and the selected ship hasn't been activated the display the button
+                                }
+                                foreach()
+                                {
+                                    //all player2's ships and display info when clicked
+                                        //if its that player's turn and the selected ship hasn't been activated the display the button
+                                }
+                            }
                             break;
                         case ShipState.RevealDial:
                             break;
@@ -1599,6 +1619,18 @@ namespace CIS598_Senior_Project.Screens
             spriteBatch.DrawString(_descriptor, "Eng Token: " + _selectedShip.HasEngineeringToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 44 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Squad Token: " + _selectedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 46 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Con. Fire Token: " + _selectedShip.HasConcentrateFireToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 48 * _heightIncrement), Color.Gold);
+        }
+
+        /// <summary>
+        /// Gets the number of ships left to activate
+        /// </summary>
+        /// <param name="ships">The list of ships to look through</param>
+        /// <returns>The number of ships left to activate</returns>
+        private int shipActivationsRemaining(List<Ship> ships)
+        {
+            int result = 0;
+            foreach (var ship in ships) if (!ship.BeenActivated) result++;
+            return result;
         }
     }
 }
