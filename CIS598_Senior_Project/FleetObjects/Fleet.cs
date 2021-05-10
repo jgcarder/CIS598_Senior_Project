@@ -62,6 +62,10 @@ namespace CIS598_Senior_Project.FleetObjects
             {
                 return _squadrons;
             }
+            set
+            {
+                _squadrons = value;
+            }
         }
 
         public String Name

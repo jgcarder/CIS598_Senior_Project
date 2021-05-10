@@ -108,6 +108,8 @@ namespace CIS598_Senior_Project.Screens
 
         private string _selectingPlayer;
 
+        private CommandDialEnum _selectedDial;
+
         private bool _player1Turn;
         private bool _player1Start;
         private bool _player1Placing;
@@ -185,6 +187,12 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(13, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 51 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false));
             _buttons.Add(new CustButton(14, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //Squadron placement buttons
             _buttons.Add(new CustButton(15, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 73 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false)); //----------------
+
+            _buttons.Add(new CustButton(16, new Rectangle(), false)); //Nav command 
+            _buttons.Add(new CustButton(17, new Rectangle(), false)); //Eng command 
+            _buttons.Add(new CustButton(18, new Rectangle(), false)); //Sqd command 
+            _buttons.Add(new CustButton(19, new Rectangle(), false)); //Con command 
+            _buttons.Add(new CustButton(20, new Rectangle(), false)); //Set Dial button
 
         }
 
@@ -322,7 +330,6 @@ namespace CIS598_Senior_Project.Screens
                                                 if (isPlacedTooCLose(false))
                                                 {
                                                     _selectedSquad.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
-                                                    _selectedSquad.Rotation = MathHelper.Pi;
                                                     Squadron s = _selectedSquad;
                                                     if (_squadToPlace1.Count >= 2) 
                                                     {
@@ -466,16 +473,48 @@ namespace CIS598_Senior_Project.Screens
                             }
                             break;
                         case SetupState.SetupDone:
+                            _state = GameEnum.Command_Phase; //move the state forward out of setup
+
+                            //Re-assign to player 1
+                            _player1.Ships = _shipsPlaced1;
+                            _player1.Squadrons = _squadsPlaced1;
+
+                            //Re-assign to player 2
+                            _player2.Ships = _shipsPlaced2;
+                            _player2.Squadrons = _squadsPlaced2;
+
+                            _player1Placing = _player1Start;
+
+                            _selectedShip = null;
+
+                            buttonSweeper(3);
+                            _buttons[16].IsActive = true;
+                            _buttons[17].IsActive = true;
+                            _buttons[18].IsActive = true;
+                            _buttons[19].IsActive = true;
+                            _buttons[20].IsActive = true;
                             break;
                     }
-                    //Determine who goes first
-                        //lowest fleet picks who goes first - 2
-                    //placing your ships/squads
-                        //take turns placing ships
-                        //or 2 squads at a time
-                            //if you have an odd number of squads you must finish ships first
                     break;
                 case GameEnum.Command_Phase:
+                    if(numLeftToSet(_player1.Ships) == 0 && numLeftToSet(_player2.Ships) == 0)
+                    {
+                        _state = GameEnum.Ship_Phase;
+                        _selectedShip = null;
+                        buttonSweeper(16);
+                    }
+                    else
+                    {
+                        if(_player1Placing)
+                        {
+                            _selectedShip = nextToPlace(_player1.Ships);
+                        }
+                        else //player 2 is placing
+                        {
+                            _selectedShip = nextToPlace(_player2.Ships);
+                        }
+                    }
+                    
                     //Setting your command dials
                         //queue up a dial - 5
                     break;
@@ -688,8 +727,10 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
 
-            //spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.White);
-
+            if(_state == GameEnum.Command_Phase)
+            {
+                drawFleets(spriteBatch);
+            }
 
             if(_setupState == SetupState.SelectFirst && _state == GameEnum.Setup)
             {
@@ -1041,6 +1082,47 @@ namespace CIS598_Senior_Project.Screens
                         }
                     }
                     break;
+                case 16:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _selectedDial = CommandDialEnum.Navigation;
+                    }
+                    break;
+                case 17:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _selectedDial = CommandDialEnum.Engineering;
+                    }
+                    break;
+                case 18:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _selectedDial = CommandDialEnum.Squadron;
+                    }
+                    break;
+                case 19:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _selectedDial = CommandDialEnum.ConcentrateFire;
+                    }
+                    break;
+                case 20: //commit to ship
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button1.Play();
+                        _selectedShip.CommandDials.Enqueue(_selectedDial);
+                        if(_selectedShip.Command == _selectedShip.CommandDials.Count)
+                        {
+                            if (_player1Placing) _player1Placing = false;
+                            else _player1Placing = true;
+                        }
+                        Thread.Sleep(100);
+                    }
+                    break;
             }
         }
 
@@ -1333,6 +1415,65 @@ namespace CIS598_Senior_Project.Screens
                 if (result == num) return i;
             }
             return output;
+        }
+
+        /// <summary>
+        /// A helper method to draw the fleets on the screen
+        /// </summary>
+        /// <param name="spriteBatch">The spritebatch used to draw things</param>
+        private void drawFleets(SpriteBatch spriteBatch)
+        {
+            foreach (var ship in _player1.Ships)
+            {
+                if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Red, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+            }
+            foreach (var ship in _player2.Ships)
+            {
+                if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Blue, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+            }
+            foreach (var squad in _player1.Squadrons)
+            {
+                if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Red, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+            }
+            foreach (var squad in _player2.Squadrons)
+            {
+                if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Blue, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+            }
+        }
+
+        /// <summary>
+        /// Returns the number of ships left to assign command dials to
+        /// </summary>
+        /// <param name="ships">The list of ships to parse through</param>
+        /// <returns>The number of ships left to assign command dials to</returns>
+        private int numLeftToSet(List<Ship> ships)
+        {
+            int result = 0;
+            foreach (var ship in ships) if (ship.CommandDials.Count != ship.Command) result++;
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the next ship in the fleet that needs to have it's command dials set
+        /// </summary>
+        /// <param name="ships">List of ships to look through</param>
+        /// <returns>The ship to set</returns>
+        private Ship nextToPlace(List<Ship> ships)
+        {
+            Ship result = null;
+            foreach (var ship in ships)
+            {
+                if (ship.CommandDials.Count != ship.Command)
+                {
+                    result = ship;
+                    break;
+                }
+            }
+            return result;
         }
     }
 }
