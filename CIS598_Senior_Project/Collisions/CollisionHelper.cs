@@ -66,10 +66,11 @@ namespace CIS598_Senior_Project.Collisions
         {
             Vector2 result = new Vector2(0, 0);
 
-            int rot = (int)(radians / (MathHelper.PiOver4 / 2));
+            int rot = Math.Abs((int)(radians / (MathHelper.PiOver4 / 2)));
 
-            while (rot >= 16) radians -= 16;
-            while (rot <= 0) radians += 16;
+            if (rot >= 16) rot -= 16;
+
+            if(rot < 0) rot += 16;
 
             switch (rot)
             {

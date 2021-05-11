@@ -19,6 +19,7 @@ using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using CIS598_Senior_Project.FleetObjects.ShipObjects;
 using CIS598_Senior_Project.FleetObjects.SquadronObjects;
 using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
+using CIS598_Senior_Project.Collisions;
 
 namespace CIS598_Senior_Project.Screens
 {
@@ -94,6 +95,7 @@ namespace CIS598_Senior_Project.Screens
         private Squadron _targetedSquadron;
 
         private CommandDialEnum _revealedCommand;
+        private CommandDialEnum _selectedDial;
 
         private List<CustButton> _buttons;
 
@@ -115,8 +117,6 @@ namespace CIS598_Senior_Project.Screens
         private int _numToPlace;
 
         private string _selectingPlayer;
-
-        private CommandDialEnum _selectedDial;
 
         private bool _player1Turn;
         private bool _player1Start;
@@ -426,7 +426,7 @@ namespace CIS598_Senior_Project.Screens
                                                 if (isPlacedTooCLose(true))
                                                 {
                                                     _selectedShip.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
-                                                    _selectedShip.Rotation = MathHelper.Pi;
+                                                    _selectedShip.Rotation = -MathHelper.Pi;
                                                     _shipToPlace2.Remove(_selectedShip);
                                                     _shipsPlaced2.Add(_selectedShip);
                                                     _selectedShip = null;
@@ -575,7 +575,7 @@ namespace CIS598_Senior_Project.Screens
                             }
                             break;
                         case ShipState.RevealDial:
-                            _revealedCommand = _selectedShip.CommandDials.Dequeue();
+                            buttonSweeper(16);
                             _buttons[22].IsActive = true;
 
                             if (_revealedCommand == CommandDialEnum.Navigation) _buttons[22].Texture = _content.Load<Texture2D>("NavCommand");
@@ -851,8 +851,23 @@ namespace CIS598_Senior_Project.Screens
             if(_state == GameEnum.Ship_Phase)
             {
                 drawFleets(spriteBatch);
-                if (_selectedShip != null) drawShipInfo(spriteBatch);
+                if(_shipState != ShipState.ActivateShip && _shipState != ShipState.Navigation && _shipState != ShipState.RevealDial && _shipState != ShipState.Engineering)
+                {
+                    if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
+                }
+                else
+                {
+                    if (_selectedShip != null) drawShipInfo(spriteBatch);
+                    if(_shipState == ShipState.RevealDial)
+                    {
+                        if (_revealedCommand == CommandDialEnum.Navigation) spriteBatch.DrawString(_descriptor, "Navigation Command: Allows you to \nincrease or decrease this ship's speed \nby 1.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                        if (_revealedCommand == CommandDialEnum.Engineering) spriteBatch.DrawString(_descriptor, "Engineering Command: Allows you to recover \nsome shields and health.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                        if (_revealedCommand == CommandDialEnum.Squadron) spriteBatch.DrawString(_descriptor, "Squadron Command: ", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                        if (_revealedCommand == CommandDialEnum.ConcentrateFire) spriteBatch.DrawString(_descriptor, "Concentrate Fire Command: Allows you to \nre-roll one of ypur attacks this turn.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                    }
+                    
 
+                }
                 spriteBatch.DrawString(_galbasic, "   <Ship Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
                 spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
                 
@@ -1257,8 +1272,16 @@ namespace CIS598_Senior_Project.Screens
                         _selectedShip.CommandDials.Enqueue(_selectedDial);
                         if(_selectedShip.Command == _selectedShip.CommandDials.Count)
                         {
-                            if (_player1Placing) _player1Placing = false;
-                            else _player1Placing = true;
+                            if (_player1Placing)
+                            {
+                                _player1Placing = false;
+                                _player1.Ships[_player1.Ships.IndexOf(_selectedShip)] = _selectedShip;
+                            }
+                            else
+                            {
+                                _player1Placing = true;
+                                _player2.Ships[_player2.Ships.IndexOf(_selectedShip)] = _selectedShip;
+                            }
                         }
                         Thread.Sleep(200);
                     }
@@ -1269,6 +1292,7 @@ namespace CIS598_Senior_Project.Screens
                         _button1.Play();
                         _selectedShip.BeenActivated = true;
                         _shipState = ShipState.RevealDial;
+                        _revealedCommand = _selectedShip.CommandDials.Dequeue();
                         _buttons[21].IsActive = false;
                         Thread.Sleep(200);
                     }
@@ -1684,14 +1708,26 @@ namespace CIS598_Senior_Project.Screens
                 if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Red, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
                 else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
 
+                Vector2 test = CollisionHelper.GetNewCoords(ship.Bounds.Center, 74, ship.Rotation + MathHelper.Pi);
+
                 spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.Bounds.Center, Color.DarkGoldenrod);
+
+                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.BowBounds.Center, Color.DarkGoldenrod);
+                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.PortBounds.Center, Color.DarkGoldenrod);
+                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.StarboardBounds.Center, Color.DarkGoldenrod);
+                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.AftBounds.Center, Color.DarkGoldenrod);
             }
             foreach (var ship in _player2.Ships)
             {
                 if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Blue, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
                 else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
 
+                Vector2 test = CollisionHelper.GetNewCoords(ship.Bounds.Center, 74, ship.Rotation + MathHelper.Pi);
+
                 spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.Bounds.Center, Color.DarkGoldenrod);
+
+                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.BowBounds.Center, Color.DarkGoldenrod);
+                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.PortBounds.Center, Color.DarkGoldenrod);
             }
             foreach (var squad in _player1.Squadrons)
             {
@@ -1805,6 +1841,27 @@ namespace CIS598_Senior_Project.Screens
 
                 }
             }
+        }
+
+        /// <summary>
+        /// Draws a reduced ship info to save space
+        /// </summary>
+        /// <param name="spritBatch">The spritBatch used to draw things</param>
+        private void drawReducedShipInfo(SpriteBatch spriteBatch)
+        {
+            string name = "";
+
+            if (_selectedShip.HasCommander) name = _selectedShip.Commander.Name;
+
+            spriteBatch.DrawString(_descriptor, _selectedShip.Name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "ID: " + _selectedShip.Id + "     Current HP: " + _selectedShip.Hull + "    Commands Set: " + _selectedShip.CommandDials.Count, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 3 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Shields:   " + _selectedShip.Arcs[0].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 5 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "             " + _selectedShip.Arcs[1].Shields + "     " + _selectedShip.Arcs[2].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 8 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "                " + _selectedShip.Arcs[3].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 11 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Nav Token: " + _selectedShip.HasNavigationToken + "   Commander: " + name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 13 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Eng Token: " + _selectedShip.HasEngineeringToken + "   Speed: " + _selectedShip.Speed, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 15 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Squad Token: " + _selectedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 17 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Con. Fire Token: " + _selectedShip.HasConcentrateFireToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 19 * _heightIncrement), Color.Gold);
         }
 
         /// <summary>
