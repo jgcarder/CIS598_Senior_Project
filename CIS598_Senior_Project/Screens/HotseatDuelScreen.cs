@@ -879,7 +879,7 @@ namespace CIS598_Senior_Project.Screens
                         if (_revealedCommand == CommandDialEnum.Navigation) spriteBatch.DrawString(_descriptor, "Navigation Command: Allows you to \nincrease or decrease this ship's speed \nby 1.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
                         if (_revealedCommand == CommandDialEnum.Engineering) spriteBatch.DrawString(_descriptor, "Engineering Command: Allows you to recover \nsome shields and health.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
                         if (_revealedCommand == CommandDialEnum.Squadron) spriteBatch.DrawString(_descriptor, "Squadron Command: ", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
-                        if (_revealedCommand == CommandDialEnum.ConcentrateFire) spriteBatch.DrawString(_descriptor, "Concentrate Fire Command: Allows you to \nre-roll one of ypur attacks this turn.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                        if (_revealedCommand == CommandDialEnum.ConcentrateFire) spriteBatch.DrawString(_descriptor, "Concentrate Fire Command: Allows you to \nre-roll one of your attacks this turn.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
                     }
                     
 
