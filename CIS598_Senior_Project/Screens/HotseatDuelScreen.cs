@@ -1274,7 +1274,7 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case 22:
-                    //Does nothing, its a label that I didn't feel like making an image
+                    //Does nothing, its a label that I didn't feel like making an image 
                     break;
                 case 23: //use now as Command dial
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
