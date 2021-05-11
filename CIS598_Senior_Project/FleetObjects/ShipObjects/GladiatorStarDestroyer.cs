@@ -56,7 +56,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override int Engineering { get { return _engineering; } }
 
-        public override int Speed { get; set; } = 0;
+        public override int Speed { get; set; } = 1;
 
         public override int TokenCount
         {
