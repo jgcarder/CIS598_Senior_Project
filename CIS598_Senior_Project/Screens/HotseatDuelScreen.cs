@@ -115,6 +115,7 @@ namespace CIS598_Senior_Project.Screens
         private int _heightIncrement;
         private int _roundNum;
         private int _numToPlace;
+        private int _speedDiff;
 
         private string _selectingPlayer;
 
@@ -170,6 +171,7 @@ namespace CIS598_Senior_Project.Screens
 
             _roundNum = 0;
             _numToPlace = 0;
+            _speedDiff = 0;
 
             _widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
             _heightIncrement = _game.GraphicsDevice.Viewport.Height / 100;
@@ -207,6 +209,10 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(22, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 10), false));      //The revealed command Dial
             _buttons.Add(new CustButton(23, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 62 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 4), false));        //Use dial
             _buttons.Add(new CustButton(24, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 68 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 4), false));        //Save as token for later
+
+            _buttons.Add(new CustButton(25, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));      //increase speed
+            _buttons.Add(new CustButton(26, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 73 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));      //decrease speed
+            _buttons.Add(new CustButton(27, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9,  62* _heightIncrement, _widthIncrement * 8, _heightIncrement * 18), false));      //set new speed
         }
 
         /// <summary>
@@ -238,6 +244,10 @@ namespace CIS598_Senior_Project.Screens
 
             _buttons[23].Texture = _content.Load<Texture2D>("UseDial");
             _buttons[24].Texture = _content.Load<Texture2D>("SaveAsToken");
+
+            _buttons[25].Texture = _content.Load<Texture2D>("Increase");
+            _buttons[26].Texture = _content.Load<Texture2D>("Decrease");
+            _buttons[27].Texture = _content.Load<Texture2D>("SetSpeed");
 
 
             //_label = _content.Load<Texture2D>("");
@@ -587,6 +597,12 @@ namespace CIS598_Senior_Project.Screens
                             _buttons[24].IsActive = true;
                             break;
                         case ShipState.Navigation:
+                            buttonSweeper(20);
+
+                            if (_selectedShip.Movement[_selectedShip.Speed + 1, 0] != -1 && _speedDiff - _selectedShip.Speed < 0) _buttons[25].IsActive = true;
+                            if (_selectedShip.Speed > 0 && _selectedShip.Speed - _speedDiff > 0) _buttons[26].IsActive = true;
+
+                            _buttons[27].IsActive = true;
                             break;
                         case ShipState.Engineering:
                             break;
@@ -858,7 +874,7 @@ namespace CIS598_Senior_Project.Screens
                 else
                 {
                     if (_selectedShip != null) drawShipInfo(spriteBatch);
-                    if(_shipState == ShipState.RevealDial)
+                    if(_shipState == ShipState.RevealDial)         //Displays the functions of command dials and command tokens
                     {
                         if (_revealedCommand == CommandDialEnum.Navigation) spriteBatch.DrawString(_descriptor, "Navigation Command: Allows you to \nincrease or decrease this ship's speed \nby 1.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
                         if (_revealedCommand == CommandDialEnum.Engineering) spriteBatch.DrawString(_descriptor, "Engineering Command: Allows you to recover \nsome shields and health.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
@@ -868,11 +884,17 @@ namespace CIS598_Senior_Project.Screens
                     
 
                 }
+
+                //Displays the phase and round number
                 spriteBatch.DrawString(_galbasic, "   <Ship Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
                 spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
                 
+                //displays whose turn it is
                 if (_player1Placing) spriteBatch.DrawString(_galbasic, " Player 1's Turn", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
                 else spriteBatch.DrawString(_galbasic, " Player 2 Turn", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
+
+                //displays the speed to be set
+                if (_shipState == ShipState.Navigation) spriteBatch.DrawString(_galbasic, "Speed: " + _speedDiff, new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 69 * _heightIncrement), Color.Gold);
             }
             if(_state == GameEnum.Squadron_Phase)
             {
@@ -1310,6 +1332,7 @@ namespace CIS598_Senior_Project.Screens
                             _buttons[22].IsActive = false;
                             _buttons[23].IsActive = false;
                             _buttons[24].IsActive = false;
+                            _speedDiff = _selectedShip.Speed;
                             Thread.Sleep(200);
                         }
                         if (_revealedCommand == CommandDialEnum.Squadron)
@@ -1401,6 +1424,28 @@ namespace CIS598_Senior_Project.Screens
                         }
 
                         Thread.Sleep(200);
+                    }
+                    break;
+                case 25: //increase speed
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button1.Play();
+                        _speedDiff++;
+                    }
+                    break;
+                case 26: //decrease speed
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _speedDiff--;
+                    }
+                    break;
+                case 27: //set speed
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+                        _selectedShip.Speed = _speedDiff;
+                        _shipState = ShipState.Attack;
                     }
                     break;
             }
