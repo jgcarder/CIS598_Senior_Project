@@ -35,9 +35,13 @@ namespace CIS598_Senior_Project.Screens
         {
             ActivateShip,
             RevealDial,
+            Navigation,
+            Engineering,
+            Squadron,
             Attack,
             ExecuteManuver
         }
+
             enum AttackState
             {
                 DeclareTarget,
@@ -534,7 +538,7 @@ namespace CIS598_Senior_Project.Screens
                         }
                     }
                     break;
-                case GameEnum.Ship_Phase:
+                case GameEnum.Ship_Phase: //phase for activating ships and stuff
                     switch(_shipState)
                     {
                         case ShipState.ActivateShip:
@@ -581,6 +585,12 @@ namespace CIS598_Senior_Project.Screens
 
                             _buttons[23].IsActive = true;
                             _buttons[24].IsActive = true;
+                            break;
+                        case ShipState.Navigation:
+                            break;
+                        case ShipState.Engineering:
+                            break;
+                        case ShipState.Squadron:
                             break;
                         case ShipState.Attack:
                             break;
@@ -1270,11 +1280,62 @@ namespace CIS598_Senior_Project.Screens
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
-                        //_shipState = ShipState.Attack;
-                        _buttons[22].IsActive = false;
-                        _buttons[23].IsActive = false;
-                        _buttons[24].IsActive = false;
-                        Thread.Sleep(200);
+                        if(_revealedCommand == CommandDialEnum.Navigation)
+                        {
+                            _shipState = ShipState.Navigation;
+                            _buttons[22].IsActive = false;
+                            _buttons[23].IsActive = false;
+                            _buttons[24].IsActive = false;
+                            Thread.Sleep(200);
+                        }
+                        if (_revealedCommand == CommandDialEnum.Squadron)
+                        {
+                            if(_player1Placing && _player1.Squadrons.Count > 0)
+                            {
+                                _shipState = ShipState.Squadron;
+                                _buttons[22].IsActive = false;
+                                _buttons[23].IsActive = false;
+                                _buttons[24].IsActive = false;
+                                Thread.Sleep(200);
+                            }
+                            else if(!_player1Placing && _player2.Squadrons.Count > 0)
+                            {
+                                _shipState = ShipState.Squadron;
+                                _buttons[22].IsActive = false;
+                                _buttons[23].IsActive = false;
+                                _buttons[24].IsActive = false;
+                                Thread.Sleep(200);
+                            }
+                            else
+                            {
+                                _shipState = ShipState.Attack;
+                                _buttons[22].IsActive = false;
+                                _buttons[23].IsActive = false;
+                                _buttons[24].IsActive = false;
+                                Thread.Sleep(200);
+                            }
+                            
+                        }
+                        if (_revealedCommand == CommandDialEnum.Engineering)
+                        {
+                            if(_roundNum > 1)
+                            {
+                                _shipState = ShipState.Engineering;
+                                _buttons[22].IsActive = false;
+                                _buttons[23].IsActive = false;
+                                _buttons[24].IsActive = false;
+                                Thread.Sleep(200);
+                            }
+                            else
+                            {
+                                _shipState = ShipState.Attack;
+                                _buttons[22].IsActive = false;
+                                _buttons[23].IsActive = false;
+                                _buttons[24].IsActive = false;
+                                Thread.Sleep(200);
+                            }
+                            
+                        }
                     }
                     break;
                 case 24: //Save for later as a Token
@@ -1722,7 +1783,7 @@ namespace CIS598_Senior_Project.Screens
             spriteBatch.DrawString(_descriptor, "             " + _selectedShip.Arcs[1].Shields + "     " + _selectedShip.Arcs[2].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 37 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "                " + _selectedShip.Arcs[3].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 40 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Nav Token: " + _selectedShip.HasNavigationToken + "   Commander: " + name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 42 * _heightIncrement), Color.Gold);
-            spriteBatch.DrawString(_descriptor, "Eng Token: " + _selectedShip.HasEngineeringToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 44 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Eng Token: " + _selectedShip.HasEngineeringToken + "   Speed: " + _selectedShip.Speed, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 44 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Squad Token: " + _selectedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 46 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Con. Fire Token: " + _selectedShip.HasConcentrateFireToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 48 * _heightIncrement), Color.Gold);
         
