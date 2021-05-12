@@ -63,8 +63,6 @@ namespace CIS598_Senior_Project.Screens
 
         enum SquadronCommand
         {
-            UseToken,
-            UseDial,
             ActivateSquadron,
             Move,
             Attack
@@ -108,6 +106,13 @@ namespace CIS598_Senior_Project.Screens
         private Texture2D _gradient;
         private Texture2D _player1Zone;
         private Texture2D _player2Zone;
+        private Texture2D _shipRanges;
+        private Texture2D _shipToSquadRange;
+        private Texture2D _squadMove1;
+        private Texture2D _squadMove2;
+        private Texture2D _squadMove3;
+        private Texture2D _squadMove4;
+        private Texture2D _squadMove5;
 
         private SpriteFont _descriptor;
         private SpriteFont _galbasic;
@@ -118,6 +123,7 @@ namespace CIS598_Senior_Project.Screens
         private int _numToPlace;
         private int _speedDiff;
         private int _engineeringPoints;
+        private int _numSquadsToActivate;
 
         private string _selectingPlayer;
 
@@ -174,7 +180,7 @@ namespace CIS598_Senior_Project.Screens
             _squadState = SquadronState.ActivateSquad;
             _squadCommand = SquadronCommand.ActivateSquadron;
 
-            _roundNum = 0;
+            _roundNum = 1;
             _numToPlace = 0;
             _speedDiff = 0;
 
@@ -231,8 +237,11 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(36, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 63 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 6), false));  //use engineering token
             _buttons.Add(new CustButton(37, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 70 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 6), false));  //use squadron token
             _buttons.Add(new CustButton(38, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 77 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 6), false));   //Done
-            
+
             _buttons.Add(new CustButton(39, new Rectangle(), false));
+            _buttons.Add(new CustButton(40, new Rectangle(), false));       //Squad move
+            _buttons.Add(new CustButton(41, new Rectangle(), false));       //squad attack
+            _buttons.Add(new CustButton(42, new Rectangle(), false));
 
         }
 
@@ -288,6 +297,14 @@ namespace CIS598_Senior_Project.Screens
             _background = _content.Load<Texture2D>("SpaceBackground1");
             _player1Zone = _content.Load<Texture2D>("Player1PlacementArea");
             _player2Zone = _content.Load<Texture2D>("Player2PlacementArea");
+
+            _shipRanges = _content.Load<Texture2D>("ShipRangeFinder");
+            _shipToSquadRange = _content.Load<Texture2D>("ShipToSquadRange");
+            _squadMove1 = _content.Load<Texture2D>("SquadMovement1");
+            _squadMove2 = _content.Load<Texture2D>("SquadMovement2");
+            _squadMove3 = _content.Load<Texture2D>("SquadMovement3");
+            _squadMove4 = _content.Load<Texture2D>("SquadMovement4");
+            _squadMove5 = _content.Load<Texture2D>("SquadMovement5");
 
             _button1 = _content.Load<SoundEffect>("Button1");
             _button2 = _content.Load<SoundEffect>("Button2");
@@ -569,6 +586,7 @@ namespace CIS598_Senior_Project.Screens
                         _state = GameEnum.Ship_Phase;
                         _selectedShip = null;
                         buttonSweeper(16);
+                        _player1Placing = _player1Start;
                     }
                     else
                     {
@@ -590,7 +608,7 @@ namespace CIS598_Senior_Project.Screens
                             {
                                 _state = GameEnum.Squadron_Phase;
                             }
-                            else
+                            else //if there are ships to activate
                             {
                                 foreach(var ship in _player1.Ships)
                                 {
@@ -649,6 +667,51 @@ namespace CIS598_Senior_Project.Screens
 
                             break;
                         case ShipState.Squadron: //they use a squadron dial
+                            switch(_squadCommand)
+                            {
+                                case SquadronCommand.ActivateSquadron:
+                                    if(Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedShip.Bounds.Center.Y, 2)) <= _shipToSquadRange.Width / 2)
+                                    {
+                                        if(_player1Placing)
+                                        {
+                                            foreach(var squad in _player1.Squadrons)
+                                            {
+                                                if(Math.Sqrt(Math.Pow(_currentMouseState.X - squad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - squad.Bounds.Center.Y, 2)) <= 25)
+                                                {
+                                                    if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        buttonSweeper(20);
+                                                        _selectedSquad = squad;
+                                                        _buttons[39].IsActive = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else //is player 2's turn
+                                        {
+                                            foreach (var squad in _player2.Squadrons)
+                                            {
+                                                if (Math.Sqrt(Math.Pow(_currentMouseState.X - squad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - squad.Bounds.Center.Y, 2)) <= 25)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _selectedSquad = squad;
+                                                        _buttons[40].IsActive = !_selectedSquad.IsEngaged;
+                                                        _buttons[41].IsActive = isSquadTargetNearby(_player1Placing);
+                                                        _buttons[42].IsActive = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case SquadronCommand.Move:
+
+                                    break;
+                                case SquadronCommand.Attack:
+
+                                    break;
+                            }
                             break;
                         case ShipState.Attack: //Ship attack phase
 
@@ -923,6 +986,11 @@ namespace CIS598_Senior_Project.Screens
                 {
                     if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
                     if (_shipState == ShipState.Engineering) spriteBatch.DrawString(_descriptor, "Remaining Engineering Points: " + _engineeringPoints, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 22 * _heightIncrement), Color.Gold);
+
+                    if (_shipState == ShipState.Squadron)
+                    {
+                        spriteBatch.Draw(_shipToSquadRange, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipToSquadRange.Width / 2, _shipToSquadRange.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                    }
                 }
                 else
                 {
@@ -932,7 +1000,7 @@ namespace CIS598_Senior_Project.Screens
                     {
                         if (_revealedCommand == CommandDialEnum.Navigation) spriteBatch.DrawString(_descriptor, "Navigation Command: Allows you to \nincrease or decrease this ship's speed \nby 1.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
                         if (_revealedCommand == CommandDialEnum.Engineering) spriteBatch.DrawString(_descriptor, "Engineering Command: Allows you to recover \nsome shields and health.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
-                        if (_revealedCommand == CommandDialEnum.Squadron) spriteBatch.DrawString(_descriptor, "Squadron Command: ", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                        if (_revealedCommand == CommandDialEnum.Squadron) spriteBatch.DrawString(_descriptor, "Squadron Command: Allows you to activate \nSome nearby squadrons early", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
                         if (_revealedCommand == CommandDialEnum.ConcentrateFire) spriteBatch.DrawString(_descriptor, "Concentrate Fire Command: Allows you to \nre-roll one of your attacks this turn.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
                     }
                     
@@ -1350,12 +1418,12 @@ namespace CIS598_Senior_Project.Screens
                         {
                             if (_player1Placing)
                             {
-                                _player1Placing = false;
+                                if(numLeftToSet(_player2.Ships) > 0) _player1Placing = false;
                                 _player1.Ships[_player1.Ships.IndexOf(_selectedShip)] = _selectedShip;
                             }
                             else
                             {
-                                _player1Placing = true;
+                                if(numLeftToSet(_player1.Ships) > 0) _player1Placing = true;
                                 _player2.Ships[_player2.Ships.IndexOf(_selectedShip)] = _selectedShip;
                             }
                         }
@@ -1394,6 +1462,7 @@ namespace CIS598_Senior_Project.Screens
                             if(_player1Placing && _player1.Squadrons.Count > 0)
                             {
                                 _shipState = ShipState.Squadron;
+                                _numSquadsToActivate = _selectedShip.Squadron;
                                 _buttons[22].IsActive = false;
                                 _buttons[23].IsActive = false;
                                 _buttons[24].IsActive = false;
@@ -1402,6 +1471,7 @@ namespace CIS598_Senior_Project.Screens
                             else if(!_player1Placing && _player2.Squadrons.Count > 0)
                             {
                                 _shipState = ShipState.Squadron;
+                                _numSquadsToActivate = _selectedShip.Squadron;
                                 _buttons[22].IsActive = false;
                                 _buttons[23].IsActive = false;
                                 _buttons[24].IsActive = false;
@@ -1601,6 +1671,22 @@ namespace CIS598_Senior_Project.Screens
                         _shipState = ShipState.Attack;
                         buttonSweeper(20);
                     }
+                    break;
+                case 39: //activates squadron
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button1.Play();
+                        _selectedSquad.HasBeenActivated = true;
+                        _buttons[40].IsActive = !_selectedSquad.IsEngaged;
+                        _buttons[41].IsActive = isSquadTargetNearby(_player1Placing);
+                        _buttons[42].IsActive = true;
+                    }
+                    break;
+                case 40: //Moves said squadron
+                    break;
+                case 41: //Attack with said squadron is a target is available
+                    break;
+                case 42: //Done with this squadron
                     break;
             }
         }
@@ -2073,6 +2159,36 @@ namespace CIS598_Senior_Project.Screens
             int result = 0;
             foreach (var ship in ships) if (!ship.BeenActivated) result++;
             return result;
+        }
+
+        /// <summary>
+        /// Checks to see if there is a squad to target near the selected squad.
+        /// </summary>
+        /// <param name="player1">A bool to distinguish if player 1 or player 2 is going</param>
+        /// <returns>A bool, true if there is a target, false otherwise.</returns>
+        private bool isSquadTargetNearby(bool player1)
+        {
+            if(player1)
+            {
+                foreach(var sqd in _player2.Squadrons)
+                {
+                    if(Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var sqd in _player1.Squadrons)
+                {
+                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
