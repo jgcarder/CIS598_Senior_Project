@@ -20,6 +20,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract int Hull { get; set; }
 
+        public abstract int MaxHull { get; }
+
         public abstract int Command { get; }
 
         public abstract int Squadron { get; }

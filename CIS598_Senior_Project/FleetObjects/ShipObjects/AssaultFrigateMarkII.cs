@@ -50,6 +50,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override int Hull { get { return _hull; } set { _hull = value; } }
 
+        public override int MaxHull { get { return 6; } }
+
         public override int Command { get { return _command; } }
 
         public override int Squadron { get { return _squadron; } }

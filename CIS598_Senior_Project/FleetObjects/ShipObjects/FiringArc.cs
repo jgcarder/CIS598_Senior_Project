@@ -8,6 +8,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
     public class FiringArc
     {
         private int _shields;
+        private int _maxShields;
         private double _arc;
         private List<RedDie> _redDice;
         private List<BlueDie> _blueDice;
@@ -17,6 +18,11 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         {
             get { return _shields; }
             set { _shields = value; }
+        }
+
+        public int MaxShields
+        {
+            get { return _maxShields; }
         }
 
         public double ArcRadians
@@ -43,6 +49,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         public FiringArc(int shields, double rads)
         {
             _shields = shields;
+            _maxShields = shields;
             _arc = rads;
 
             _blackDice = new List<BlackDie>();

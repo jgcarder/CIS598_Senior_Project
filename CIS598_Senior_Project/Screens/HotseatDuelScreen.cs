@@ -213,6 +213,15 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(25, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));      //increase speed
             _buttons.Add(new CustButton(26, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 73 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));      //decrease speed
             _buttons.Add(new CustButton(27, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9,  62* _heightIncrement, _widthIncrement * 8, _heightIncrement * 18), false));      //set new speed
+
+            _buttons.Add(new CustButton(28, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 7), false));   //restore shields
+            _buttons.Add(new CustButton(29, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 62 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 4), false));   //restore Bow shields
+            _buttons.Add(new CustButton(30, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 67 * _heightIncrement, _widthIncrement * 5, _heightIncrement * 9), false));   //restore Port shields
+            _buttons.Add(new CustButton(31, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 6, 67 * _heightIncrement, _widthIncrement * 5, _heightIncrement * 9), false));   //restore Starboard shields
+            _buttons.Add(new CustButton(32, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 77 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 4), false));   //restore Aft shields
+            _buttons.Add(new CustButton(33, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 82 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 4), false));   //Back button
+            _buttons.Add(new CustButton(34, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 70 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 7), false));   //Restore Hull button
+            _buttons.Add(new CustButton(35, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 78 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 7), false));   //Done with engineering
         }
 
         /// <summary>
@@ -248,6 +257,15 @@ namespace CIS598_Senior_Project.Screens
             _buttons[25].Texture = _content.Load<Texture2D>("Increase");
             _buttons[26].Texture = _content.Load<Texture2D>("Decrease");
             _buttons[27].Texture = _content.Load<Texture2D>("SetSpeed");
+
+            _buttons[28].Texture = _content.Load<Texture2D>("RestoreShields");
+            _buttons[29].Texture = _content.Load<Texture2D>("BowShields");
+            _buttons[30].Texture = _content.Load<Texture2D>("PortShields");
+            _buttons[31].Texture = _content.Load<Texture2D>("StarboardShields");
+            _buttons[32].Texture = _content.Load<Texture2D>("AftShields");
+            _buttons[33].Texture = _content.Load<Texture2D>("Back");
+            _buttons[34].Texture = _content.Load<Texture2D>("RepairHull");
+            _buttons[35].Texture = _content.Load<Texture2D>("Done");
 
 
             //_label = _content.Load<Texture2D>("");
@@ -596,7 +614,7 @@ namespace CIS598_Senior_Project.Screens
                             _buttons[23].IsActive = true;
                             _buttons[24].IsActive = true;
                             break;
-                        case ShipState.Navigation:
+                        case ShipState.Navigation: //They use a nav dial
                             buttonSweeper(20);
 
                             if (_selectedShip.Movement[_selectedShip.Speed + 1, 0] != -1 && _speedDiff - _selectedShip.Speed < 0) _buttons[25].IsActive = true;
@@ -604,13 +622,18 @@ namespace CIS598_Senior_Project.Screens
 
                             _buttons[27].IsActive = true;
                             break;
-                        case ShipState.Engineering:
+                        case ShipState.Engineering: //they use an eng dial
+                            buttonSweeper(20);
+                            _buttons[28].IsActive = true;
+                            _buttons[34].IsActive = true;
+                            _buttons[35].IsActive = true;
+
                             break;
-                        case ShipState.Squadron:
+                        case ShipState.Squadron: //they use a squadron dial
                             break;
-                        case ShipState.Attack:
+                        case ShipState.Attack: //Ship attack phase
                             break;
-                        case ShipState.ExecuteManuver:
+                        case ShipState.ExecuteManuver: //ship manuver phase
                             break;
                     }
 
@@ -1365,23 +1388,11 @@ namespace CIS598_Senior_Project.Screens
                         }
                         if (_revealedCommand == CommandDialEnum.Engineering)
                         {
-                            if(_roundNum > 1)
-                            {
-                                _shipState = ShipState.Engineering;
-                                _buttons[22].IsActive = false;
-                                _buttons[23].IsActive = false;
-                                _buttons[24].IsActive = false;
-                                Thread.Sleep(200);
-                            }
-                            else
-                            {
-                                _shipState = ShipState.Attack;
-                                _buttons[22].IsActive = false;
-                                _buttons[23].IsActive = false;
-                                _buttons[24].IsActive = false;
-                                Thread.Sleep(200);
-                            }
-                            
+                            _shipState = ShipState.Engineering;
+                            _buttons[22].IsActive = false;
+                            _buttons[23].IsActive = false;
+                            _buttons[24].IsActive = false;
+                            Thread.Sleep(200);
                         }
                     }
                     break;
@@ -1447,6 +1458,22 @@ namespace CIS598_Senior_Project.Screens
                         _selectedShip.Speed = _speedDiff;
                         _shipState = ShipState.Attack;
                     }
+                    break;
+                case 28:    //restore shields
+                    break;
+                case 29:    //Bow shields
+                    break;
+                case 30:    //Port shields
+                    break;
+                case 31:    //starboard shields
+                    break;
+                case 32:    //aft shields
+                    break;
+                case 33:    //Back button
+                    break;
+                case 34:    //Repair hull
+                    break;
+                case 35:    //Done with engineering
                     break;
             }
         }
@@ -1900,9 +1927,9 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.DrawString(_descriptor, _selectedShip.Name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "ID: " + _selectedShip.Id + "     Current HP: " + _selectedShip.Hull + "    Commands Set: " + _selectedShip.CommandDials.Count, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 3 * _heightIncrement), Color.Gold);
-            spriteBatch.DrawString(_descriptor, "Shields:   " + _selectedShip.Arcs[0].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 5 * _heightIncrement), Color.Gold);
-            spriteBatch.DrawString(_descriptor, "             " + _selectedShip.Arcs[1].Shields + "     " + _selectedShip.Arcs[2].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 8 * _heightIncrement), Color.Gold);
-            spriteBatch.DrawString(_descriptor, "                " + _selectedShip.Arcs[3].Shields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 11 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Shields:   " + _selectedShip.Arcs[0].Shields + "/" + _selectedShip.Arcs[0].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 5 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "             " + _selectedShip.Arcs[1].Shields + "/" + _selectedShip.Arcs[1].MaxShields + "     " + _selectedShip.Arcs[2].Shields + "/" + _selectedShip.Arcs[2].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 8 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "                " + _selectedShip.Arcs[3].Shields + "/" + _selectedShip.Arcs[3].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 11 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Nav Token: " + _selectedShip.HasNavigationToken + "   Commander: " + name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 13 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Eng Token: " + _selectedShip.HasEngineeringToken + "   Speed: " + _selectedShip.Speed, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 15 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Squad Token: " + _selectedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 17 * _heightIncrement), Color.Gold);

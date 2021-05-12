@@ -97,6 +97,18 @@
 /processorParam:TextureFormat=Color
 /build:AdvancedProjectorsCard.png
 
+#begin AftShields.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AftShields.png
+
 #begin ArmadaLogo.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -247,6 +259,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:blank.png
+
+#begin BowShields.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BowShields.png
 
 #begin button_test.png
 /importer:TextureImporter
@@ -608,6 +632,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:DominatorCard.png
+
+#begin Done.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Done.png
 
 #begin DuelFleetSelectionBackground.png
 /importer:TextureImporter
@@ -1499,6 +1535,18 @@
 /processorParam:TextureFormat=Color
 /build:PointDefenseRerouteCard.png
 
+#begin PortShields.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PortShields.png
+
 #begin PreviousSong.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1594,6 +1642,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:RedemptionCard.png
+
+#begin RepairHull.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:RepairHull.png
+
+#begin RestoreShields.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:RestoreShields.png
 
 #begin SalvationCard.png
 /importer:TextureImporter
@@ -1822,6 +1894,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SquadMovement5.png
+
+#begin StarboardShields.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:StarboardShields.png
 
 #begin Start.png
 /importer:TextureImporter
