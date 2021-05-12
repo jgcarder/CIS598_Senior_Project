@@ -65,7 +65,8 @@ namespace CIS598_Senior_Project.Screens
         {
             ActivateSquadron,
             Move,
-            Attack
+            Attack, 
+            Choose
         }
 
         private Game _game;
@@ -131,6 +132,9 @@ namespace CIS598_Senior_Project.Screens
         private bool _player1Start;
         private bool _player1Placing;
         private bool _usedToken;
+
+        private bool _squadHasMoved;
+        private bool _squadHasAttacked;
 
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
@@ -238,10 +242,10 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(37, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 70 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 6), false));  //use squadron token
             _buttons.Add(new CustButton(38, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 77 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 6), false));   //Done
 
-            _buttons.Add(new CustButton(39, new Rectangle(), false));
-            _buttons.Add(new CustButton(40, new Rectangle(), false));       //Squad move
-            _buttons.Add(new CustButton(41, new Rectangle(), false));       //squad attack
-            _buttons.Add(new CustButton(42, new Rectangle(), false));
+            _buttons.Add(new CustButton(39, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 75 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));         //activate squad
+            _buttons.Add(new CustButton(40, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 66 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));       //Squad move
+            _buttons.Add(new CustButton(41, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 57 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));       //squad attack
+            _buttons.Add(new CustButton(42, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 49 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));         //Done with squad
 
         }
 
@@ -291,6 +295,11 @@ namespace CIS598_Senior_Project.Screens
             _buttons[36].Texture = _content.Load<Texture2D>("UseEngToken");
             _buttons[37].Texture = _content.Load<Texture2D>("UseSquadToken");
             _buttons[38].Texture = _content.Load<Texture2D>("Done");
+
+            _buttons[39].Texture = _content.Load<Texture2D>("ActivateSquad");
+            _buttons[40].Texture = _content.Load<Texture2D>("MoveSquad");
+            _buttons[41].Texture = _content.Load<Texture2D>("AttackSquad");
+            _buttons[42].Texture = _content.Load<Texture2D>("Done");
 
 
             //_label = _content.Load<Texture2D>("");
@@ -695,18 +704,25 @@ namespace CIS598_Senior_Project.Screens
                                                 {
                                                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                                                     {
+                                                        buttonSweeper(20);
                                                         _selectedSquad = squad;
-                                                        _buttons[40].IsActive = !_selectedSquad.IsEngaged;
-                                                        _buttons[41].IsActive = isSquadTargetNearby(_player1Placing);
-                                                        _buttons[42].IsActive = true;
+                                                        _buttons[39].IsActive = true;
                                                     }
                                                 }
                                             }
                                         }
                                     }
                                     break;
-                                case SquadronCommand.Move:
+                                case SquadronCommand.Choose:
+                                    _selectedSquad.IsEngaged = isEngaged(_player1Placing);
 
+                                    _buttons[39].IsActive = false;
+                                    _buttons[40].IsActive = !_selectedSquad.IsEngaged;
+                                    _buttons[41].IsActive = isSquadTargetNearby(_player1Placing);
+                                    _buttons[42].IsActive = true;
+                                    break;
+                                case SquadronCommand.Move:
+                                    //needs to draw the 
                                     break;
                                 case SquadronCommand.Attack:
 
@@ -984,12 +1000,32 @@ namespace CIS598_Senior_Project.Screens
                 drawFleets(spriteBatch);
                 if(_shipState != ShipState.ActivateShip && _shipState != ShipState.Navigation && _shipState != ShipState.RevealDial && _shipState != ShipState.UseToken)
                 {
-                    if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
-                    if (_shipState == ShipState.Engineering) spriteBatch.DrawString(_descriptor, "Remaining Engineering Points: " + _engineeringPoints, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 22 * _heightIncrement), Color.Gold);
-
-                    if (_shipState == ShipState.Squadron)
+                    
+                    if (_shipState == ShipState.Squadron)   //squadron command drawings 
                     {
-                        spriteBatch.Draw(_shipToSquadRange, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipToSquadRange.Width / 2, _shipToSquadRange.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                        if(_squadCommand == SquadronCommand.ActivateSquadron || _squadCommand == SquadronCommand.Choose)
+                        {
+                            if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
+                            spriteBatch.Draw(_shipToSquadRange, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipToSquadRange.Width / 2, _shipToSquadRange.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                        }
+                        else if(_squadCommand == SquadronCommand.Move)
+                        {
+                            if (_selectedSquad.Speed == 1) spriteBatch.Draw(_squadMove1, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove1.Width / 2, _squadMove1.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                            else if (_selectedSquad.Speed == 2) spriteBatch.Draw(_squadMove2, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove2.Width / 2, _squadMove2.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                            else if (_selectedSquad.Speed == 3) spriteBatch.Draw(_squadMove3, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove3.Width / 2, _squadMove3.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                            else if (_selectedSquad.Speed == 4) spriteBatch.Draw(_squadMove4, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove4.Width / 2, _squadMove4.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                            else if (_selectedSquad.Speed == 5) spriteBatch.Draw(_squadMove5, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove5.Width / 2, _squadMove5.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                        }
+                        else if(_squadCommand == SquadronCommand.Attack)
+                        {
+                            if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
+                            if (_targetedSquadron != null) drawTargetedSquadronInfo(spriteBatch);
+                        }
+                    }
+                    else
+                    {
+                        if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
+                        if (_shipState == ShipState.Engineering) spriteBatch.DrawString(_descriptor, "Remaining Engineering Points: " + _engineeringPoints, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 22 * _heightIncrement), Color.Gold);
                     }
                 }
                 else
@@ -1677,16 +1713,54 @@ namespace CIS598_Senior_Project.Screens
                     {
                         _button1.Play();
                         _selectedSquad.HasBeenActivated = true;
-                        _buttons[40].IsActive = !_selectedSquad.IsEngaged;
-                        _buttons[41].IsActive = isSquadTargetNearby(_player1Placing);
-                        _buttons[42].IsActive = true;
+
+                        _squadCommand = SquadronCommand.Choose;
+
+                        _squadHasAttacked = false;
+                        _squadHasMoved = false;
                     }
                     break;
                 case 40: //Moves said squadron
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _squadCommand = SquadronCommand.Move;
+
+                        _squadHasMoved = true;
+                        buttonSweeper(40);
+                    }
                     break;
-                case 41: //Attack with said squadron is a target is available
+                case 41: //Attack with said squadron if a target is available
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+                        _squadCommand = SquadronCommand.Attack;
+
+                        _squadHasAttacked = true;
+                        buttonSweeper(40);
+                    }
                     break;
                 case 42: //Done with this squadron
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        _numSquadsToActivate--;
+                        if(_numSquadsToActivate <= 0)
+                        {
+                            _shipState = ShipState.Attack;
+                            _squadCommand = SquadronCommand.ActivateSquadron;
+                        }
+                        else
+                        {
+                            _squadCommand = SquadronCommand.ActivateSquadron;
+                        }
+
+                        _squadHasMoved = false;
+                        _squadHasAttacked = false;
+                        _selectedSquad = null;
+                        _targetedSquadron = null;
+                        buttonSweeper(40);
+                    }
                     break;
             }
         }
@@ -2189,6 +2263,76 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// A method used in determining if a squadron can move or not
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <returns></returns>
+        private bool isEngaged(bool player1)
+        {
+            if (player1)
+            {
+                foreach (var sqd in _player2.Squadrons)
+                {
+                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                    {
+                        if(!sqd.HasHeavy) return true;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var sqd in _player1.Squadrons)
+                {
+                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                    {
+                        if (!sqd.HasHeavy) return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Draws the selected squadron
+        /// </summary>
+        /// <param name="spriteBatch">The spriteBatch used to draw things</param>
+        private void drawSelectedSquadronInfo(SpriteBatch spriteBatch)
+        {
+            Texture2D image;
+            if (_selectedSquad is AWingSquadron) image = _content.Load<Texture2D>("AWingCard");
+            else if (_selectedSquad is BWingSquadron) image = _content.Load<Texture2D>("BWingCard");
+            else if (_selectedSquad is XWingSquadron) image = _content.Load<Texture2D>("XWingCard");
+            else if (_selectedSquad is YWingSquadron) image = _content.Load<Texture2D>("YWingCard");
+            else if (_selectedSquad is TIEFighterSquadron) image = _content.Load<Texture2D>("TIEFighterCard");
+            else if (_selectedSquad is TIEAdvancedSquadron) image = _content.Load<Texture2D>("TIEAdvancedCard");
+            else if (_selectedSquad is TIEInterceptorSquadron) image = _content.Load<Texture2D>("TIEInterceptorCard");
+            else image = _content.Load<Texture2D>("TIEBomberCard");
+
+            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, _heightIncrement, _widthIncrement * 12, _heightIncrement * 15), Color.White);
+            spriteBatch.DrawString(_descriptor, "Hull Points: " + _selectedSquad.Hull + "  ID: " + _selectedSquad.Id, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, _heightIncrement * 17), Color.Gold);
+        }
+
+        /// <summary>
+        /// Draws the Targeted squadron
+        /// </summary>
+        /// <param name="spriteBatch">The spriteBatch used to draw things</param>
+        private void drawTargetedSquadronInfo(SpriteBatch spriteBatch)
+        {
+            Texture2D image;
+            if (_targetedSquadron is AWingSquadron) image = _content.Load<Texture2D>("AWingCard");
+            else if (_targetedSquadron is BWingSquadron) image = _content.Load<Texture2D>("BWingCard");
+            else if (_targetedSquadron is XWingSquadron) image = _content.Load<Texture2D>("XWingCard");
+            else if (_targetedSquadron is YWingSquadron) image = _content.Load<Texture2D>("YWingCard");
+            else if (_targetedSquadron is TIEFighterSquadron) image = _content.Load<Texture2D>("TIEFighterCard");
+            else if (_targetedSquadron is TIEAdvancedSquadron) image = _content.Load<Texture2D>("TIEAdvancedCard");
+            else if (_targetedSquadron is TIEInterceptorSquadron) image = _content.Load<Texture2D>("TIEInterceptorCard");
+            else image = _content.Load<Texture2D>("TIEBomberCard");
+
+            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 19 * _heightIncrement, _widthIncrement * 12, _heightIncrement * 15), Color.White);
+            spriteBatch.DrawString(_descriptor, "Target's Hull Points: " + _targetedSquadron.Hull + "  ID: " + _targetedSquadron.Id, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 15, _heightIncrement * 36), Color.Gold);
         }
     }
 }

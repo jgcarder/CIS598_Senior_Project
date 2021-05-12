@@ -25,6 +25,18 @@
 /processorParam:TextureFormat=Color
 /build:ActivateShip.png
 
+#begin ActivateSquad.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ActivateSquad.png
+
 #begin AdarTallonCard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -180,6 +192,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:AssaultFrigateToken.png
+
+#begin AttackSquad.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AttackSquad.png
 
 #begin AWingCard.png
 /importer:TextureImporter
@@ -1258,6 +1282,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:MonMothmaCard.png
+
+#begin MoveSquad.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:MoveSquad.png
 
 #begin NavCommand.png
 /importer:TextureImporter

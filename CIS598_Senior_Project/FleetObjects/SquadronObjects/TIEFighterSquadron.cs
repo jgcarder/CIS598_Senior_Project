@@ -15,6 +15,8 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 
         public override int Hull { get { return _hull; } set { _hull = value; } }
 
+        public override int MaxHull { get { return 3; } }
+
         public override int Speed { get; set; } = 4;
 
         public override int Id { get; }
