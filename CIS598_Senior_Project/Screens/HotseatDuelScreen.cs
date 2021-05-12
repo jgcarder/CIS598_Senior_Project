@@ -687,7 +687,7 @@ namespace CIS598_Senior_Project.Screens
                                             {
                                                 if(Math.Sqrt(Math.Pow(_currentMouseState.X - squad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - squad.Bounds.Center.Y, 2)) <= 25)
                                                 {
-                                                    if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released && !squad.HasBeenActivated)
                                                     {
                                                         buttonSweeper(20);
                                                         _selectedSquad = squad;
@@ -702,7 +702,7 @@ namespace CIS598_Senior_Project.Screens
                                             {
                                                 if (Math.Sqrt(Math.Pow(_currentMouseState.X - squad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - squad.Bounds.Center.Y, 2)) <= 25)
                                                 {
-                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released && !squad.HasBeenActivated)
                                                     {
                                                         buttonSweeper(20);
                                                         _selectedSquad = squad;
@@ -717,15 +717,21 @@ namespace CIS598_Senior_Project.Screens
                                     _selectedSquad.IsEngaged = isEngaged(_player1Placing);
 
                                     _buttons[39].IsActive = false;
-                                    _buttons[40].IsActive = !_selectedSquad.IsEngaged;
-                                    _buttons[41].IsActive = isSquadTargetNearby(_player1Placing);
+
+                                    if (!_squadHasMoved) _buttons[40].IsActive = !_selectedSquad.IsEngaged;
+                                    else _buttons[40].IsActive = false;
+
+                                    if (!_squadHasAttacked) _buttons[41].IsActive = isSquadTargetNearby(_player1Placing);
+                                    else _buttons[41].IsActive = false;
+
                                     _buttons[42].IsActive = true;
+
                                     break;
                                 case SquadronCommand.Move:
                                     //needs to draw the 
                                     break;
                                 case SquadronCommand.Attack:
-
+                                    //attack and total damage
                                     break;
                             }
                             break;
