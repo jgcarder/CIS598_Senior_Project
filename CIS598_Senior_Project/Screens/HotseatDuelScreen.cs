@@ -732,6 +732,7 @@ namespace CIS598_Senior_Project.Screens
                                     break;
                                 case SquadronCommand.Attack:
                                     //attack and total damage
+                                        //automatically select a nearby squad with escort if there is one
                                     break;
                             }
                             break;
