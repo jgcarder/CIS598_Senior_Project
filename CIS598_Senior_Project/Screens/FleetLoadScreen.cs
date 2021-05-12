@@ -307,7 +307,7 @@ namespace CIS598_Senior_Project.Screens
 
             spriteBatch.Begin();
 
-            spriteBatch.Draw(_background, new Vector2(), Color.White);
+            spriteBatch.Draw(_background, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height + 3 * _heightIncrement), Color.White);
 
             spriteBatch.Draw(_gradient, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 18, 0), Color.White);
 

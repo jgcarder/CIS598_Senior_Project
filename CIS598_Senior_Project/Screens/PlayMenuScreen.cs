@@ -56,8 +56,8 @@ namespace CIS598_Senior_Project.Screens
             _widthIncrement = _game.GraphicsDevice.Viewport.Width / 100;
             _heightIncrement = _game.GraphicsDevice.Viewport.Height / 100;
 
-            _buttons.Add(new CustButton(0, new Rectangle(_widthIncrement * 35, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 72, _widthIncrement * 30, _heightIncrement * 15), true));
-            _buttons.Add(new CustButton(1, new Rectangle(_widthIncrement * 35, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 54, _widthIncrement * 30, _heightIncrement * 15), true));
+            _buttons.Add(new CustButton(0, new Rectangle(_widthIncrement * 35, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 54, _widthIncrement * 30, _heightIncrement * 15), true));
+            _buttons.Add(new CustButton(1, new Rectangle(_widthIncrement * 35, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 54, _widthIncrement * 30, _heightIncrement * 15), false));
             _buttons.Add(new CustButton(2, new Rectangle(_widthIncrement * 35, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 36, _widthIncrement * 30, _heightIncrement * 15), true));
             _buttons.Add(new CustButton(3, new Rectangle(_widthIncrement * 35, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 18, _widthIncrement * 30, _heightIncrement * 15), true));
         }
@@ -199,7 +199,7 @@ namespace CIS598_Senior_Project.Screens
             spriteBatch.Begin();
             spriteBatch.Draw(_background, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width, _game.GraphicsDevice.Viewport.Height + _heightIncrement * 3), Color.White);
 
-            spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 90), Color.White);
+            spriteBatch.Draw(_label, new Vector2(_widthIncrement * 34, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 72), Color.White);
 
             for (int i = 0; i < _buttons.Count; i++)
             {
