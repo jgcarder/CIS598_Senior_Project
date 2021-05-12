@@ -2317,8 +2317,8 @@ namespace CIS598_Senior_Project.Screens
             else if (_selectedSquad is TIEInterceptorSquadron) image = _content.Load<Texture2D>("TIEInterceptorCard");
             else image = _content.Load<Texture2D>("TIEBomberCard");
 
-            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, _heightIncrement, _widthIncrement * 12, _heightIncrement * 15), Color.White);
-            spriteBatch.DrawString(_descriptor, "Hull Points: " + _selectedSquad.Hull + "  ID: " + _selectedSquad.Id, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, _heightIncrement * 17), Color.Gold);
+            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, _heightIncrement, _widthIncrement * 12, _heightIncrement * 18), Color.White);
+            spriteBatch.DrawString(_descriptor, "Hull Points: " + _selectedSquad.Hull + "  ID: " + _selectedSquad.Id, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, _heightIncrement * 20), Color.Gold);
         }
 
         /// <summary>
@@ -2337,8 +2337,8 @@ namespace CIS598_Senior_Project.Screens
             else if (_targetedSquadron is TIEInterceptorSquadron) image = _content.Load<Texture2D>("TIEInterceptorCard");
             else image = _content.Load<Texture2D>("TIEBomberCard");
 
-            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 19 * _heightIncrement, _widthIncrement * 12, _heightIncrement * 15), Color.White);
-            spriteBatch.DrawString(_descriptor, "Target's Hull Points: " + _targetedSquadron.Hull + "  ID: " + _targetedSquadron.Id, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 15, _heightIncrement * 36), Color.Gold);
+            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 22 * _heightIncrement, _widthIncrement * 12, _heightIncrement * 18), Color.White);
+            spriteBatch.DrawString(_descriptor, "Target's Hull Points: " + _targetedSquadron.Hull + "  ID: " + _targetedSquadron.Id, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 15, _heightIncrement * 41), Color.Gold);
         }
     }
 }
