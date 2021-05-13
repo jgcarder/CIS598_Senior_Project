@@ -126,6 +126,14 @@ namespace CIS598_Senior_Project.Screens
         private int _engineeringPoints;
         private int _numSquadsToActivate;
 
+        private int _targetArc;
+
+        private int _sq2SqDamage;
+        private int _sq2ShDamage;
+        private int _sh2ShDamage;
+        private int _sh2SqDamage;
+        private int _counterDanage;
+
         private string _selectingPlayer;
 
         private bool _player1Turn;
@@ -135,6 +143,7 @@ namespace CIS598_Senior_Project.Screens
 
         private bool _squadHasMoved;
         private bool _squadHasAttacked;
+        private bool _attackHasCrits;
 
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
@@ -164,6 +173,11 @@ namespace CIS598_Senior_Project.Screens
             _player2 = player2;
 
             _engineeringPoints = 0;
+
+            _sq2ShDamage = 0;
+            _sq2SqDamage = 0;
+            _sh2ShDamage = 0;
+            _sh2SqDamage = 0;
 
             _shipToPlace1 = _player1.Ships;
             _shipsPlaced1 = new List<Ship>();
@@ -247,6 +261,7 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(41, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 57 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));       //squad attack
             _buttons.Add(new CustButton(42, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 49 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));         //Done with squad
 
+            _buttons.Add(new CustButton(43, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 75 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));          //Attack with squadron
         }
 
         /// <summary>
@@ -300,6 +315,8 @@ namespace CIS598_Senior_Project.Screens
             _buttons[40].Texture = _content.Load<Texture2D>("MoveSquad");
             _buttons[41].Texture = _content.Load<Texture2D>("AttackSquad");
             _buttons[42].Texture = _content.Load<Texture2D>("Done");
+
+            _buttons[43].Texture = _content.Load<Texture2D>("AttackSquad");
 
 
             //_label = _content.Load<Texture2D>("");
@@ -727,12 +744,176 @@ namespace CIS598_Senior_Project.Screens
                                     _buttons[42].IsActive = true;
 
                                     break;
-                                case SquadronCommand.Move:
-                                    //needs to draw the 
+                                case SquadronCommand.Move: //moving the squad
+                                    int radius = 0;
+                                    if (_selectedSquad.Speed == 1) radius = _squadMove1.Width / 2;
+                                    if (_selectedSquad.Speed == 2) radius = _squadMove2.Width / 2;
+                                    if (_selectedSquad.Speed == 3) radius = _squadMove3.Width / 2;
+                                    if (_selectedSquad.Speed == 4) radius = _squadMove4.Width / 2;
+                                    if (_selectedSquad.Speed == 5) radius = _squadMove5.Width / 2;
+
+                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedSquad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedSquad.Bounds.Center.Y, 2)) <= radius)
+                                    {
+                                        if(_currentMouseState.X > 25 && _currentMouseState.X < _game.GraphicsDevice.Viewport.Width - 25 && _currentMouseState.Y > 25 && _currentMouseState.Y < _game.GraphicsDevice.Viewport.Height - 25)
+                                        {
+                                            if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                            {
+                                                if(!isSquadSpotTaken())
+                                                {
+                                                    _selectedSquad.Position = new Vector2(_currentMouseState.X, _currentMouseState.Y);
+                                                    _squadHasMoved = true;
+                                                    _squadCommand = SquadronCommand.Choose;
+                                                }
+                                            }
+                                        }
+                                    }
                                     break;
-                                case SquadronCommand.Attack:
+                                case SquadronCommand.Attack: //attacking with the squad
+
+                                    if(isEscortsNearby()) _targetedSquadron = escortsNearby();
+
+                                    if(_targetedSquadron != null)
+                                    {
+                                        _sq2SqDamage = squadDamage();
+                                        _sq2ShDamage = 0;
+                                        _sh2ShDamage = 0;
+                                        _sh2SqDamage = 0;
+                                        buttonSweeper(40);
+                                        _buttons[43].IsActive = true;
+                                        //activate fire button
+                                    }
+                                    else if(_targetedShip != null)
+                                    {
+                                        _sq2SqDamage = 0;
+                                        _sq2ShDamage = shipDamage();
+                                        _sh2ShDamage = 0;
+                                        _sh2SqDamage = 0;
+                                        buttonSweeper(40);
+                                        _buttons[43].IsActive = true;
+                                        //activate fire button
+                                    }
+
+                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedSquad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedSquad.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                    {
+                                        //player 1 and 2 selecting targets
+                                        if (_player1Placing)
+                                        {
+                                            foreach (var squad in _player2.Squadrons)
+                                            {
+                                                if (Math.Sqrt(Math.Pow(_currentMouseState.X - squad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - squad.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedShip = null;
+                                                        _targetedSquadron = squad;
+                                                    }
+                                                }
+                                            }
+
+                                            foreach(var ship in _player2.Ships)
+                                            {
+                                                if(Math.Sqrt(Math.Pow(_currentMouseState.X - ship.BowBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.BowBounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedSquadron = null;
+                                                        _targetedShip = ship;
+                                                        _targetArc = 0;
+                                                    }
+                                                }
+                                                else if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.PortBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.PortBounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedSquadron = null;
+                                                        _targetedShip = ship;
+                                                        _targetArc = 1;
+                                                    }
+                                                }
+                                                else if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.StarboardBounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedSquadron = null;
+                                                        _targetedShip = ship;
+                                                        _targetArc = 2;
+                                                    }
+                                                }
+                                                else if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.AftBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.AftBounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedSquadron = null;
+                                                        _targetedShip = ship;
+                                                        _targetArc = 3;
+                                                    }
+                                                }
+                                            }
+                                            
+                                        } 
+                                        else //player 2 is placing
+                                        {
+                                            foreach (var squad in _player1.Squadrons)
+                                            {
+                                                if (Math.Sqrt(Math.Pow(_currentMouseState.X - squad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - squad.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedShip = null;
+                                                        _targetedSquadron = squad;
+                                                    }
+                                                }
+                                            }
+
+                                            foreach (var ship in _player1.Ships)
+                                            {
+                                                if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.BowBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.BowBounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedSquadron = null;
+                                                        _targetedShip = ship;
+                                                        _targetArc = 0;
+                                                    }
+                                                }
+                                                else if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.PortBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.PortBounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedSquadron = null;
+                                                        _targetedShip = ship;
+                                                        _targetArc = 1;
+                                                    }
+                                                }
+                                                else if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.StarboardBounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedSquadron = null;
+                                                        _targetedShip = ship;
+                                                        _targetArc = 2;
+                                                    }
+                                                }
+                                                else if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.AftBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.AftBounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                                {
+                                                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                                    {
+                                                        _targetedSquadron = null;
+                                                        _targetedShip = ship;
+                                                        _targetArc = 3;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    //select target
+
+
+
+
+
                                     //attack and total damage
-                                        //automatically select a nearby squad with escort if there is one
+                                    //automatically select a nearby squad with escort if there is one
                                     break;
                             }
                             break;
@@ -1017,6 +1198,7 @@ namespace CIS598_Senior_Project.Screens
                         }
                         else if(_squadCommand == SquadronCommand.Move)
                         {
+                            if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
                             if (_selectedSquad.Speed == 1) spriteBatch.Draw(_squadMove1, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove1.Width / 2, _squadMove1.Height / 2), 1f, SpriteEffects.None, 0.5f);
                             else if (_selectedSquad.Speed == 2) spriteBatch.Draw(_squadMove2, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove2.Width / 2, _squadMove2.Height / 2), 1f, SpriteEffects.None, 0.5f);
                             else if (_selectedSquad.Speed == 3) spriteBatch.Draw(_squadMove3, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove3.Width / 2, _squadMove3.Height / 2), 1f, SpriteEffects.None, 0.5f);
@@ -1027,6 +1209,7 @@ namespace CIS598_Senior_Project.Screens
                         {
                             if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
                             if (_targetedSquadron != null) drawTargetedSquadronInfo(spriteBatch);
+                            if (_targetedShip != null) drawReducedTargetedShipInfo(spriteBatch);
                         }
                     }
                     else
@@ -2231,6 +2414,27 @@ namespace CIS598_Senior_Project.Screens
         }
 
         /// <summary>
+        /// Draws a reduced ship info to save space
+        /// </summary>
+        /// <param name="spritBatch">The spritBatch used to draw things</param>
+        private void drawReducedTargetedShipInfo(SpriteBatch spriteBatch)
+        {
+            string name = "";
+
+            if (_selectedShip.HasCommander) name = _selectedShip.Commander.Name;
+
+            spriteBatch.DrawString(_descriptor, _selectedShip.Name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 22 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "ID: " + _selectedShip.Id + "     Current HP: " + _selectedShip.Hull + "/" + _selectedShip.MaxHull + "    Commands Set: " + _selectedShip.CommandDials.Count, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 24 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Shields:    " + _selectedShip.Arcs[0].Shields + "/" + _selectedShip.Arcs[0].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 26 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "             " + _selectedShip.Arcs[1].Shields + "/" + _selectedShip.Arcs[1].MaxShields + "     " + _selectedShip.Arcs[2].Shields + "/" + _selectedShip.Arcs[2].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 29 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "                  " + _selectedShip.Arcs[3].Shields + "/" + _selectedShip.Arcs[3].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 32 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Nav Token: " + _selectedShip.HasNavigationToken + "   Commander: " + name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 34 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Eng Token: " + _selectedShip.HasEngineeringToken + "   Speed: " + _selectedShip.Speed, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 36 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Squad Token: " + _selectedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 38 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Con. Fire Token: " + _selectedShip.HasConcentrateFireToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 40 * _heightIncrement), Color.Gold);
+        }
+
+        /// <summary>
         /// Gets the number of ships left to activate
         /// </summary>
         /// <param name="ships">The list of ships to look through</param>
@@ -2338,8 +2542,325 @@ namespace CIS598_Senior_Project.Screens
             else if (_targetedSquadron is TIEInterceptorSquadron) image = _content.Load<Texture2D>("TIEInterceptorCard");
             else image = _content.Load<Texture2D>("TIEBomberCard");
 
-            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 22 * _heightIncrement, _widthIncrement * 12, _heightIncrement * 18), Color.White);
-            spriteBatch.DrawString(_descriptor, "Target's Hull Points: " + _targetedSquadron.Hull + "  ID: " + _targetedSquadron.Id, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 15, _heightIncrement * 41), Color.Gold);
+            spriteBatch.Draw(image, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 22 * _heightIncrement, _widthIncrement * 12, _heightIncrement * 21), Color.White);
+            spriteBatch.DrawString(_descriptor, "Target's Hull Points: " + _targetedSquadron.Hull + "  ID: " + _targetedSquadron.Id, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 15, _heightIncrement * 44), Color.Gold);
+        }
+
+        /// <summary>
+        /// Used for when a squadron is moving
+        /// </summary>
+        /// <returns></returns>
+        private bool isSquadSpotTaken()
+        {
+            foreach(var ship in _player1.Ships)
+            {
+                if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 155 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 210)
+                {
+                    return true;
+                }
+            }
+
+            foreach(var squad in _player1.Squadrons)
+            {
+                if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 51 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 51)
+                {
+                    return true;
+                }
+            }
+
+            foreach (var ship in _player2.Ships)
+            {
+                if (Math.Abs(_currentMouseState.X - ship.Bounds.Center.X) < 155 && Math.Abs(_currentMouseState.Y - ship.Bounds.Center.Y) < 210)
+                {
+                    return true;
+                }
+            }
+
+            foreach (var squad in _player2.Squadrons)
+            {
+                if (Math.Abs(_currentMouseState.X - squad.Bounds.Center.X) < 51 && Math.Abs(_currentMouseState.Y - squad.Bounds.Center.Y) < 51)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// A method for finding and selecting the escort squadron if one exists
+        /// </summary>
+        /// <returns>The first escort squadron encountered</returns>
+        private Squadron escortsNearby()
+        {
+            if(_player1Placing)
+            {
+                foreach(var squad in _player2.Squadrons)
+                {
+                    if(Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) < _squadMove1.Width / 2)
+                    {
+                        if(squad.HasEscort)
+                        {
+                            return squad;
+                        }
+                    }
+                }
+            }
+            else //player 2 is going
+            {
+                foreach (var squad in _player1.Squadrons)
+                {
+                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) < _squadMove1.Width / 2)
+                    {
+                        if (squad.HasEscort)
+                        {
+                            return squad;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /*
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private bool targetSquadron()
+        {
+
+        }
+        */
+
+        /// <summary>
+        /// calculates the damage done to capital ships by squadrons
+        /// </summary>
+        /// <returns>The total damage done to them</returns>
+        private int shipDamage()
+        {
+            int hits = 0;
+
+            List<BlackDieSideEnum> blackRolls = new List<BlackDieSideEnum>();
+            List<BlueDieSideEnum> blueRolls = new List<BlueDieSideEnum>();
+            List<RedDieSideEnum> redRolls = new List<RedDieSideEnum>();
+
+            foreach(var die in _selectedSquad.AntiShipDice)
+            {
+                if (die is BlueDie)
+                {
+                    BlueDie b = new BlueDie(DieTypeEnum.Blue);
+                    blueRolls.Add(b.Roll());
+                }
+                if (die is BlackDie)
+                {
+                    BlackDie b = new BlackDie(DieTypeEnum.Black);
+                    blackRolls.Add(b.Roll());
+                }
+                if (die is RedDie)
+                {
+                    RedDie b = new RedDie(DieTypeEnum.Red);
+                    redRolls.Add(b.Roll());
+                }
+            }
+
+            foreach (var roll in blackRolls)
+            {
+                if(_selectedSquad.HasBomber)
+                {
+                    if (roll == BlackDieSideEnum.Hit) hits++;
+                    if (roll == BlackDieSideEnum.HitCrit) 
+                    {
+                        hits += 2;
+                        _attackHasCrits = true;
+                    }
+                }
+                else
+                {
+                    if (roll == BlackDieSideEnum.Hit || roll == BlackDieSideEnum.HitCrit) hits++;
+                }
+            }
+
+            foreach (var roll in blueRolls)
+            {
+                if (_selectedSquad.HasBomber)
+                {
+                    if (roll == BlueDieSideEnum.Hit) hits++;
+                    if(roll == BlueDieSideEnum.Crit)
+                    {
+                        hits++;
+                        _attackHasCrits = true;
+                    }
+                }
+                else
+                {
+                    if (roll == BlueDieSideEnum.Hit) hits++;
+                }
+            }
+
+            foreach (var roll in redRolls)
+            {
+                if (_selectedSquad.HasBomber)
+                {
+                    if (roll == RedDieSideEnum.Hit) hits++;
+                    if (roll == RedDieSideEnum.DoubleHit) hits += 2;
+                    if(roll == RedDieSideEnum.Crit)
+                    {
+                        hits++;
+                        _attackHasCrits = true;
+                    }
+                }
+                else
+                {
+                    if (roll == RedDieSideEnum.Hit) hits++;
+                    if (roll == RedDieSideEnum.DoubleHit) hits += 2;
+                }
+            }
+
+            return hits;
+        }
+
+
+        /// <summary>
+        /// Method for calculating and resolving squadron to squadron attacks
+        /// </summary>
+        /// <returns>The number of successful hits</returns>
+        private int squadDamage()
+        {
+            int hits = 0;
+            int rerolls = 0;
+
+            if (checkForSwarm()) rerolls++;
+
+            List<BlackDieSideEnum> blackRolls = new List<BlackDieSideEnum>();
+            List<BlueDieSideEnum> blueRolls = new List<BlueDieSideEnum>();
+            List<RedDieSideEnum> redRolls = new List<RedDieSideEnum>();
+
+            foreach (var die in _selectedSquad.AntiSquadronDice)
+            {
+                if(die is BlueDie)
+                {
+                    BlueDie b = new BlueDie(DieTypeEnum.Blue);
+                    blueRolls.Add(b.Roll());
+                }
+                if (die is BlackDie)
+                {
+                    BlackDie b = new BlackDie(DieTypeEnum.Black);
+                    blackRolls.Add(b.Roll());
+                }
+                if (die is RedDie)
+                {
+                    RedDie b = new RedDie(DieTypeEnum.Red);
+                    redRolls.Add(b.Roll());
+                }
+            }
+
+            foreach(var roll in blackRolls)
+            {
+                if (roll == BlackDieSideEnum.Hit || roll == BlackDieSideEnum.HitCrit) hits++;
+                if(rerolls > 0 && roll == BlackDieSideEnum.Blank)
+                {
+                    BlackDieSideEnum bs = new BlackDie(DieTypeEnum.Black).Roll();
+                    if (bs == BlackDieSideEnum.Hit || bs == BlackDieSideEnum.HitCrit) hits++;
+
+                    rerolls--;
+                }
+            }
+
+            foreach(var roll in blueRolls)
+            {
+                if (roll == BlueDieSideEnum.Hit) hits++;
+                if (rerolls > 0 && roll == BlueDieSideEnum.Accuracy)
+                {
+                    BlueDieSideEnum bs = new BlueDie(DieTypeEnum.Blue).Roll();
+                    if (bs == BlueDieSideEnum.Hit) hits++;
+
+                    rerolls--;
+                }
+            }
+
+            foreach (var roll in redRolls)
+            {
+                if (roll == RedDieSideEnum.Hit) hits++;
+                if (roll == RedDieSideEnum.DoubleHit) hits += 2;
+                if (rerolls > 0 && (roll == RedDieSideEnum.Blank || roll == RedDieSideEnum.Accuracy || roll == RedDieSideEnum.Crit))
+                {
+                    RedDieSideEnum bs = new RedDie(DieTypeEnum.Red).Roll();
+                    if (bs == RedDieSideEnum.Hit) hits++;
+                    if (bs == RedDieSideEnum.DoubleHit) hits += 2;
+
+                    rerolls--;
+                }
+            }
+
+            return hits;
+        }
+
+        /// <summary>
+        /// Checks for any other swarm squadrons out there
+        /// </summary>
+        /// <returns>True if there is another swarm nearby, false otherwise</returns>
+        private bool checkForSwarm()
+        {
+            if(_player1Placing)
+            {
+                foreach(var sqd in _player1.Squadrons)
+                {
+                    if(Math.Sqrt(Math.Pow(_targetedSquadron.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_targetedSquadron.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                    {
+                        if (sqd.HasSwarm) return true;
+                    }
+                }
+            }
+            else //player 2 is going
+            {
+                foreach (var sqd in _player2.Squadrons)
+                {
+                    if (Math.Sqrt(Math.Pow(_targetedSquadron.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_targetedSquadron.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                    {
+                        if (sqd.HasSwarm) return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// A method for finding the escort squadron if one exists
+        /// </summary>
+        /// <returns>True if there are squadrons with escort nearby</returns>
+        private bool isEscortsNearby()
+        {
+            if (_player1Placing)
+            {
+                foreach (var squad in _player2.Squadrons)
+                {
+                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) < _squadMove1.Width / 2)
+                    {
+                        if (squad.HasEscort)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            else //player 2 is going
+            {
+                foreach (var squad in _player1.Squadrons)
+                {
+                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) < _squadMove1.Width / 2)
+                    {
+                        if (squad.HasEscort)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
