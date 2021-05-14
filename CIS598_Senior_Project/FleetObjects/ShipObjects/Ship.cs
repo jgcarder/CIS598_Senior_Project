@@ -58,7 +58,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract UpgradeCard Commander { get; set; }
 
-        public abstract FiringArc[] Arcs { get; }
+        public abstract FiringArc[] Arcs { get; set; }
 
         public abstract UpgradeCard[] Upgrades { get; set; }
 

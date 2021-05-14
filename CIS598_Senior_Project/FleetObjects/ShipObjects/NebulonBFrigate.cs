@@ -183,7 +183,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public override BoundingCircle AftBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 81, Rotation - 3 * MathHelper.PiOver2), 36); } }
 
-        public override FiringArc[] Arcs { get; }
+        public override FiringArc[] Arcs { get; set; }
 
         public override UpgradeCard[] Upgrades { get; set; }
 

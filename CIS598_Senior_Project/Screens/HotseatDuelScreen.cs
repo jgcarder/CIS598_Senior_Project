@@ -92,6 +92,8 @@ namespace CIS598_Senior_Project.Screens
         private int[] _squadTypeAmounts1;
         private int[] _squadTypeAmounts2;
 
+        private int[] _shipToShipDamages;
+
         private Ship _selectedShip;
         private Ship _targetedShip;
         private Squadron _selectedSquad;
@@ -131,6 +133,7 @@ namespace CIS598_Senior_Project.Screens
         private int _engineeringPoints;
         private int _numSquadsToActivate;
 
+        private int _previousArc;
         private int _selectedArc;
         private int _targetArc;
 
@@ -142,6 +145,11 @@ namespace CIS598_Senior_Project.Screens
 
         private int _numAttackRemaining;
 
+        private int _speed1Diff;
+        private int _speed2Diff;
+        private int _speed3Diff;
+        private int _speed4Diff;
+
         private string _selectingPlayer;
 
         private bool _player1Turn;
@@ -152,6 +160,9 @@ namespace CIS598_Senior_Project.Screens
         private bool _squadHasMoved;
         private bool _squadHasAttacked;
         private bool _attackHasCrits;
+        private bool _attackHasAccuracies;
+        private bool _diceRolled;
+        private bool _damagedHull;
 
         private MouseState _currentMouseState;
         private MouseState _previousMouseState;
@@ -191,9 +202,16 @@ namespace CIS598_Senior_Project.Screens
             _sh2ShDamage = 0;
             _sh2SqDamage = 0;
 
+            _speed1Diff = 0;
+            _speed2Diff = 0;
+            _speed3Diff = 0;
+            _speed4Diff = 0;
+
             _numAttackRemaining = 0;
 
             _selectedArc = -1;
+
+            _shipToShipDamages = new int[2];
 
             _shipToPlace1 = _player1.Ships;
             _shipsPlaced1 = new List<Ship>();
@@ -285,6 +303,29 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(47, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 70 * _heightIncrement, _widthIncrement * 12, _heightIncrement * 7), false));          //secelt aft arc
             _buttons.Add(new CustButton(48, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 78 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));          //confirm selection
 
+            _buttons.Add(new CustButton(49, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 78 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));          //Confirm attack
+
+            _buttons.Add(new CustButton(50, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 23 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 8), false));       //reroll dice
+            _buttons.Add(new CustButton(51, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 23 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 8), false));        //Done modifying
+
+            _buttons.Add(new CustButton(52, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 63 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 5), false));       //defense tokens
+            _buttons.Add(new CustButton(53, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 63 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 5), false));
+            _buttons.Add(new CustButton(54, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 70 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 5), false));
+            _buttons.Add(new CustButton(55, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 70 * _heightIncrement, _widthIncrement * 8, _heightIncrement * 5), false));
+            _buttons.Add(new CustButton(56, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 23 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));       //done spending accuracies
+            _buttons.Add(new CustButton(57, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 32 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));      //done spending def tokens
+
+            _buttons.Add(new CustButton(58, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 22 * _heightIncrement, _widthIncrement * 4, _heightIncrement * 8), false));
+            _buttons.Add(new CustButton(59, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 5, 22 * _heightIncrement, _widthIncrement * 4, _heightIncrement * 8), false));
+            _buttons.Add(new CustButton(60, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 31 * _heightIncrement, _widthIncrement * 4, _heightIncrement * 8), false));
+            _buttons.Add(new CustButton(61, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 5, 31 * _heightIncrement, _widthIncrement * 4, _heightIncrement * 8), false));
+            _buttons.Add(new CustButton(62, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 40 * _heightIncrement, _widthIncrement * 4, _heightIncrement * 8), false));
+            _buttons.Add(new CustButton(63, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 5, 40 * _heightIncrement, _widthIncrement * 4, _heightIncrement * 8), false));
+            _buttons.Add(new CustButton(64, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 49 * _heightIncrement, _widthIncrement * 4, _heightIncrement * 8), false));
+            _buttons.Add(new CustButton(65, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 5, 49 * _heightIncrement, _widthIncrement * 4, _heightIncrement * 8), false));
+            _buttons.Add(new CustButton(66, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 58 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));
+
+
         }
 
         /// <summary>
@@ -346,6 +387,24 @@ namespace CIS598_Senior_Project.Screens
             _buttons[46].Texture = _content.Load<Texture2D>("StarboardArc");
             _buttons[47].Texture = _content.Load<Texture2D>("AftArc");
             _buttons[48].Texture = _content.Load<Texture2D>("SelectArc");
+
+            _buttons[49].Texture = _content.Load<Texture2D>("AttackSquad");
+
+            _buttons[50].Texture = _content.Load<Texture2D>("RerollDice");
+            _buttons[51].Texture = _content.Load<Texture2D>("Done");
+
+            _buttons[56].Texture = _content.Load<Texture2D>("Done");
+            _buttons[57].Texture = _content.Load<Texture2D>("Done");
+
+            _buttons[58].Texture = _content.Load<Texture2D>("ToTheLeft");
+            _buttons[59].Texture = _content.Load<Texture2D>("ToTheRight");
+            _buttons[60].Texture = _content.Load<Texture2D>("ToTheLeft");
+            _buttons[61].Texture = _content.Load<Texture2D>("ToTheRight");
+            _buttons[62].Texture = _content.Load<Texture2D>("ToTheLeft");
+            _buttons[63].Texture = _content.Load<Texture2D>("ToTheRight");
+            _buttons[64].Texture = _content.Load<Texture2D>("ToTheLeft");
+            _buttons[65].Texture = _content.Load<Texture2D>("ToTheRight");
+            _buttons[66].Texture = _content.Load<Texture2D>("Done");
 
 
             //_label = _content.Load<Texture2D>("");
@@ -809,7 +868,12 @@ namespace CIS598_Senior_Project.Screens
 
                                     if(_targetedSquadron != null)
                                     {
-                                        _sq2SqDamage = squadDamage();
+                                        if(!_diceRolled)
+                                        {
+                                            _sq2SqDamage = squadDamage();
+                                            _diceRolled = true;
+                                        }
+                                        
                                         _sq2ShDamage = 0;
                                         _sh2ShDamage = 0;
                                         _sh2SqDamage = 0;
@@ -820,7 +884,11 @@ namespace CIS598_Senior_Project.Screens
                                     else if(_targetedShip != null)
                                     {
                                         _sq2SqDamage = 0;
-                                        _sq2ShDamage = shipDamage();
+                                        if(!_diceRolled)
+                                        {
+                                            _sq2ShDamage = shipDamage();
+                                            _diceRolled = true;
+                                        }
                                         _sh2ShDamage = 0;
                                         _sh2SqDamage = 0;
                                         buttonSweeper(40);
@@ -950,34 +1018,245 @@ namespace CIS598_Senior_Project.Screens
                             {
                                 case AttackState.SelectArc:
                                     buttonSweeper(40);
-
-                                    if(!areTargetsNearby(0) && !areTargetsNearby(1) && !areTargetsNearby(2) && !areTargetsNearby(3))
+                                    if(_numAttackRemaining <= 0)
                                     {
+                                        _targetArc = -1;
+                                        _targetedShip = null;
+                                        _targetedSquadron = null;
                                         _shipState = ShipState.ExecuteManuver;
                                     }
                                     else
                                     {
-                                        if (areTargetsNearby(0)) _buttons[44].IsActive = true;
-                                        if (areTargetsNearby(1)) _buttons[45].IsActive = true;
-                                        if (areTargetsNearby(2)) _buttons[46].IsActive = true;
-                                        if (areTargetsNearby(3)) _buttons[47].IsActive = true;
-                                        _buttons[48].IsActive = true;
+                                        if (!areTargetsNearby(0) && !areTargetsNearby(1) && !areTargetsNearby(2) && !areTargetsNearby(3))
+                                        {
+                                            _shipState = ShipState.ExecuteManuver;
+                                        }
+                                        else
+                                        {
+                                            if (areTargetsNearby(0) && _previousArc != 0) _buttons[44].IsActive = true;
+                                            if (areTargetsNearby(1) && _previousArc != 1) _buttons[45].IsActive = true;
+                                            if (areTargetsNearby(2) && _previousArc != 2) _buttons[46].IsActive = true;
+                                            if (areTargetsNearby(3) && _previousArc != 3) _buttons[47].IsActive = true;
+                                            _buttons[48].IsActive = true;
+
+                                            if(!_buttons[44].IsActive && !_buttons[45].IsActive && !_buttons[46].IsActive && !_buttons[47].IsActive)
+                                            {
+                                                _targetArc = -1;
+                                                _targetedShip = null;
+                                                _targetedSquadron = null;
+                                                _shipState = ShipState.ExecuteManuver;
+                                                _numAttackRemaining = 0;
+                                            }
+                                        }
                                     }
+                                    
                                     break;
                                 case AttackState.DeclareTarget:
                                     buttonSweeper(40);
+
+                                    if(Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedShip.Bounds.Center.Y, 2)) < _range.Width / 2)
+                                    {
+                                        if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                                        {
+                                            if(_player1Placing)
+                                            {
+                                                foreach(var squad in _player2.Squadrons)
+                                                {
+                                                    if(Math.Sqrt(Math.Pow(_currentMouseState.X - squad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - squad.Bounds.Center.Y, 2)) < 25)
+                                                    {
+                                                        if(isSquadInArc(_selectedArc, squad))
+                                                        {
+                                                            _targetedShip = null;
+                                                            _targetedSquadron = squad;
+                                                        }
+                                                    }
+                                                }
+
+                                                foreach(var ship in _player2.Ships)
+                                                {
+                                                    if(Math.Sqrt(Math.Pow(_currentMouseState.X - ship.BowBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.BowBounds.Center.Y, 2)) < ship.BowBounds.Radius)
+                                                    {
+                                                        if(isTargetArcInArc(_selectedArc, ship.BowBounds) && isClosestArc(ship.BowBounds, ship))
+                                                        {
+                                                            _targetedSquadron = null;
+                                                            _targetedShip = ship; 
+                                                            _targetArc = 0;
+                                                        }
+                                                    }
+                                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.PortBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.PortBounds.Center.Y, 2)) < ship.PortBounds.Radius)
+                                                    {
+                                                        if (isTargetArcInArc(_selectedArc, ship.PortBounds) && isClosestArc(ship.PortBounds, ship))
+                                                        {
+                                                            _targetedSquadron = null;
+                                                            _targetedShip = ship;
+                                                            _targetArc = 1;
+                                                        }
+                                                    }
+                                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.StarboardBounds.Center.Y, 2)) < ship.StarboardBounds.Radius)
+                                                    {
+                                                        if (isTargetArcInArc(_selectedArc, ship.StarboardBounds) && isClosestArc(ship.StarboardBounds, ship))
+                                                        {
+                                                            _targetedSquadron = null;
+                                                            _targetedShip = ship;
+                                                            _targetArc = 2;
+                                                        }
+                                                    }
+                                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.AftBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.AftBounds.Center.Y, 2)) < ship.BowBounds.Radius)
+                                                    {
+                                                        if (isTargetArcInArc(_selectedArc, ship.AftBounds) && isClosestArc(ship.AftBounds, ship))
+                                                        {
+                                                            _targetedSquadron = null;
+                                                            _targetedShip = ship;
+                                                            _targetArc = 3;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                foreach (var squad in _player1.Squadrons)
+                                                {
+                                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - squad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - squad.Bounds.Center.Y, 2)) < 25)
+                                                    {
+                                                        if (isSquadInArc(_selectedArc, squad))
+                                                        {
+                                                            _targetedShip = null;
+                                                            _targetedSquadron = squad;
+                                                        }
+                                                    }
+                                                }
+
+                                                foreach (var ship in _player1.Ships)
+                                                {
+                                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.BowBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.BowBounds.Center.Y, 2)) < ship.BowBounds.Radius)
+                                                    {
+                                                        if (isTargetArcInArc(_selectedArc, ship.BowBounds) && isClosestArc(ship.BowBounds, ship))
+                                                        {
+                                                            _targetedSquadron = null;
+                                                            _targetedShip = ship;
+                                                            _targetArc = 0;
+                                                        }
+                                                    }
+                                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.PortBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.PortBounds.Center.Y, 2)) < ship.PortBounds.Radius)
+                                                    {
+                                                        if (isTargetArcInArc(_selectedArc, ship.PortBounds) && isClosestArc(ship.PortBounds, ship))
+                                                        {
+                                                            _targetedSquadron = null;
+                                                            _targetedShip = ship;
+                                                            _targetArc = 1;
+                                                        }
+                                                    }
+                                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.StarboardBounds.Center.Y, 2)) < ship.StarboardBounds.Radius)
+                                                    {
+                                                        if (isTargetArcInArc(_selectedArc, ship.StarboardBounds) && isClosestArc(ship.StarboardBounds, ship))
+                                                        {
+                                                            _targetedSquadron = null;
+                                                            _targetedShip = ship;
+                                                            _targetArc = 2;
+                                                        }
+                                                    }
+                                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - ship.AftBounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - ship.AftBounds.Center.Y, 2)) < ship.BowBounds.Radius)
+                                                    {
+                                                        if (isTargetArcInArc(_selectedArc, ship.AftBounds) && isClosestArc(ship.AftBounds, ship))
+                                                        {
+                                                            _targetedSquadron = null;
+                                                            _targetedShip = ship;
+                                                            _targetArc = 3;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     break;
                                 case AttackState.RollDice:
+                                    if (_targetedShip != null)
+                                    {
+                                        _attackHasCrits = false;
+                                        _sq2ShDamage = 0;
+                                        _sq2SqDamage = 0;
+                                        _sh2SqDamage = 0;
+                                        if(!_diceRolled)
+                                        {
+                                            _shipToShipDamages = shipToShipDamage();
+                                            _sh2ShDamage = _shipToShipDamages[0];
+                                        }
+                                        if (_sh2ShDamage <= 0)
+                                        {
+                                            _attackState = AttackState.SelectArc;
+                                            _numAttackRemaining--;
+                                        }
+                                    }
+                                    else if (_targetedSquadron != null)
+                                    {
+                                        _sq2ShDamage = 0;
+                                        _sq2SqDamage = 0;
+                                        _sh2ShDamage = 0;
+                                        if(!_diceRolled)
+                                        {
+                                            _sh2SqDamage = shipDamageToSquads();
+                                            _diceRolled = true;
+                                        }
+                                        if (_sh2SqDamage <= 0)
+                                        {
+                                            _attackState = AttackState.SelectArc;
+                                            _numAttackRemaining--;
+                                        }
+                                        else
+                                        {
+                                            if (_revealedCommand == CommandDialEnum.ConcentrateFire || _selectedShip.HasConcentrateFireToken) _attackState = AttackState.ModifyDice;
+                                            else
+                                            {
+                                                buttonSweeper(40);
+                                                if (_shipToShipDamages[1] > 0) _attackState = AttackState.SpendAccuracies;
+                                                else
+                                                {
+                                                    _attackState = AttackState.SpendDefenseTokens;
+                                                }
+                                                setDefButtons();
+                                            }
+                                        }
+                                    }
                                     break;
                                 case AttackState.ModifyDice:
+                                    buttonSweeper(40);
+                                    _buttons[51].IsActive = true;
+                                    if(_revealedCommand == CommandDialEnum.ConcentrateFire || _selectedShip.HasConcentrateFireToken)
+                                    {
+                                        _buttons[50].IsActive = true;
+                                    }
                                     break;
-                                case AttackState.SpendAccuracies:
+                                case AttackState.SpendAccuracies: 
                                     break;
                                 case AttackState.SpendDefenseTokens:
                                     break;
                                 case AttackState.ResolveDamage:
+
+                                    if(_targetedShip.Arcs[_targetArc].Shields >= _shipToShipDamages[0])
+                                    {
+                                        _targetedShip.Arcs[_targetArc].Shields -= _shipToShipDamages[0];
+                                        _shipToShipDamages[0] = 0;
+                                        _sh2ShDamage = _shipToShipDamages[0];
+                                    }
+                                    else
+                                    {
+                                        _shipToShipDamages[0] -= _targetedShip.Arcs[_targetArc].Shields;
+                                        _targetedShip.Arcs[_targetArc].Shields = 0;
+                                        _targetedShip.Hull -= _shipToShipDamages[0];
+                                        _sh2ShDamage = 0;
+                                        if(_attackHasCrits) resolveSquadCritical();
+                                    }
+
+                                    _attackState = AttackState.Done;
                                     break;
                                 case AttackState.Done:
+                                    _sh2ShDamage = 0;
+                                    _sh2SqDamage = 0;
+                                    _attackHasCrits = false;
+                                    _attackHasAccuracies = false;
+                                    //_numAttackRemaining--;
+                                    _attackState = AttackState.SelectArc;
                                     break;
                             }
 
@@ -988,10 +1267,12 @@ namespace CIS598_Senior_Project.Screens
                             _buttons[36].IsActive = _selectedShip.HasEngineeringToken;
                             _buttons[37].IsActive = _selectedShip.HasSquadronToken;
                             
-                            _buttons[38].IsActive = true;
+                            _buttons[38].IsActive = true; 
                             
                             break;
-                        case ShipState.ExecuteManuver: //ship manuver phase
+                        case ShipState.ExecuteManuver: //ship manuver phase 
+                            setSpeedButtons();
+
                             break;
                     }
 
@@ -1331,16 +1612,27 @@ namespace CIS598_Senior_Project.Screens
                             spriteBatch.DrawString(_galbasic, " <Use Tokens>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
                             break;
                         case ShipState.Attack:
-                            if (_selectedShip != null) drawShipInfo(spriteBatch);
 
                             switch(_attackState)
                             {
                                 case AttackState.SelectArc:
+                                    if (_selectedShip != null) drawShipInfo(spriteBatch);
                                     spriteBatch.DrawString(_galbasic, " <Select Arc>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
 
                                     break;
                                 case AttackState.DeclareTarget:
                                     spriteBatch.DrawString(_galbasic, " <Declare Target>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                                    if (_targetedShip != null && _targetedSquadron == null)
+                                    {
+                                        drawReducedShipInfo(spriteBatch);
+                                        drawReducedTargetedShipInfo(spriteBatch);
+                                    }
+                                    else if (_targetedShip == null && _targetedSquadron != null)
+                                    {
+                                        drawReducedShipInfo(spriteBatch);
+                                        drawTargetedSquadronInfo(spriteBatch);
+                                    }
+                                    else drawShipInfo(spriteBatch);
 
                                     break;
                                 case AttackState.RollDice:
@@ -1349,19 +1641,31 @@ namespace CIS598_Senior_Project.Screens
                                     break;
                                 case AttackState.ModifyDice:
                                     spriteBatch.DrawString(_galbasic, " <Modifying Dice>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-
+                                    drawReducedTargetInfo2(spriteBatch);
+                                    if (_targetedSquadron != null)
+                                    {
+                                        spriteBatch.DrawString(_descriptor, " Number of Hits: " + _sh2SqDamage, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 33 * _heightIncrement), Color.Gold);
+                                    }
+                                    else if(_targetedShip != null)
+                                    {
+                                        spriteBatch.DrawString(_descriptor, " Number of Hits: " + _sh2ShDamage, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 33 * _heightIncrement), Color.Gold);
+                                        spriteBatch.DrawString(_descriptor, " Number of Accuracies: " + _shipToShipDamages[1], new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 35 * _heightIncrement), Color.Gold);
+                                        spriteBatch.DrawString(_descriptor, " Has Crits: " + _attackHasCrits, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 37 * _heightIncrement), Color.Gold);
+                                    }
+                                    
                                     break;
                                 case AttackState.SpendAccuracies:
                                     spriteBatch.DrawString(_galbasic, " <Spend Accuracies>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-
+                                    spriteBatch.DrawString(_descriptor, " Number of Accuracies: " + _shipToShipDamages[1], new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 25 * _heightIncrement), Color.Gold);
+                                    drawReducedTargetInfo2(spriteBatch);
                                     break;
                                 case AttackState.SpendDefenseTokens:
                                     spriteBatch.DrawString(_galbasic, " <Ship Defense>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-
+                                    drawReducedTargetInfo2(spriteBatch);
                                     break;
                                 case AttackState.ResolveDamage:
                                     spriteBatch.DrawString(_galbasic, " <Resolve Damage>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-
+                                    drawReducedTargetInfo2(spriteBatch);
                                     break;
                                 case AttackState.Done:
                                     spriteBatch.DrawString(_galbasic, " <Resolve Damage>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
@@ -1398,6 +1702,10 @@ namespace CIS598_Senior_Project.Screens
                             spriteBatch.DrawString(_galbasic, " <Movement Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
                             if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
 
+                            if(_selectedShip.Speed > 3) spriteBatch.DrawString(_galbasic, "" + _speed4Diff,  new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 24, 25 * _heightIncrement), Color.Gold);
+                            if (_selectedShip.Speed > 2) spriteBatch.DrawString(_galbasic, "" + _speed3Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 24, 34 * _heightIncrement), Color.Gold);
+                            if (_selectedShip.Speed > 1) spriteBatch.DrawString(_galbasic, "" + _speed2Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 24, 43 * _heightIncrement), Color.Gold);
+                            if (_selectedShip.Speed > 0) spriteBatch.DrawString(_galbasic, "" + _speed1Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 24, 52 * _heightIncrement), Color.Gold);
 
                             break;
                     }
@@ -1885,6 +2193,12 @@ namespace CIS598_Senior_Project.Screens
                             _buttons[24].IsActive = false;
                             Thread.Sleep(200);
                         }
+                        if(_revealedCommand == CommandDialEnum.ConcentrateFire)
+                        {
+                            _shipState = ShipState.Attack;
+                            buttonSweeper(20);
+                            Thread.Sleep(200);
+                        }
                     }
                     break;
                 case 24: //Save for later as a Token
@@ -2057,7 +2371,9 @@ namespace CIS598_Senior_Project.Screens
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button3.Play();
-                        _shipState = ShipState.Attack;
+                        if (_roundNum > 1) _shipState = ShipState.Attack;
+                        else _shipState = ShipState.ExecuteManuver;
+
                         buttonSweeper(20);
                     }
                     break;
@@ -2137,6 +2453,10 @@ namespace CIS598_Senior_Project.Screens
                                 
                                 _shoot2.Play();
                             }
+                            else
+                            {
+                                _shoot2.Play();
+                            }
 
                             buttonSweeper(40);
                             _squadCommand = SquadronCommand.Choose;
@@ -2154,46 +2474,836 @@ namespace CIS598_Senior_Project.Screens
                                 {
                                     _targetedShip.Hull -= _sq2ShDamage;
                                     resolveSquadCritical();
+                                    _attackHasCrits = false;
                                 }
+                            }
+                            else
+                            {
+                                _shoot1.Play();
+                                _targetedShip.Arcs[_targetArc].Shields -= _sq2ShDamage;
+                                _sq2ShDamage = 0;
+                                _attackHasCrits = false;
                             }
                             buttonSweeper(40);
                             _squadCommand = SquadronCommand.Choose;
                         }
+                        _diceRolled = false;
                     }
                     break;
-                case 44:
+                case 44:    //select the bow firing arc
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
                         _selectedArc = 0;
                     }
                     break;
-                case 45:
+                case 45:    //select the port arc
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
                         _selectedArc = 1;
                     }
                     break;
-                case 46:
+                case 46:    //Select the starboard arc
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
                         _selectedArc = 2;
                     }
                     break;
-                case 47:
+                case 47:    //select the aft arc
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button2.Play();
                         _selectedArc = 3;
                     }
                     break;
-                case 48:
+                case 48:    //Confirm selection
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
                         _button1.Play();
                         if(_selectedArc != -1) _attackState = AttackState.DeclareTarget;
+                    }
+                    break;
+                case 49: //attack squadron or arc
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _numAttackRemaining--;
+                        _attackState = AttackState.RollDice;
+                    }
+                    break;
+                case 50:    //reroll the dice
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+                        if (_targetedSquadron != null) _sh2SqDamage = shipDamageToSquads();
+                        else if (_targetedShip != null)
+                        {
+                            _attackHasAccuracies = false;
+                            _attackHasCrits = false;
+                            _shipToShipDamages = shipToShipDamage();
+                            _sh2ShDamage = _shipToShipDamages[0];
+                        }
+                        _buttons[50].IsActive = false;
+                        Thread.Sleep(200);
+                    }
+                    break;
+                case 51: //run with the dice
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+                        if (_shipToShipDamages[1] > 0) _attackState = AttackState.SpendAccuracies;
+                        else
+                        {
+                            _attackState = AttackState.SpendDefenseTokens;
+                        }
+                        buttonSweeper(40);
+                        setDefButtons();
+                        Thread.Sleep(200);
+                    }
+                    break;
+                case 52:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        if (_attackState == AttackState.SpendAccuracies && _shipToShipDamages[1] > 0)
+                        {
+
+                            _buttons[52].IsActive = false;
+                            _shipToShipDamages[1]--;
+                        }
+                        if (_attackState == AttackState.SpendDefenseTokens)
+                        {
+                            _buttons[52].IsActive = false;
+                            if (_targetedShip.DefenseTokens[0].State == DefenseTokenStateEnum.Ready) _targetedShip.DefenseTokens[0].State = DefenseTokenStateEnum.Exhausted;
+                            else if (_targetedShip.DefenseTokens[0].State == DefenseTokenStateEnum.Exhausted) _targetedShip.DefenseTokens[0].State = DefenseTokenStateEnum.Discarded;
+
+                            if (_buttons[53].Texture.Name.Equals(_buttons[52].Texture.Name)) _buttons[53].IsActive = false;
+                            if (_buttons[54].Texture.Name.Equals(_buttons[52].Texture.Name)) _buttons[54].IsActive = false;
+                            if (_buttons[55].Texture.Name.Equals(_buttons[52].Texture.Name)) _buttons[55].IsActive = false;
+
+                            if(_targetedShip.DefenseTokens[0] is RedirectDefenseToken)
+                            {
+                                if(_targetArc == 0)
+                                {
+                                    if(_targetedShip.Arcs[1].Shields > 0)
+                                    {
+                                        if(_targetedShip.Arcs[1].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[1].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[1].Shields;
+                                            _targetedShip.Arcs[1].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[2].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[2].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[2].Shields;
+                                            _targetedShip.Arcs[2].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else if (_targetArc == 1)
+                                {
+                                    if (_targetedShip.Arcs[0].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[0].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[0].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[0].Shields;
+                                            _targetedShip.Arcs[0].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[3].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[3].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[3].Shields;
+                                            _targetedShip.Arcs[3].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else if (_targetArc == 2)
+                                {
+                                    if (_targetedShip.Arcs[3].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[3].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[3].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[3].Shields;
+                                            _targetedShip.Arcs[3].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[0].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[0].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[0].Shields;
+                                            _targetedShip.Arcs[0].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (_targetedShip.Arcs[1].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[1].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[1].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[1].Shields;
+                                            _targetedShip.Arcs[1].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[2].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[2].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[2].Shields;
+                                            _targetedShip.Arcs[2].Shields = 0;
+                                        }
+                                    }
+                                }
+                            }
+                            if(_targetedShip.DefenseTokens[0] is BraceDefenseToken)
+                            {
+                                _shipToShipDamages[0] = _shipToShipDamages[0] / 2;
+                                _sh2ShDamage /= 2;
+                            }
+                            if(_targetedShip.DefenseTokens[0] is EvadeDefenseToken)
+                            {
+                                _shipToShipDamages[0] = _shipToShipDamages[0] / 2;
+                                _sh2ShDamage /= 2;
+                            }
+
+                        }
+                        
+                    }
+                    break;
+                case 53:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        if (_attackState == AttackState.SpendAccuracies && _shipToShipDamages[1] > 0)
+                        {
+                            
+                            _buttons[53].IsActive = false;
+                            _shipToShipDamages[1]--;
+                        }
+                        if (_attackState == AttackState.SpendDefenseTokens)
+                        {
+                            _buttons[53].IsActive = false;
+                            if (_targetedShip.DefenseTokens[1].State == DefenseTokenStateEnum.Ready) _targetedShip.DefenseTokens[1].State = DefenseTokenStateEnum.Exhausted;
+                            else if (_targetedShip.DefenseTokens[1].State == DefenseTokenStateEnum.Exhausted) _targetedShip.DefenseTokens[1].State = DefenseTokenStateEnum.Discarded;
+
+                            if (_buttons[52].Texture.Name.Equals(_buttons[53].Texture.Name)) _buttons[52].IsActive = false;
+                            if (_buttons[54].Texture.Name.Equals(_buttons[53].Texture.Name)) _buttons[54].IsActive = false;
+                            if (_buttons[55].Texture.Name.Equals(_buttons[53].Texture.Name)) _buttons[55].IsActive = false;
+
+                            if (_targetedShip.DefenseTokens[1] is RedirectDefenseToken)
+                            {
+                                if (_targetArc == 0)
+                                {
+                                    if (_targetedShip.Arcs[1].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[1].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[1].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[1].Shields;
+                                            _targetedShip.Arcs[1].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[2].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[2].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[2].Shields;
+                                            _targetedShip.Arcs[2].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else if (_targetArc == 1)
+                                {
+                                    if (_targetedShip.Arcs[0].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[0].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[0].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[0].Shields;
+                                            _targetedShip.Arcs[0].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[3].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[3].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[3].Shields;
+                                            _targetedShip.Arcs[3].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else if (_targetArc == 2)
+                                {
+                                    if (_targetedShip.Arcs[3].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[3].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[3].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[3].Shields;
+                                            _targetedShip.Arcs[3].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[0].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[0].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[0].Shields;
+                                            _targetedShip.Arcs[0].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (_targetedShip.Arcs[1].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[1].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[1].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[1].Shields;
+                                            _targetedShip.Arcs[1].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[2].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[2].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[2].Shields;
+                                            _targetedShip.Arcs[2].Shields = 0;
+                                        }
+                                    }
+                                }
+                            }
+                            if (_targetedShip.DefenseTokens[1] is BraceDefenseToken)
+                            {
+                                _shipToShipDamages[0] = _shipToShipDamages[0] / 2;
+                                _sh2ShDamage /= 2;
+                            }
+                            if (_targetedShip.DefenseTokens[1] is EvadeDefenseToken)
+                            {
+                                _shipToShipDamages[0] = _shipToShipDamages[0] / 2;
+                                _sh2ShDamage /= 2;
+                            }
+                        }
+
+                    }
+                    break;
+                case 54:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        if (_attackState == AttackState.SpendAccuracies && _shipToShipDamages[1] > 0)
+                        {
+                            
+                            _buttons[54].IsActive = false;
+                            _shipToShipDamages[1]--;
+                        }
+                        if (_attackState == AttackState.SpendDefenseTokens)
+                        {
+                            _buttons[54].IsActive = false;
+                            if (_targetedShip.DefenseTokens[2].State == DefenseTokenStateEnum.Ready) _targetedShip.DefenseTokens[2].State = DefenseTokenStateEnum.Exhausted;
+                            else if (_targetedShip.DefenseTokens[2].State == DefenseTokenStateEnum.Exhausted) _targetedShip.DefenseTokens[2].State = DefenseTokenStateEnum.Discarded;
+
+                            if (_buttons[52].Texture.Name.Equals(_buttons[54].Texture.Name)) _buttons[52].IsActive = false;
+                            if (_buttons[53].Texture.Name.Equals(_buttons[54].Texture.Name)) _buttons[53].IsActive = false;
+                            if (_buttons[55].Texture.Name.Equals(_buttons[54].Texture.Name)) _buttons[55].IsActive = false;
+
+                            if (_targetedShip.DefenseTokens[2] is RedirectDefenseToken)
+                            {
+                                if (_targetArc == 0)
+                                {
+                                    if (_targetedShip.Arcs[1].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[1].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[1].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[1].Shields;
+                                            _targetedShip.Arcs[1].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[2].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[2].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[2].Shields;
+                                            _targetedShip.Arcs[2].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else if (_targetArc == 1)
+                                {
+                                    if (_targetedShip.Arcs[0].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[0].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[0].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[0].Shields;
+                                            _targetedShip.Arcs[0].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[3].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[3].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[3].Shields;
+                                            _targetedShip.Arcs[3].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else if (_targetArc == 2)
+                                {
+                                    if (_targetedShip.Arcs[3].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[3].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[3].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[3].Shields;
+                                            _targetedShip.Arcs[3].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[0].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[0].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[0].Shields;
+                                            _targetedShip.Arcs[0].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (_targetedShip.Arcs[1].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[1].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[1].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[1].Shields;
+                                            _targetedShip.Arcs[1].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[2].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[2].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[2].Shields;
+                                            _targetedShip.Arcs[2].Shields = 0;
+                                        }
+                                    }
+                                }
+                            }
+                            if (_targetedShip.DefenseTokens[2] is BraceDefenseToken)
+                            {
+                                _shipToShipDamages[0] = _shipToShipDamages[0] / 2;
+                                _sh2ShDamage /= 2;
+                            }
+                            if (_targetedShip.DefenseTokens[2] is EvadeDefenseToken)
+                            {
+                                _shipToShipDamages[0] = _shipToShipDamages[0] / 2;
+                                _sh2ShDamage /= 2;
+                            }
+                        }
+
+                    }
+                    break;
+                case 55:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        if(_attackState == AttackState.SpendAccuracies && _shipToShipDamages[1] > 0)
+                        {
+                            _button2.Play();
+                            _buttons[55].IsActive = false;
+                            _shipToShipDamages[1]--;
+                        }
+                        if (_attackState == AttackState.SpendDefenseTokens)
+                        {
+                            _button2.Play();
+                            _buttons[55].IsActive = false;
+                            if (_targetedShip.DefenseTokens[3].State == DefenseTokenStateEnum.Ready) _targetedShip.DefenseTokens[3].State = DefenseTokenStateEnum.Exhausted;
+                            else if (_targetedShip.DefenseTokens[3].State == DefenseTokenStateEnum.Exhausted) _targetedShip.DefenseTokens[3].State = DefenseTokenStateEnum.Discarded;
+
+                            if (_buttons[52].Texture.Name.Equals(_buttons[55].Texture.Name)) _buttons[52].IsActive = false;
+                            if (_buttons[53].Texture.Name.Equals(_buttons[55].Texture.Name)) _buttons[53].IsActive = false;
+                            if (_buttons[54].Texture.Name.Equals(_buttons[55].Texture.Name)) _buttons[54].IsActive = false;
+
+                            if (_targetedShip.DefenseTokens[3] is RedirectDefenseToken)
+                            {
+                                if (_targetArc == 0)
+                                {
+                                    if (_targetedShip.Arcs[1].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[1].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[1].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[1].Shields;
+                                            _targetedShip.Arcs[1].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[2].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[2].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[2].Shields;
+                                            _targetedShip.Arcs[2].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else if (_targetArc == 1)
+                                {
+                                    if (_targetedShip.Arcs[0].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[0].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[0].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[0].Shields;
+                                            _targetedShip.Arcs[0].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[3].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[3].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[3].Shields;
+                                            _targetedShip.Arcs[3].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else if (_targetArc == 2)
+                                {
+                                    if (_targetedShip.Arcs[3].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[3].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[3].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[3].Shields;
+                                            _targetedShip.Arcs[3].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[0].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[0].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[0].Shields;
+                                            _targetedShip.Arcs[0].Shields = 0;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    if (_targetedShip.Arcs[1].Shields > 0)
+                                    {
+                                        if (_targetedShip.Arcs[1].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[1].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[1].Shields;
+                                            _targetedShip.Arcs[1].Shields = 0;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (_targetedShip.Arcs[2].Shields >= _sh2ShDamage)
+                                        {
+                                            _targetedShip.Arcs[2].Shields -= _sh2ShDamage;
+                                            _shipToShipDamages[0] = 0;
+                                            _sh2ShDamage = 0;
+                                        }
+                                        else
+                                        {
+                                            _sh2ShDamage -= _targetedShip.Arcs[2].Shields;
+                                            _targetedShip.Arcs[2].Shields = 0;
+                                        }
+                                    }
+                                }
+                            }
+                            if (_targetedShip.DefenseTokens[3] is BraceDefenseToken)
+                            {
+                                _shipToShipDamages[0] = _shipToShipDamages[0] / 2;
+                                _sh2ShDamage /= 2;
+                            }
+                            if (_targetedShip.DefenseTokens[3] is EvadeDefenseToken)
+                            {
+                                _shipToShipDamages[0] = _shipToShipDamages[0] / 2;
+                                _sh2ShDamage /= 2;
+                            }
+                        }
+                    }
+
+                    
+                    break;
+                case 56:    //done with spending accuracies
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        if (_attackState == AttackState.SpendDefenseTokens)
+                        {
+                            _button3.Play();
+                            _buttons[56].IsActive = false;
+                            _attackState = AttackState.SpendDefenseTokens;
+                            Thread.Sleep(200);
+                        }
+                    }
+                     
+                    break;
+                case 57: //done spending defense tokens
+
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+
+                        if (_attackState == AttackState.SpendDefenseTokens)
+                        {
+                            _button3.Play();
+                            _buttons[57].IsActive = false;
+                            _attackState = AttackState.ResolveDamage;
+                            Thread.Sleep(200);
+                        }
+                    }
+                    break;
+                case 58:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        if (Math.Abs(_speed4Diff) < _selectedShip.Movement[_selectedShip.Speed, 3]) _speed4Diff++;
+                    }
+                    break;
+                case 59:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+                        if (Math.Abs(_speed4Diff) < _selectedShip.Movement[_selectedShip.Speed, 4]) _speed4Diff--;
+
+                    }
+                    break;
+                case 60:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        if (Math.Abs(_speed3Diff) < _selectedShip.Movement[_selectedShip.Speed, 2]) _speed3Diff++;
+
+                    }
+                    break;
+                case 61:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+
+                        _button3.Play();
+                        if (Math.Abs(_speed3Diff) < _selectedShip.Movement[_selectedShip.Speed, 2]) _speed3Diff--;
+                    }
+                    break;
+                case 62:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        if (Math.Abs(_speed2Diff) < _selectedShip.Movement[_selectedShip.Speed, 1]) _speed2Diff++;
+
+                    }
+                    break;
+                case 63:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+                        if (Math.Abs(_speed2Diff) < _selectedShip.Movement[_selectedShip.Speed, 1]) _speed2Diff--;
+
+                    }
+                    break;
+                case 64:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        if (Math.Abs(_speed1Diff) < _selectedShip.Movement[_selectedShip.Speed, 0]) _speed1Diff++;
+
+                    }
+                    break;
+                case 65:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button3.Play();
+                        if (Math.Abs(_speed1Diff) < _selectedShip.Movement[_selectedShip.Speed, 0]) _speed1Diff--;
+
+                    }
+                    break;
+                case 66:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button4.Play();
+
                     }
                     break;
             }
@@ -2655,6 +3765,27 @@ namespace CIS598_Senior_Project.Screens
             spriteBatch.DrawString(_descriptor, "Eng Token: " + _selectedShip.HasEngineeringToken + "   Speed: " + _selectedShip.Speed, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 15 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Squad Token: " + _selectedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 17 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Con. Fire Token: " + _selectedShip.HasConcentrateFireToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 19 * _heightIncrement), Color.Gold);
+        }
+
+        /// <summary>
+        /// Draws a reduced ship info to save space
+        /// </summary>
+        /// <param name="spritBatch">The spritBatch used to draw things</param>
+        private void drawReducedTargetInfo2(SpriteBatch spriteBatch)
+        {
+            string name = "";
+
+            if (_selectedShip.HasCommander) name = _selectedShip.Commander.Name;
+
+            spriteBatch.DrawString(_descriptor, _targetedShip.Name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "ID: " + _targetedShip.Id + "     Current HP: " + _targetedShip.Hull + "/" + _targetedShip.MaxHull + "    Commands Set: " + _targetedShip.CommandDials.Count, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 3 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Shields:    " + _targetedShip.Arcs[0].Shields + "/" + _targetedShip.Arcs[0].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 5 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "             " + _targetedShip.Arcs[1].Shields + "/" + _targetedShip.Arcs[1].MaxShields + "     " + _targetedShip.Arcs[2].Shields + "/" + _targetedShip.Arcs[2].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 8 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "                  " + _targetedShip.Arcs[3].Shields + "/" + _targetedShip.Arcs[3].MaxShields, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 11 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Nav Token: " + _targetedShip.HasNavigationToken + "   Commander: " + name, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 13 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Eng Token: " + _targetedShip.HasEngineeringToken + "   Speed: " + _targetedShip.Speed, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 15 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Squad Token: " + _targetedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 17 * _heightIncrement), Color.Gold);
+            spriteBatch.DrawString(_descriptor, "Con. Fire Token: " + _targetedShip.HasConcentrateFireToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 19 * _heightIncrement), Color.Gold);
         }
 
         /// <summary>
@@ -3200,7 +4331,21 @@ namespace CIS598_Senior_Project.Screens
         /// <returns>True if there is an available target</returns>
         private bool areTargetsNearby(int arc)
         {
-            if(_player1Placing)
+            Texture2D range;
+            if (_selectedShip.Arcs[arc].RedDice.Count > 0)
+            {
+                range = _shipRanges;
+            }
+            else if (_selectedShip.Arcs[arc].BlueDice.Count > 0)
+            {
+                range = _shipIonRange;
+            }
+            else// if (_selectedShip.Arcs[arc].BlackDice.Count > 0)
+            {
+                range = _shipToSquadRange;
+            }
+
+            if (_player1Placing)
             {
                 float center = 0;
                 float north = 0;
@@ -3274,7 +4419,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
                         west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3289,7 +4434,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
                         west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3304,7 +4449,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
                         west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3319,7 +4464,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
                         west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3336,7 +4481,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
                         west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3351,7 +4496,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
                         west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3366,7 +4511,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
                         west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3381,7 +4526,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
                         west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3398,7 +4543,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
                         west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3413,7 +4558,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
                         west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3428,7 +4573,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
                         west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3443,7 +4588,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
                         west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3460,7 +4605,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
                         west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3475,7 +4620,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
                         west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3490,7 +4635,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
                         west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3505,7 +4650,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
                         west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3590,7 +4735,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
                         west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3605,7 +4750,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
                         west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3620,7 +4765,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
                         west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3635,7 +4780,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
                         west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3652,7 +4797,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
                         west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3667,7 +4812,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
                         west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3682,7 +4827,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
                         west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3697,7 +4842,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
                         west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3714,7 +4859,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
                         west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3729,7 +4874,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
                         west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3744,7 +4889,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
                         west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3759,7 +4904,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
                         west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3776,7 +4921,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
                         west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3791,7 +4936,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
                         west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3806,7 +4951,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
                         west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3821,7 +4966,7 @@ namespace CIS598_Senior_Project.Screens
                         south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
                         west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
 
-                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < range.Width/2)
                         {
                             if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                             if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
@@ -3830,6 +4975,162 @@ namespace CIS598_Senior_Project.Screens
                             if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                         }
                     }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks to see if the clicked on arc in range.
+        /// </summary>
+        /// <param name="arc">The arc to look in</param>
+        /// <param name="bounds">The arc bounds to check agains</param>
+        /// <returns>True if its there, false otherwise</returns>
+        private bool isTargetArcInArc(int arc, BoundingCircle bounds)
+        {
+            float center = 0;
+            float north = 0;
+            float east = 0;
+            float south = 0;
+            float west = 0;
+            float arcAngle = (float)_selectedShip.Arcs[arc].ArcRadians;
+
+            center = angleGen(bounds.Center);
+            north = angleGen(new Vector2(bounds.Center.X, bounds.Center.Y - bounds.Radius));
+            east = angleGen(new Vector2(bounds.Center.X + bounds.Radius, bounds.Center.Y));
+            south = angleGen(new Vector2(bounds.Center.X, bounds.Center.Y + bounds.Radius));
+            west = angleGen(new Vector2(bounds.Center.X - bounds.Radius, bounds.Center.Y));
+
+            if (arc == 0)
+            {
+                if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - bounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - bounds.Center.Y, 2)) < _range.Width/2)
+                {
+                    if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                }
+            }
+            else if (arc == 1)
+            {
+                if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - bounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - bounds.Center.Y, 2)) < _range.Width/2)
+                {
+                    if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                }
+            }
+            else if (arc == 2)
+            {
+                if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - bounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - bounds.Center.Y, 2)) < _range.Width/2)
+                {
+                    if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                }
+            }
+            else if (arc == 3)
+            {
+                if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - bounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - bounds.Center.Y, 2)) < _range.Width/2)
+                {
+                    if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks to see if is not obstructed
+        /// </summary>
+        /// <param name="bounds">The bounds to check</param>
+        /// <param name="ship">The ship its attached to</param>
+        /// <returns>True if the area isn't obstructed</returns>
+        private bool isClosestArc(BoundingCircle bounds, Ship ship)
+        {
+            double selected = Math.Sqrt(Math.Pow(bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2));
+            double bow = Math.Sqrt(Math.Pow(ship.BowBounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(ship.BowBounds.Center.Y - _selectedShip.Bounds.Center.Y, 2));
+            double port = Math.Sqrt(Math.Pow(ship.PortBounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(ship.PortBounds.Center.Y - _selectedShip.Bounds.Center.Y, 2));
+            double starboard = Math.Sqrt(Math.Pow(ship.StarboardBounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(ship.StarboardBounds.Center.Y - _selectedShip.Bounds.Center.Y, 2));
+            double aft = Math.Sqrt(Math.Pow(ship.AftBounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(ship.AftBounds.Center.Y - _selectedShip.Bounds.Center.Y, 2));
+
+            if (selected <= bow && selected <= port && selected <= starboard && selected <= aft) return true;
+            else return false;
+
+        }
+
+        /// <summary>
+        /// Checks if the selected squadron is in the firing arc
+        /// </summary>
+        /// <param name="arc">The arc to check</param>
+        /// <param name="squad">The squad to look for</param>
+        /// <returns>True if it is in range</returns>
+        private bool isSquadInArc(int arc, Squadron squad)
+        {
+            float center = 0;
+            float north = 0;
+            float east = 0;
+            float south = 0;
+            float west = 0;
+            float arcAngle = (float)_selectedShip.Arcs[arc].ArcRadians;
+            center = angleGen(squad.Bounds.Center);
+            north = angleGen(new Vector2(squad.Bounds.Center.X, squad.Bounds.Center.Y - squad.Bounds.Radius));
+            east = angleGen(new Vector2(squad.Bounds.Center.X + squad.Bounds.Radius, squad.Bounds.Center.Y));
+            south = angleGen(new Vector2(squad.Bounds.Center.X, squad.Bounds.Center.Y + squad.Bounds.Radius));
+            west = angleGen(new Vector2(squad.Bounds.Center.X - squad.Bounds.Radius, squad.Bounds.Center.Y));
+
+            if (arc == 0)
+            {
+                if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                {
+                    if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                }
+            }
+            else if (arc == 1)
+            {
+                if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                {
+                    if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                }
+            }
+            else if (arc == 2)
+            {
+                if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                {
+                    if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                }
+            }
+            else if (arc == 3)
+            {
+                if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                {
+                    if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                    if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
                 }
             }
 
@@ -3871,6 +5172,159 @@ namespace CIS598_Senior_Project.Screens
             //Else do nothing you're already here
 
             return radians;
+        }
+
+        /// <summary>
+        /// Calculates a ship's damage to a squadron
+        /// </summary>
+        /// <returns>The damage</returns>
+        private int shipDamageToSquads()
+        {
+            int damage = 0;
+            List<BlueDieSideEnum> bs = new List<BlueDieSideEnum>();
+            foreach (var bd in _selectedShip.BlueAS) bs.Add(bd.Roll());
+
+            foreach(var s in bs)
+            {
+                if (s == BlueDieSideEnum.Hit) damage++;
+            }
+
+            return damage;
+        }
+
+        /// <summary>
+        /// calculates the effects of a ship to ship attack
+        /// </summary>
+        /// <returns>The results of a ship to ship attack roll from the player</returns>
+        private int[] shipToShipDamage()
+        {
+            int[] results = { 0, 0};
+
+            List<BlueDieSideEnum> bs = new List<BlueDieSideEnum>();
+            List<BlackDieSideEnum> bls = new List<BlackDieSideEnum>();
+            List<RedDieSideEnum> rs = new List<RedDieSideEnum>();
+
+            foreach (var die in _selectedShip.Arcs[_selectedArc].BlueDice) bs.Add(die.Roll());
+            foreach (var die in _selectedShip.Arcs[_selectedArc].BlackDice) bls.Add(die.Roll());
+            foreach (var die in _selectedShip.Arcs[_selectedArc].RedDice) rs.Add(die.Roll());
+
+            foreach(var roll in bs)
+            {
+                if (roll == BlueDieSideEnum.Hit) results[0]++;
+                if(roll == BlueDieSideEnum.Accuracy)
+                {
+                    _attackHasAccuracies = true;
+                    results[1]++;
+                }
+                if(roll == BlueDieSideEnum.Crit)
+                {
+                    _attackHasCrits = true;
+                    results[0]++;
+                }
+            }
+
+            foreach(var roll in bls)
+            {
+                if(roll == BlackDieSideEnum.HitCrit)
+                {
+                    _attackHasCrits = true;
+                    results[0]++;
+                    results[0]++;
+                }
+                if (roll == BlackDieSideEnum.Hit) results[0]++;
+            }
+
+            foreach(var roll in rs)
+            {
+                if(roll == RedDieSideEnum.Crit)
+                {
+                    _attackHasCrits = true;
+                    results[0]++;
+                }
+                if (roll == RedDieSideEnum.Hit) results[0]++;
+                if (roll == RedDieSideEnum.DoubleHit) results[0] += 2;
+                if(roll == RedDieSideEnum.Accuracy)
+                {
+                    _attackHasAccuracies = true;
+                    results[1]++;
+                }
+            }
+
+            return results;
+        }
+
+        /// <summary>
+        /// Sets up the defense token buttons
+        /// </summary>
+        private void setDefButtons()
+        {
+            for(int i = 0; i < _targetedShip.DefenseTokens.Count; i++)
+            {
+                if(_targetedShip.DefenseTokens[i].State != DefenseTokenStateEnum.Discarded)
+                {
+                    _buttons[i + 52].IsActive = true;
+                    if(_targetedShip.DefenseTokens[i] is RedirectDefenseToken)
+                    {
+                        if (_targetedShip.DefenseTokens[i].State == DefenseTokenStateEnum.Ready) _buttons[i + 52].Texture = _content.Load<Texture2D>("ReadyRedirectToken");
+                        if (_targetedShip.DefenseTokens[i].State == DefenseTokenStateEnum.Exhausted) _buttons[i + 52].Texture = _content.Load<Texture2D>("ExhaustedRedirectToken");
+                    }
+                    if (_targetedShip.DefenseTokens[i] is BraceDefenseToken)
+                    {
+                        if (_targetedShip.DefenseTokens[i].State == DefenseTokenStateEnum.Ready) _buttons[i + 52].Texture = _content.Load<Texture2D>("ReadyBraceToken");
+                        if (_targetedShip.DefenseTokens[i].State == DefenseTokenStateEnum.Exhausted) _buttons[i + 52].Texture = _content.Load<Texture2D>("ExhaustedBraceToken");
+                    }
+                    if (_targetedShip.DefenseTokens[i] is EvadeDefenseToken)
+                    {
+                        if (_targetedShip.DefenseTokens[i].State == DefenseTokenStateEnum.Ready) _buttons[i + 52].Texture = _content.Load<Texture2D>("ReadyEvadeToken");
+                        if (_targetedShip.DefenseTokens[i].State == DefenseTokenStateEnum.Exhausted) _buttons[i + 52].Texture = _content.Load<Texture2D>("ExhaustedEvadeToken");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the speed buttons in
+        /// </summary>
+        private void setSpeedButtons()
+        {
+            if(_selectedShip.Speed == 1)
+            {
+                _buttons[64].IsActive = true;
+                _buttons[65].IsActive = true;
+            }
+            else if(_selectedShip.Speed == 2)
+            {
+                _buttons[62].IsActive = true;
+                _buttons[63].IsActive = true;
+                _buttons[64].IsActive = true;
+                _buttons[65].IsActive = true;
+            }
+            else if (_selectedShip.Speed == 3)
+            {
+                _buttons[60].IsActive = true;
+                _buttons[61].IsActive = true;
+                _buttons[62].IsActive = true;
+                _buttons[63].IsActive = true;
+                _buttons[64].IsActive = true;
+                _buttons[65].IsActive = true;
+            }
+            else if(_selectedShip.Speed == 4)
+            {
+                _buttons[58].IsActive = true;
+                _buttons[59].IsActive = true;
+                _buttons[60].IsActive = true;
+                _buttons[61].IsActive = true;
+                _buttons[62].IsActive = true;
+                _buttons[63].IsActive = true;
+                _buttons[64].IsActive = true;
+                _buttons[65].IsActive = true;
+            }
+            _buttons[66].IsActive = true;
+        }
+
+        private Vector2 manuver()
+        {
+
         }
     }
 }
