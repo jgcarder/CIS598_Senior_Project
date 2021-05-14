@@ -140,6 +140,8 @@ namespace CIS598_Senior_Project.Screens
         private int _sh2SqDamage;
         private int _counterDamage;
 
+        private int _numAttackRemaining;
+
         private string _selectingPlayer;
 
         private bool _player1Turn;
@@ -188,6 +190,8 @@ namespace CIS598_Senior_Project.Screens
             _sq2SqDamage = 0;
             _sh2ShDamage = 0;
             _sh2SqDamage = 0;
+
+            _numAttackRemaining = 0;
 
             _selectedArc = -1;
 
@@ -937,14 +941,6 @@ namespace CIS598_Senior_Project.Screens
                                             }
                                         }
                                     }
-                                    //select target
-
-
-
-
-
-                                    //attack and total damage
-                                    //automatically select a nearby squad with escort if there is one
                                     break;
                             }
                             break;
@@ -954,11 +950,19 @@ namespace CIS598_Senior_Project.Screens
                             {
                                 case AttackState.SelectArc:
                                     buttonSweeper(40);
-                                    _buttons[44].IsActive = true;
-                                    _buttons[45].IsActive = true;
-                                    _buttons[46].IsActive = true;
-                                    _buttons[47].IsActive = true;
-                                    _buttons[48].IsActive = true;
+
+                                    if(!areTargetsNearby(0) && !areTargetsNearby(1) && !areTargetsNearby(2) && !areTargetsNearby(3))
+                                    {
+                                        _shipState = ShipState.ExecuteManuver;
+                                    }
+                                    else
+                                    {
+                                        if (areTargetsNearby(0)) _buttons[44].IsActive = true;
+                                        if (areTargetsNearby(1)) _buttons[45].IsActive = true;
+                                        if (areTargetsNearby(2)) _buttons[46].IsActive = true;
+                                        if (areTargetsNearby(3)) _buttons[47].IsActive = true;
+                                        _buttons[48].IsActive = true;
+                                    }
                                     break;
                                 case AttackState.DeclareTarget:
                                     buttonSweeper(40);
@@ -3187,6 +3191,686 @@ namespace CIS598_Senior_Project.Screens
                 }
             }
             return squads;
+        }
+
+        /// <summary>
+        /// Detects if there is a target in the given firing arc.
+        /// </summary>
+        /// <param name="arc">Arc to look near</param>
+        /// <returns>True if there is an available target</returns>
+        private bool areTargetsNearby(int arc)
+        {
+            if(_player1Placing)
+            {
+                float center = 0;
+                float north = 0;
+                float east = 0;
+                float south = 0;
+                float west = 0;
+                float arcAngle = (float)_selectedShip.Arcs[arc].ArcRadians;
+
+                foreach (var squad in _player2.Squadrons)
+                {
+                    center = angleGen(squad.Bounds.Center);
+                    north = angleGen(new Vector2(squad.Bounds.Center.X, squad.Bounds.Center.Y - squad.Bounds.Radius));
+                    east = angleGen(new Vector2(squad.Bounds.Center.X + squad.Bounds.Radius, squad.Bounds.Center.Y));
+                    south = angleGen(new Vector2(squad.Bounds.Center.X, squad.Bounds.Center.Y + squad.Bounds.Radius));
+                    west = angleGen(new Vector2(squad.Bounds.Center.X - squad.Bounds.Radius, squad.Bounds.Center.Y));
+
+                    if(arc == 0)
+                    {
+                        if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if(arc == 1)
+                    {
+                        if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if(arc == 2)
+                    {
+                        if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if(arc == 3)
+                    {
+                        if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+
+                }
+
+                foreach (var ship in _player2.Ships)
+                {
+                    if (arc == 0)
+                    {
+                        center = angleGen(ship.BowBounds.Center);
+                        north = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y - ship.BowBounds.Radius));
+                        east = angleGen(new Vector2(ship.BowBounds.Center.X + ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
+                        west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.PortBounds.Center);
+                        north = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y - ship.PortBounds.Radius));
+                        east = angleGen(new Vector2(ship.PortBounds.Center.X + ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
+                        west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.StarboardBounds.Center);
+                        north = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y - ship.StarboardBounds.Radius));
+                        east = angleGen(new Vector2(ship.StarboardBounds.Center.X + ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
+                        west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.AftBounds.Center);
+                        north = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y - ship.AftBounds.Radius));
+                        east = angleGen(new Vector2(ship.AftBounds.Center.X + ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
+                        west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 1)
+                    {
+                        center = angleGen(ship.BowBounds.Center);
+                        north = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y - ship.BowBounds.Radius));
+                        east = angleGen(new Vector2(ship.BowBounds.Center.X + ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
+                        west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.PortBounds.Center);
+                        north = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y - ship.PortBounds.Radius));
+                        east = angleGen(new Vector2(ship.PortBounds.Center.X + ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
+                        west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.StarboardBounds.Center);
+                        north = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y - ship.StarboardBounds.Radius));
+                        east = angleGen(new Vector2(ship.StarboardBounds.Center.X + ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
+                        west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.AftBounds.Center);
+                        north = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y - ship.AftBounds.Radius));
+                        east = angleGen(new Vector2(ship.AftBounds.Center.X + ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
+                        west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 2)
+                    {
+                        center = angleGen(ship.BowBounds.Center);
+                        north = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y - ship.BowBounds.Radius));
+                        east = angleGen(new Vector2(ship.BowBounds.Center.X + ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
+                        west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.PortBounds.Center);
+                        north = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y - ship.PortBounds.Radius));
+                        east = angleGen(new Vector2(ship.PortBounds.Center.X + ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
+                        west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.StarboardBounds.Center);
+                        north = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y - ship.StarboardBounds.Radius));
+                        east = angleGen(new Vector2(ship.StarboardBounds.Center.X + ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
+                        west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.AftBounds.Center);
+                        north = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y - ship.AftBounds.Radius));
+                        east = angleGen(new Vector2(ship.AftBounds.Center.X + ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
+                        west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 3)
+                    {
+                        center = angleGen(ship.BowBounds.Center);
+                        north = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y - ship.BowBounds.Radius));
+                        east = angleGen(new Vector2(ship.BowBounds.Center.X + ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
+                        west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.PortBounds.Center);
+                        north = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y - ship.PortBounds.Radius));
+                        east = angleGen(new Vector2(ship.PortBounds.Center.X + ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
+                        west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.StarboardBounds.Center);
+                        north = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y - ship.StarboardBounds.Radius));
+                        east = angleGen(new Vector2(ship.StarboardBounds.Center.X + ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
+                        west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.AftBounds.Center);
+                        north = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y - ship.AftBounds.Radius));
+                        east = angleGen(new Vector2(ship.AftBounds.Center.X + ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
+                        west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                float center = 0;
+                float north = 0;
+                float east = 0;
+                float south = 0;
+                float west = 0;
+                float arcAngle = (float)_selectedShip.Arcs[arc].ArcRadians;
+
+                foreach (var squad in _player1.Squadrons)
+                {
+                    center = angleGen(squad.Bounds.Center);
+                    north = angleGen(new Vector2(squad.Bounds.Center.X, squad.Bounds.Center.Y - squad.Bounds.Radius));
+                    east = angleGen(new Vector2(squad.Bounds.Center.X + squad.Bounds.Radius, squad.Bounds.Center.Y));
+                    south = angleGen(new Vector2(squad.Bounds.Center.X, squad.Bounds.Center.Y + squad.Bounds.Radius));
+                    west = angleGen(new Vector2(squad.Bounds.Center.X - squad.Bounds.Radius, squad.Bounds.Center.Y));
+
+                    if (arc == 0)
+                    {
+                        if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 1)
+                    {
+                        if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 2)
+                    {
+                        if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 3)
+                    {
+                        if (Math.Sqrt(Math.Pow(squad.Bounds.Center.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(squad.Bounds.Center.Y - _selectedShip.Bounds.Center.Y, 2)) < (_shipToSquadRange.Width / 2) + 25)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+
+                }
+
+                foreach (var ship in _player1.Ships)
+                {
+                    if (arc == 0)
+                    {
+                        center = angleGen(ship.BowBounds.Center);
+                        north = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y - ship.BowBounds.Radius));
+                        east = angleGen(new Vector2(ship.BowBounds.Center.X + ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
+                        west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.PortBounds.Center);
+                        north = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y - ship.PortBounds.Radius));
+                        east = angleGen(new Vector2(ship.PortBounds.Center.X + ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
+                        west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.StarboardBounds.Center);
+                        north = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y - ship.StarboardBounds.Radius));
+                        east = angleGen(new Vector2(ship.StarboardBounds.Center.X + ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
+                        west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.AftBounds.Center);
+                        north = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y - ship.AftBounds.Radius));
+                        east = angleGen(new Vector2(ship.AftBounds.Center.X + ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
+                        west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.PiOver2 - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.PiOver2 + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 1)
+                    {
+                        center = angleGen(ship.BowBounds.Center);
+                        north = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y - ship.BowBounds.Radius));
+                        east = angleGen(new Vector2(ship.BowBounds.Center.X + ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
+                        west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.PortBounds.Center);
+                        north = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y - ship.PortBounds.Radius));
+                        east = angleGen(new Vector2(ship.PortBounds.Center.X + ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
+                        west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.StarboardBounds.Center);
+                        north = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y - ship.StarboardBounds.Radius));
+                        east = angleGen(new Vector2(ship.StarboardBounds.Center.X + ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
+                        west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.AftBounds.Center);
+                        north = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y - ship.AftBounds.Radius));
+                        east = angleGen(new Vector2(ship.AftBounds.Center.X + ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
+                        west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.Pi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= MathHelper.Pi + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 2)
+                    {
+                        center = angleGen(ship.BowBounds.Center);
+                        north = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y - ship.BowBounds.Radius));
+                        east = angleGen(new Vector2(ship.BowBounds.Center.X + ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
+                        west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.PortBounds.Center);
+                        north = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y - ship.PortBounds.Radius));
+                        east = angleGen(new Vector2(ship.PortBounds.Center.X + ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
+                        west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.StarboardBounds.Center);
+                        north = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y - ship.StarboardBounds.Radius));
+                        east = angleGen(new Vector2(ship.StarboardBounds.Center.X + ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
+                        west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.AftBounds.Center);
+                        north = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y - ship.AftBounds.Radius));
+                        east = angleGen(new Vector2(ship.AftBounds.Center.X + ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
+                        west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= MathHelper.TwoPi - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                    else if (arc == 3)
+                    {
+                        center = angleGen(ship.BowBounds.Center);
+                        north = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y - ship.BowBounds.Radius));
+                        east = angleGen(new Vector2(ship.BowBounds.Center.X + ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.BowBounds.Center.X, ship.BowBounds.Center.Y + ship.BowBounds.Radius));
+                        west = angleGen(new Vector2(ship.BowBounds.Center.X - ship.BowBounds.Radius, ship.BowBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.BowBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.BowBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.PortBounds.Center);
+                        north = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y - ship.PortBounds.Radius));
+                        east = angleGen(new Vector2(ship.PortBounds.Center.X + ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.PortBounds.Center.X, ship.PortBounds.Center.Y + ship.PortBounds.Radius));
+                        west = angleGen(new Vector2(ship.PortBounds.Center.X - ship.PortBounds.Radius, ship.PortBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.PortBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.PortBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.StarboardBounds.Center);
+                        north = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y - ship.StarboardBounds.Radius));
+                        east = angleGen(new Vector2(ship.StarboardBounds.Center.X + ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.StarboardBounds.Center.X, ship.StarboardBounds.Center.Y + ship.StarboardBounds.Radius));
+                        west = angleGen(new Vector2(ship.StarboardBounds.Center.X - ship.StarboardBounds.Radius, ship.StarboardBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.StarboardBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.StarboardBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+
+                        center = angleGen(ship.AftBounds.Center);
+                        north = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y - ship.AftBounds.Radius));
+                        east = angleGen(new Vector2(ship.AftBounds.Center.X + ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+                        south = angleGen(new Vector2(ship.AftBounds.Center.X, ship.AftBounds.Center.Y + ship.AftBounds.Radius));
+                        west = angleGen(new Vector2(ship.AftBounds.Center.X - ship.AftBounds.Radius, ship.AftBounds.Center.Y));
+
+                        if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - ship.AftBounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - ship.AftBounds.Center.Y, 2)) < _range.Width)
+                        {
+                            if (center >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && center <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (north >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && north <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (east >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && east <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (south >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && south <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                            if (west >= (3 * MathHelper.PiOver2) - (arcAngle / 2) + Math.Abs(_selectedShip.Rotation) && west <= (3 * MathHelper.PiOver2) + (arcAngle / 2) + Math.Abs(_selectedShip.Rotation)) return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Generates the angle to the nearest points of an arc
+        /// </summary>
+        /// <param name="point">The point to check against</param>
+        /// <returns>The angle in radians</returns>
+        private float angleGen(Vector2 point)
+        {
+            float xDist = point.X - _selectedShip.Bounds.Center.X;
+            float yDist = point.Y - _selectedShip.Bounds.Center.Y;
+            float hDist = 0;
+            float radians = 0;
+            bool xNeg = false;
+            bool yNeg = false;
+            
+            if(xDist < 0)
+            {
+                xDist = Math.Abs(xDist);
+                xNeg = true;
+            }
+            if(yDist < 0)
+            {
+                yDist = Math.Abs(yDist);
+                yNeg = true;
+            }
+
+            hDist = (float)Math.Sqrt(Math.Pow(xDist, 2) + Math.Pow(yDist, 2));
+
+            radians = (float)Math.Acos((Math.Pow(hDist, 2) + Math.Pow(xDist, 2) - Math.Pow(yDist, 2)) / (2 * hDist * xDist));
+
+            if (xNeg && !yNeg) radians += MathHelper.Pi;
+            else if (!xNeg && !yNeg) radians = MathHelper.Pi - radians;
+            else if (xNeg && yNeg) radians = MathHelper.TwoPi - radians;
+            //Else do nothing you're already here
+
+            return radians;
         }
     }
 }
