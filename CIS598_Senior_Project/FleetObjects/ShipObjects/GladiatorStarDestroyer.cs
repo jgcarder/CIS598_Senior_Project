@@ -258,8 +258,8 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
             Arcs[0].AddDice(2, DieTypeEnum.Red);
             Arcs[0].AddDice(2, DieTypeEnum.Black);
-            Arcs[0].AddDice(2, DieTypeEnum.Red);
-            Arcs[0].AddDice(2, DieTypeEnum.Black);
+            Arcs[3].AddDice(1, DieTypeEnum.Red);
+            Arcs[3].AddDice(1, DieTypeEnum.Black);
 
             if (ShipTypeA)
             {

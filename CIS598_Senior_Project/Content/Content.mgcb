@@ -109,6 +109,18 @@
 /processorParam:TextureFormat=Color
 /build:AdvancedProjectorsCard.png
 
+#begin AftArc.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:AftArc.png
+
 #begin AftShields.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -283,6 +295,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:blank.png
+
+#begin BowArc.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BowArc.png
 
 #begin BowShields.png
 /importer:TextureImporter
@@ -788,6 +812,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ExpandedLaunchersCard.png
+
+#begin Explosion1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Explosion1.wav
 
 #begin FleetCreator.png
 /importer:TextureImporter
@@ -1571,6 +1601,18 @@
 /processorParam:TextureFormat=Color
 /build:PointDefenseRerouteCard.png
 
+#begin PortArc.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:PortArc.png
+
 #begin PortShields.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1739,6 +1781,18 @@
 /processorParam:TextureFormat=Color
 /build:SaveQuit.png
 
+#begin SelectArc.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SelectArc.png
+
 #begin SelectFleets.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1823,6 +1877,18 @@
 /processorParam:TextureFormat=Color
 /build:SetSpeed.png
 
+#begin ShipIonRange.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ShipIonRange.png
+
 #begin ShipRangeFinder.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1846,6 +1912,24 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ShipToSquadRange.png
+
+#begin Shoot1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Shoot1.wav
+
+#begin Shoot2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Shoot2.wav
+
+#begin Shoot3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Shoot3.wav
 
 #begin SpaceBackground1.jpg
 /importer:TextureImporter
@@ -1930,6 +2014,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:SquadMovement5.png
+
+#begin StarboardArc.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:StarboardArc.png
 
 #begin StarboardShields.png
 /importer:TextureImporter

@@ -19,12 +19,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
         {
             get
             {
-                return "Before an enemy ship is dealt\n" +
-                       "a faceup damage card, look at\n" +
-                       "the top four cards of the\n" +
-                       "damage deck, place one on top\n" +
-                       "of the deck and discard the\n" +
-                       "others.";
+                return "The assigned ship is equiped\n" +
+                       "with redundant life support\n" +
+                       "systems that cannot suffer \n" +
+                       "critical failure.";
             }
         }
 

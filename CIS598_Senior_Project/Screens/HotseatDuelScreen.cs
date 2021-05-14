@@ -46,19 +46,22 @@ namespace CIS598_Senior_Project.Screens
 
             enum AttackState
             {
+                SelectArc,
                 DeclareTarget,
                 RollDice,
                 ModifyDice,
                 SpendAccuracies,
                 SpendDefenseTokens,
-                ResolveDamage
+                ResolveDamage,
+                Done
             }
         
         enum SquadronState
         {
             ActivateSquad,
             Move,
-            Attack
+            Attack,
+            Choose
         }
 
         enum SquadronCommand
@@ -108,12 +111,14 @@ namespace CIS598_Senior_Project.Screens
         private Texture2D _player1Zone;
         private Texture2D _player2Zone;
         private Texture2D _shipRanges;
+        private Texture2D _shipIonRange;
         private Texture2D _shipToSquadRange;
         private Texture2D _squadMove1;
         private Texture2D _squadMove2;
         private Texture2D _squadMove3;
         private Texture2D _squadMove4;
         private Texture2D _squadMove5;
+        private Texture2D _range;
 
         private SpriteFont _descriptor;
         private SpriteFont _galbasic;
@@ -126,13 +131,14 @@ namespace CIS598_Senior_Project.Screens
         private int _engineeringPoints;
         private int _numSquadsToActivate;
 
+        private int _selectedArc;
         private int _targetArc;
 
         private int _sq2SqDamage;
         private int _sq2ShDamage;
         private int _sh2ShDamage;
         private int _sh2SqDamage;
-        private int _counterDanage;
+        private int _counterDamage;
 
         private string _selectingPlayer;
 
@@ -152,6 +158,10 @@ namespace CIS598_Senior_Project.Screens
         private SoundEffect _button2;
         private SoundEffect _button3;
         private SoundEffect _button4;
+        private SoundEffect _shoot1;
+        private SoundEffect _shoot2;
+        private SoundEffect _shoot3;
+        private SoundEffect _explosion;
 
         private List<float> _vol;
 
@@ -179,6 +189,8 @@ namespace CIS598_Senior_Project.Screens
             _sh2ShDamage = 0;
             _sh2SqDamage = 0;
 
+            _selectedArc = -1;
+
             _shipToPlace1 = _player1.Ships;
             _shipsPlaced1 = new List<Ship>();
             _shipToPlace2 = _player2.Ships;
@@ -194,7 +206,7 @@ namespace CIS598_Senior_Project.Screens
             _state = GameEnum.Setup;
             _setupState = SetupState.SelectFirst;
             _shipState = ShipState.ActivateShip;
-            _attackState = AttackState.DeclareTarget;
+            _attackState = AttackState.SelectArc;
             _squadState = SquadronState.ActivateSquad;
             _squadCommand = SquadronCommand.ActivateSquadron;
 
@@ -262,6 +274,13 @@ namespace CIS598_Senior_Project.Screens
             _buttons.Add(new CustButton(42, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 49 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));         //Done with squad
 
             _buttons.Add(new CustButton(43, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 75 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));          //Attack with squadron
+
+            _buttons.Add(new CustButton(44, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 51 * _heightIncrement, _widthIncrement * 12, _heightIncrement * 7), false));          //selecting bow arc
+            _buttons.Add(new CustButton(45, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 59 * _heightIncrement, _widthIncrement * 5, _heightIncrement * 10), false));          //select port arc
+            _buttons.Add(new CustButton(46, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 9, 59 * _heightIncrement, _widthIncrement * 5, _heightIncrement * 10), false));           //select starboard arc
+            _buttons.Add(new CustButton(47, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 16, 70 * _heightIncrement, _widthIncrement * 12, _heightIncrement * 7), false));          //secelt aft arc
+            _buttons.Add(new CustButton(48, new Rectangle(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 78 * _heightIncrement, _widthIncrement * 18, _heightIncrement * 8), false));          //confirm selection
+
         }
 
         /// <summary>
@@ -318,6 +337,12 @@ namespace CIS598_Senior_Project.Screens
 
             _buttons[43].Texture = _content.Load<Texture2D>("AttackSquad");
 
+            _buttons[44].Texture = _content.Load<Texture2D>("BowArc");
+            _buttons[45].Texture = _content.Load<Texture2D>("PortArc");
+            _buttons[46].Texture = _content.Load<Texture2D>("StarboardArc");
+            _buttons[47].Texture = _content.Load<Texture2D>("AftArc");
+            _buttons[48].Texture = _content.Load<Texture2D>("SelectArc");
+
 
             //_label = _content.Load<Texture2D>("");
             _background = _content.Load<Texture2D>("SpaceBackground1");
@@ -325,6 +350,7 @@ namespace CIS598_Senior_Project.Screens
             _player2Zone = _content.Load<Texture2D>("Player2PlacementArea");
 
             _shipRanges = _content.Load<Texture2D>("ShipRangeFinder");
+            _shipIonRange = _content.Load<Texture2D>("ShipIonRange");
             _shipToSquadRange = _content.Load<Texture2D>("ShipToSquadRange");
             _squadMove1 = _content.Load<Texture2D>("SquadMovement1");
             _squadMove2 = _content.Load<Texture2D>("SquadMovement2");
@@ -336,6 +362,11 @@ namespace CIS598_Senior_Project.Screens
             _button2 = _content.Load<SoundEffect>("Button2");
             _button3 = _content.Load<SoundEffect>("Button3");
             _button4 = _content.Load<SoundEffect>("Button4");
+            _shoot1 = _content.Load<SoundEffect>("Shoot1");
+            _shoot2 = _content.Load<SoundEffect>("Shoot2");
+            _shoot3 = _content.Load<SoundEffect>("Shoot3");
+            _explosion = _content.Load<SoundEffect>("Explosion1");
+
 
             foreach (var button in _buttons)
             {
@@ -692,11 +723,11 @@ namespace CIS598_Senior_Project.Screens
                             _buttons[35].IsActive = true;
 
                             break;
-                        case ShipState.Squadron: //they use a squadron dial
+                        case ShipState.Squadron: //they use a squadron dial or token
                             switch(_squadCommand)
                             {
                                 case SquadronCommand.ActivateSquadron:
-                                    if(Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedShip.Bounds.Center.Y, 2)) <= _shipToSquadRange.Width / 2)
+                                    if(Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedShip.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedShip.Bounds.Center.Y, 2)) <= (_shipToSquadRange.Width) / 2)
                                     {
                                         if(_player1Placing)
                                         {
@@ -754,7 +785,7 @@ namespace CIS598_Senior_Project.Screens
 
                                     if (Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedSquad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedSquad.Bounds.Center.Y, 2)) <= radius)
                                     {
-                                        if(_currentMouseState.X > 25 && _currentMouseState.X < _game.GraphicsDevice.Viewport.Width - 25 && _currentMouseState.Y > 25 && _currentMouseState.Y < _game.GraphicsDevice.Viewport.Height - 25)
+                                        if(_currentMouseState.X > 25 && _currentMouseState.X < (_game.GraphicsDevice.Viewport.Width - _widthIncrement * 20) - 25 && _currentMouseState.Y > 25 && _currentMouseState.Y < _game.GraphicsDevice.Viewport.Height - 25)
                                         {
                                             if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                                             {
@@ -793,7 +824,7 @@ namespace CIS598_Senior_Project.Screens
                                         //activate fire button
                                     }
 
-                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedSquad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedSquad.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                                    if (Math.Sqrt(Math.Pow(_currentMouseState.X - _selectedSquad.Bounds.Center.X, 2) + Math.Pow(_currentMouseState.Y - _selectedSquad.Bounds.Center.Y, 2)) <= (_squadMove1.Width) / 2)
                                     {
                                         //player 1 and 2 selecting targets
                                         if (_player1Placing)
@@ -919,8 +950,35 @@ namespace CIS598_Senior_Project.Screens
                             break;
                         case ShipState.Attack: //Ship attack phase
 
+                            switch(_attackState)
+                            {
+                                case AttackState.SelectArc:
+                                    buttonSweeper(40);
+                                    _buttons[44].IsActive = true;
+                                    _buttons[45].IsActive = true;
+                                    _buttons[46].IsActive = true;
+                                    _buttons[47].IsActive = true;
+                                    _buttons[48].IsActive = true;
+                                    break;
+                                case AttackState.DeclareTarget:
+                                    buttonSweeper(40);
+                                    break;
+                                case AttackState.RollDice:
+                                    break;
+                                case AttackState.ModifyDice:
+                                    break;
+                                case AttackState.SpendAccuracies:
+                                    break;
+                                case AttackState.SpendDefenseTokens:
+                                    break;
+                                case AttackState.ResolveDamage:
+                                    break;
+                                case AttackState.Done:
+                                    break;
+                            }
+
                             break;
-                        case ShipState.UseToken: //Player uses a token after taking a token, instead of using a dial
+                        case ShipState.UseToken: //Player uses a token after taking a token, or afterinstead of using a dial
                             buttonSweeper(16);
 
                             _buttons[36].IsActive = _selectedShip.HasEngineeringToken;
@@ -1113,155 +1171,256 @@ namespace CIS598_Senior_Project.Screens
             }
 
 
-            if (_state == GameEnum.Setup && _setupState == SetupState.Placement)
+            switch(_state)
             {
-                if (_player1Placing) spriteBatch.Draw(_player1Zone, new Rectangle(0, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 25, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
-                else spriteBatch.Draw(_player2Zone, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
+                case GameEnum.Setup:
+                    spriteBatch.DrawString(_galbasic, " <Game Setup>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
 
-                foreach (var ship in _shipsPlaced1)
-                {
-                    if(_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Red, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
-                    else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
-                }
-                foreach (var ship in _shipsPlaced2)
-                {
-                    if(_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Blue, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
-                    else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
-                }
-                foreach (var squad in _squadsPlaced1)
-                {
-                    if(_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Red, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
-                    else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
-                }
-                foreach (var squad in _squadsPlaced2)
-                {
-                    if(_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Blue, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
-                    else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
-                }
-
-                if (_player1Placing)
-                {
-                    int hOffset = 43;
-                    for(int i = 0; i < _squadTypeAmounts1.Length; i++)
+                    switch (_setupState)
                     {
-                        if(_squadTypeAmounts1[i] > 0)
-                        {
-                            spriteBatch.DrawString(_galbasic, "X " + _squadTypeAmounts1[i], new Vector2(_widthIncrement * 92, hOffset * _heightIncrement), Color.White);
-                            hOffset += 11;
-                        }
+                        case SetupState.SelectFirst:
+                            spriteBatch.DrawString(_galbasic, _selectingPlayer + ": What do you want to do?", new Vector2(_widthIncrement * 34, 40 * _heightIncrement), Color.Gold);
+                            break;
+                        case SetupState.Placement:
+
+                            if (_player1Placing) spriteBatch.Draw(_player1Zone, new Rectangle(0, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 25, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
+                            else spriteBatch.Draw(_player2Zone, new Rectangle(0, 0, _game.GraphicsDevice.Viewport.Width - _widthIncrement * 20, _game.GraphicsDevice.Viewport.Height / 4), Color.White);
+
+                            foreach (var ship in _shipsPlaced1)
+                            {
+                                if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Red, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                                else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                            }
+                            foreach (var ship in _shipsPlaced2)
+                            {
+                                if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(ship.Image, ship.Position, null, Color.Blue, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                                else spriteBatch.Draw(ship.Image, ship.Position, null, Color.White, ship.Rotation, ship.Origin, 1, SpriteEffects.None, 1);
+                            }
+                            foreach (var squad in _squadsPlaced1)
+                            {
+                                if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Red, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                                else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                            }
+                            foreach (var squad in _squadsPlaced2)
+                            {
+                                if (_player1.IsRebelFleet == _player2.IsRebelFleet) spriteBatch.Draw(squad.Image, squad.Position, null, Color.Blue, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                                else spriteBatch.Draw(squad.Image, squad.Position, null, Color.White, squad.Rotation, squad.Origin, 1, SpriteEffects.None, 1);
+                            }
+
+                            if (_player1Placing)
+                            {
+                                int hOffset = 43;
+                                for (int i = 0; i < _squadTypeAmounts1.Length; i++)
+                                {
+                                    if (_squadTypeAmounts1[i] > 0)
+                                    {
+                                        spriteBatch.DrawString(_galbasic, "X " + _squadTypeAmounts1[i], new Vector2(_widthIncrement * 92, hOffset * _heightIncrement), Color.White);
+                                        hOffset += 11;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                int hOffset = 43;
+                                for (int i = 0; i < _squadTypeAmounts2.Length; i++)
+                                {
+                                    if (_squadTypeAmounts2[i] > 0)
+                                    {
+                                        spriteBatch.DrawString(_galbasic, "X " + _squadTypeAmounts2[i], new Vector2(_widthIncrement * 92, hOffset * _heightIncrement), Color.White);
+                                        hOffset += 11;
+                                    }
+                                }
+                            }
+
+                            break;
+                        case SetupState.SetupDone:
+
+                            break;
                     }
-                }
-                else
-                {
-                    int hOffset = 43;
-                    for (int i = 0; i < _squadTypeAmounts2.Length; i++)
-                    {
-                        if (_squadTypeAmounts2[i] > 0)
-                        {
-                            spriteBatch.DrawString(_galbasic, "X " + _squadTypeAmounts2[i], new Vector2(_widthIncrement * 92, hOffset * _heightIncrement), Color.White);
-                            hOffset += 11;
-                        }
-                    }
-                }
-            }
-
-
-            if(_state == GameEnum.Setup)
-            {
-                spriteBatch.DrawString(_galbasic, "   <Game Setup>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-            }
-            if(_state == GameEnum.Command_Phase)
-            {
-                drawFleets(spriteBatch);
-                if(_selectedShip != null) drawShipInfo(spriteBatch);
-
-                spriteBatch.DrawString(_galbasic, "<Command Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-                spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
-
-                if (_player1Placing) spriteBatch.DrawString(_galbasic, " Player 1 Setting", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
-                else spriteBatch.DrawString(_galbasic, " Player 2 Setting", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
-
-                spriteBatch.DrawString(_galbasic, _selectedDial.ToString(), new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _heightIncrement * 50), Color.Gold);
-            }
-            if(_state == GameEnum.Ship_Phase)
-            {
-                drawFleets(spriteBatch);
-                if(_shipState != ShipState.ActivateShip && _shipState != ShipState.Navigation && _shipState != ShipState.RevealDial && _shipState != ShipState.UseToken)
-                {
-                    
-                    if (_shipState == ShipState.Squadron)   //squadron command drawings 
-                    {
-                        if(_squadCommand == SquadronCommand.ActivateSquadron || _squadCommand == SquadronCommand.Choose)
-                        {
-                            if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
-                            spriteBatch.Draw(_shipToSquadRange, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipToSquadRange.Width / 2, _shipToSquadRange.Height / 2), 1f, SpriteEffects.None, 0.5f);
-                        }
-                        else if(_squadCommand == SquadronCommand.Move)
-                        {
-                            if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
-                            if (_selectedSquad.Speed == 1) spriteBatch.Draw(_squadMove1, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove1.Width / 2, _squadMove1.Height / 2), 1f, SpriteEffects.None, 0.5f);
-                            else if (_selectedSquad.Speed == 2) spriteBatch.Draw(_squadMove2, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove2.Width / 2, _squadMove2.Height / 2), 1f, SpriteEffects.None, 0.5f);
-                            else if (_selectedSquad.Speed == 3) spriteBatch.Draw(_squadMove3, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove3.Width / 2, _squadMove3.Height / 2), 1f, SpriteEffects.None, 0.5f);
-                            else if (_selectedSquad.Speed == 4) spriteBatch.Draw(_squadMove4, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove4.Width / 2, _squadMove4.Height / 2), 1f, SpriteEffects.None, 0.5f);
-                            else if (_selectedSquad.Speed == 5) spriteBatch.Draw(_squadMove5, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove5.Width / 2, _squadMove5.Height / 2), 1f, SpriteEffects.None, 0.5f);
-                        }
-                        else if(_squadCommand == SquadronCommand.Attack)
-                        {
-                            if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
-                            if (_targetedSquadron != null) drawTargetedSquadronInfo(spriteBatch);
-                            if (_targetedShip != null) drawReducedTargetedShipInfo(spriteBatch);
-                        }
-                    }
-                    else
-                    {
-                        if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
-                        if (_shipState == ShipState.Engineering) spriteBatch.DrawString(_descriptor, "Remaining Engineering Points: " + _engineeringPoints, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 22 * _heightIncrement), Color.Gold);
-                    }
-                }
-                else
-                {
+                    break;
+                case GameEnum.Command_Phase:
+                    drawFleets(spriteBatch);
                     if (_selectedShip != null) drawShipInfo(spriteBatch);
 
-                    if(_shipState == ShipState.RevealDial)         //Displays the functions of command dials and command tokens
+                    spriteBatch.DrawString(_galbasic, " <Command Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                    spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
+
+                    if (_player1Placing) spriteBatch.DrawString(_galbasic, " Player 1 Setting", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
+                    else spriteBatch.DrawString(_galbasic, " Player 2 Setting", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
+
+                    spriteBatch.DrawString(_galbasic, _selectedDial.ToString(), new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _heightIncrement * 50), Color.Gold);
+                    break;
+                case GameEnum.Ship_Phase:
+                    drawFleets(spriteBatch);
+
+                    spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
+
+                    //displays whose turn it is
+                    if (_player1Placing) spriteBatch.DrawString(_galbasic, " Player 1's Turn", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
+                    else spriteBatch.DrawString(_galbasic, " Player 2 Turn", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
+
+
+                    switch (_shipState)
                     {
-                        if (_revealedCommand == CommandDialEnum.Navigation) spriteBatch.DrawString(_descriptor, "Navigation Command: Allows you to \nincrease or decrease this ship's speed \nby 1.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
-                        if (_revealedCommand == CommandDialEnum.Engineering) spriteBatch.DrawString(_descriptor, "Engineering Command: Allows you to recover \nsome shields and health.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
-                        if (_revealedCommand == CommandDialEnum.Squadron) spriteBatch.DrawString(_descriptor, "Squadron Command: Allows you to activate \nSome nearby squadrons early", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
-                        if (_revealedCommand == CommandDialEnum.ConcentrateFire) spriteBatch.DrawString(_descriptor, "Concentrate Fire Command: Allows you to \nre-roll one of your attacks this turn.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                        case ShipState.ActivateShip:
+                            spriteBatch.DrawString(_galbasic, " <Select Ship>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                            if (_selectedShip != null) drawShipInfo(spriteBatch);
+                            break;
+                        case ShipState.RevealDial:
+                            spriteBatch.DrawString(_galbasic, " <Reveal Dial>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                            if (_selectedShip != null) drawShipInfo(spriteBatch);
+                            if (_revealedCommand == CommandDialEnum.Navigation) spriteBatch.DrawString(_descriptor, "Navigation Command: Allows you to \nincrease or decrease this ship's speed \nby 1.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                            if (_revealedCommand == CommandDialEnum.Engineering) spriteBatch.DrawString(_descriptor, "Engineering Command: Allows you to recover \nsome shields and health.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                            if (_revealedCommand == CommandDialEnum.Squadron) spriteBatch.DrawString(_descriptor, "Squadron Command: Allows you to activate \nSome nearby squadrons early", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                            if (_revealedCommand == CommandDialEnum.ConcentrateFire) spriteBatch.DrawString(_descriptor, "Concentrate Fire Command: Allows you to \nre-roll one of your attacks this turn.", new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 73 * _heightIncrement), Color.Gold);
+                            break;
+                        case ShipState.Navigation:
+                            spriteBatch.DrawString(_galbasic, " <Navigation>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                            if (_selectedShip != null) drawShipInfo(spriteBatch);
+                            spriteBatch.DrawString(_galbasic, "Speed: " + _speedDiff, new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 69 * _heightIncrement), Color.Gold);
+                            break;
+                        case ShipState.Engineering:
+                            spriteBatch.DrawString(_galbasic, " <Engineering>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                            if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
+                            if (_shipState == ShipState.Engineering) spriteBatch.DrawString(_descriptor, "Remaining Engineering Points: " + _engineeringPoints, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 22 * _heightIncrement), Color.Gold);
+                            break;
+                        case ShipState.Squadron:
+
+                            switch(_squadCommand)
+                            {
+                                case SquadronCommand.ActivateSquadron:
+                                    spriteBatch.DrawString(_galbasic, " <Select Squadron>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
+                                    spriteBatch.Draw(_shipToSquadRange, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipToSquadRange.Width / 2, _shipToSquadRange.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                                    break;
+                                case SquadronCommand.Choose:
+                                    spriteBatch.DrawString(_galbasic, " <Chooss Options>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
+                                    spriteBatch.Draw(_shipToSquadRange, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipToSquadRange.Width / 2, _shipToSquadRange.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                                    break;
+                                case SquadronCommand.Attack:
+                                    spriteBatch.DrawString(_galbasic, " <Attacking>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
+                                    if (_targetedSquadron != null) drawTargetedSquadronInfo(spriteBatch);
+                                    if (_targetedShip != null) drawReducedTargetedShipInfo(spriteBatch);
+                                    break;
+                                case SquadronCommand.Move:
+                                    spriteBatch.DrawString(_galbasic, " <Moving>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    if (_selectedSquad != null) drawSelectedSquadronInfo(spriteBatch);
+                                    if (_selectedSquad.Speed == 1) spriteBatch.Draw(_squadMove1, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove1.Width / 2, _squadMove1.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                                    else if (_selectedSquad.Speed == 2) spriteBatch.Draw(_squadMove2, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove2.Width / 2, _squadMove2.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                                    else if (_selectedSquad.Speed == 3) spriteBatch.Draw(_squadMove3, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove3.Width / 2, _squadMove3.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                                    else if (_selectedSquad.Speed == 4) spriteBatch.Draw(_squadMove4, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove4.Width / 2, _squadMove4.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                                    else if (_selectedSquad.Speed == 5) spriteBatch.Draw(_squadMove5, _selectedSquad.Bounds.Center, null, Color.White, 0f, new Vector2(_squadMove5.Width / 2, _squadMove5.Height / 2), 1f, SpriteEffects.None, 0.5f);
+                                    break;
+                            }
+                            break;
+                        case ShipState.UseToken:
+                            spriteBatch.DrawString(_galbasic, " <Use Tokens>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                            break;
+                        case ShipState.Attack:
+                            if (_selectedShip != null) drawShipInfo(spriteBatch);
+
+                            switch(_attackState)
+                            {
+                                case AttackState.SelectArc:
+                                    spriteBatch.DrawString(_galbasic, " <Select Arc>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    break;
+                                case AttackState.DeclareTarget:
+                                    spriteBatch.DrawString(_galbasic, " <Declare Target>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    break;
+                                case AttackState.RollDice:
+                                    spriteBatch.DrawString(_galbasic, " <Modifying Dice>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    break;
+                                case AttackState.ModifyDice:
+                                    spriteBatch.DrawString(_galbasic, " <Modifying Dice>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    break;
+                                case AttackState.SpendAccuracies:
+                                    spriteBatch.DrawString(_galbasic, " <Spend Accuracies>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    break;
+                                case AttackState.SpendDefenseTokens:
+                                    spriteBatch.DrawString(_galbasic, " <Ship Defense>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    break;
+                                case AttackState.ResolveDamage:
+                                    spriteBatch.DrawString(_galbasic, " <Resolve Damage>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    break;
+                                case AttackState.Done:
+                                    spriteBatch.DrawString(_galbasic, " <Resolve Damage>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+
+                                    break;
+                            }
+
+                            if(_selectedArc >= 0)
+                            {
+                                if (_selectedShip.Arcs[_selectedArc].RedDice.Count > 0)
+                                {
+                                    spriteBatch.Draw(_shipRanges, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipRanges.Width / 2, _shipRanges.Height / 2), 1f, SpriteEffects.None, 0);
+                                    _range = _shipRanges;
+                                }
+                                else if (_selectedShip.Arcs[_selectedArc].BlueDice.Count > 0)
+                                {
+                                    spriteBatch.Draw(_shipIonRange, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipIonRange.Width / 2, _shipIonRange.Height / 2), 1f, SpriteEffects.None, 0);
+                                    _range = _shipIonRange;
+                                }
+                                else if (_selectedShip.Arcs[_selectedArc].BlackDice.Count > 0)
+                                {
+                                    spriteBatch.Draw(_shipToSquadRange, _selectedShip.Bounds.Center, null, Color.White, 0f, new Vector2(_shipToSquadRange.Width / 2, _shipToSquadRange.Height / 2), 1f, SpriteEffects.None, 0);
+                                    _range = _shipToSquadRange;
+                                }
+                                else
+                                {
+                                    _range = null;
+                                }
+                            }
+
+
+                            break;
+                        case ShipState.ExecuteManuver:
+                            spriteBatch.DrawString(_galbasic, " <Movement Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                            if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
+
+
+                            break;
                     }
-                    
+                    break;
+                case GameEnum.Squadron_Phase:
+                    drawFleets(spriteBatch);
+                    spriteBatch.DrawString(_galbasic, " <Squad Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                    spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
 
-                }
-
-                //Displays the phase and round number
-                spriteBatch.DrawString(_galbasic, "   <Ship Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-                spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
-                
-                //displays whose turn it is
-                if (_player1Placing) spriteBatch.DrawString(_galbasic, " Player 1's Turn", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
-                else spriteBatch.DrawString(_galbasic, " Player 2 Turn", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 21), Color.Gold);
-
-                //displays the speed to be set
-                if (_shipState == ShipState.Navigation) spriteBatch.DrawString(_galbasic, "Speed: " + _speedDiff, new Vector2(_game.GraphicsDevice.Viewport.Width - 19 * _widthIncrement, 69 * _heightIncrement), Color.Gold);
+                    switch (_squadState)
+                    {
+                        case SquadronState.ActivateSquad:
+                            break;
+                        case SquadronState.Choose:
+                            break;
+                        case SquadronState.Attack:
+                            break;
+                        case SquadronState.Move:
+                            break;
+                    }
+                    break;
+                case GameEnum.Status_Phase:
+                    drawFleets(spriteBatch);
+                    spriteBatch.DrawString(_galbasic, "  <Squad Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
+                    spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
+                    break;
             }
-            if(_state == GameEnum.Squadron_Phase)
-            {
-                drawFleets(spriteBatch);
-                spriteBatch.DrawString(_galbasic, "  <Squad Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-                spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
-            }
-            if(_state == GameEnum.Status_Phase)
-            {
-                drawFleets(spriteBatch);
-                spriteBatch.DrawString(_galbasic, "  <Squad Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
-                spriteBatch.DrawString(_galbasic, " ROUND: " + _roundNum, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 17), Color.Gold);
-            }
-
-            if (_setupState == SetupState.SelectFirst && _state == GameEnum.Setup)
-            {
-                spriteBatch.DrawString(_galbasic, _selectingPlayer + ": What do you want to do?", new Vector2(_widthIncrement * 34, 40 * _heightIncrement), Color.Gold);
-            }
-
 
             spriteBatch.End();
         }
@@ -1935,7 +2094,7 @@ namespace CIS598_Senior_Project.Screens
                     {
                         _button4.Play();
                         _numSquadsToActivate--;
-                        if(_numSquadsToActivate <= 0)
+                        if(_numSquadsToActivate <= 0 || numSquadsNearby() <= 0)
                         {
                             _shipState = ShipState.Attack;
                             _squadCommand = SquadronCommand.ActivateSquadron;
@@ -1950,6 +2109,87 @@ namespace CIS598_Senior_Project.Screens
                         _selectedSquad = null;
                         _targetedSquadron = null;
                         buttonSweeper(40);
+                    }
+                    break;
+                case 43: //attack target button for squadron
+                    if(_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        Thread.Sleep(200);
+
+                        if (_targetedSquadron != null) //target is a squadron
+                        {
+                            _targetedSquadron.Hull -= _sq2SqDamage;
+                            _targetedSquadron = null;
+                            _targetedShip = null;
+                            _targetArc = 0;
+
+                            _shoot1.Play();
+
+                            if(_targetedSquadron.HasCounter2) //if the squad can counter(Note: happens even if is destroyed first)
+                            {
+                                _counterDamage = resolveCounter2();
+                                _selectedSquad.Hull -= _counterDamage;
+                                
+                                _shoot2.Play();
+                            }
+
+                            buttonSweeper(40);
+                            _squadCommand = SquadronCommand.Choose;
+                        }
+                        if (_targetedShip != null)
+                        {
+                            if(_targetedShip.Arcs[_targetArc].Shields < _sq2ShDamage)
+                            {
+                                _sq2ShDamage -= _targetedShip.Arcs[_targetArc].Shields;
+                                _targetedShip.Arcs[_targetArc].Shields = 0;
+
+                                _shoot1.Play();
+
+                                if(_attackHasCrits)
+                                {
+                                    _targetedShip.Hull -= _sq2ShDamage;
+                                    resolveSquadCritical();
+                                }
+                            }
+                            buttonSweeper(40);
+                            _squadCommand = SquadronCommand.Choose;
+                        }
+                    }
+                    break;
+                case 44:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _selectedArc = 0;
+                    }
+                    break;
+                case 45:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _selectedArc = 1;
+                    }
+                    break;
+                case 46:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _selectedArc = 2;
+                    }
+                    break;
+                case 47:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button2.Play();
+                        _selectedArc = 3;
+                    }
+                    break;
+                case 48:
+                    if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
+                    {
+                        _button1.Play();
+                        if(_selectedArc != -1) _attackState = AttackState.DeclareTarget;
                     }
                     break;
             }
@@ -2372,7 +2612,7 @@ namespace CIS598_Senior_Project.Screens
             spriteBatch.DrawString(_descriptor, "Squad Token: " + _selectedShip.HasSquadronToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 46 * _heightIncrement), Color.Gold);
             spriteBatch.DrawString(_descriptor, "Con. Fire Token: " + _selectedShip.HasConcentrateFireToken, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, 48 * _heightIncrement), Color.Gold);
         
-            if(_state == GameEnum.Ship_Phase)
+            if(_state == GameEnum.Ship_Phase && _shipState != ShipState.Attack)
             {
                 int h = 50;
                 if(_selectedShip.Title != null)
@@ -2807,7 +3047,7 @@ namespace CIS598_Senior_Project.Screens
             {
                 foreach(var sqd in _player1.Squadrons)
                 {
-                    if(Math.Sqrt(Math.Pow(_targetedSquadron.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_targetedSquadron.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                    if(Math.Sqrt(Math.Pow(_targetedSquadron.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_targetedSquadron.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= (_squadMove1.Width + sqd.Image.Width) / 2)
                     {
                         if (sqd.HasSwarm) return true;
                     }
@@ -2817,7 +3057,7 @@ namespace CIS598_Senior_Project.Screens
             {
                 foreach (var sqd in _player2.Squadrons)
                 {
-                    if (Math.Sqrt(Math.Pow(_targetedSquadron.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_targetedSquadron.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= _squadMove1.Width / 2)
+                    if (Math.Sqrt(Math.Pow(_targetedSquadron.Bounds.Center.X - sqd.Bounds.Center.X, 2) + Math.Pow(_targetedSquadron.Bounds.Center.Y - sqd.Bounds.Center.Y, 2)) <= (_squadMove1.Width + sqd.Image.Width) / 2)
                     {
                         if (sqd.HasSwarm) return true;
                     }
@@ -2837,7 +3077,7 @@ namespace CIS598_Senior_Project.Screens
             {
                 foreach (var squad in _player2.Squadrons)
                 {
-                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) < _squadMove1.Width / 2)
+                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) < (_squadMove1.Width + squad.Image.Width) / 2)
                     {
                         if (squad.HasEscort)
                         {
@@ -2850,7 +3090,7 @@ namespace CIS598_Senior_Project.Screens
             {
                 foreach (var squad in _player1.Squadrons)
                 {
-                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) < _squadMove1.Width / 2)
+                    if (Math.Sqrt(Math.Pow(_selectedSquad.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedSquad.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) < (_squadMove1.Width + squad.Image.Width) / 2)
                     {
                         if (squad.HasEscort)
                         {
@@ -2861,6 +3101,92 @@ namespace CIS598_Senior_Project.Screens
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Resolves critical effects on ships by bomber squadrons
+        /// </summary>
+        private void resolveSquadCritical()
+        {
+            Random rand = new Random();
+            int outcome = rand.Next(0, 5);
+            switch (outcome)
+            {
+                case 0:  //life support failure 
+                    if(_targetedShip.Commander != null && !(_targetedShip.Commander is CommanderGeneralDodonna))
+                    {
+                        _targetedShip.HasConcentrateFireToken = false;
+                        _targetedShip.HasSquadronToken = false;
+                        _targetedShip.HasNavigationToken = false;
+                        _targetedShip.HasEngineeringToken = false;
+                    }
+                    break;
+                case 1:  //engine failure
+                    _targetedShip.Speed = 0;
+                    break;
+                case 2: //hull breach
+                    _targetedShip.Hull--;
+                    break;
+                case 3: //exhausted defenses
+                    foreach(var def in _targetedShip.DefenseTokens)
+                    {
+                        if (def.State == DefenseTokenStateEnum.Ready) def.State = DefenseTokenStateEnum.Exhausted;
+                    }
+                    break;
+                case 4: //you get lucky
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Resolves the counter ability on squadrons
+        /// </summary>
+        /// <returns>The number of hits</returns>
+        private int resolveCounter2()
+        {
+            int hits = 0;
+            List<BlueDie> bd = new List<BlueDie>();
+            bd.Add(new BlueDie(DieTypeEnum.Blue));
+            bd.Add(new BlueDie(DieTypeEnum.Blue));
+
+            foreach(var die in bd)
+            {
+                BlueDieSideEnum bs = die.Roll();
+                if (bs == BlueDieSideEnum.Hit) hits++;
+            }
+
+            return hits;
+        }
+
+        /// <summary>
+        /// The number of squadrons in activation distance
+        /// </summary>
+        /// <returns>returns the number of nearby squads to the ship.</returns>
+        private int numSquadsNearby()
+        {
+            int squads = 0;
+
+            if(_player1Placing)
+            {
+                foreach(var squad in _player1.Squadrons)
+                {
+                    if(Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) <= (_shipToSquadRange.Width + squad.Image.Width) / 2)
+                    {
+                        squads++;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var squad in _player2.Squadrons)
+                {
+                    if (Math.Sqrt(Math.Pow(_selectedShip.Bounds.Center.X - squad.Bounds.Center.X, 2) + Math.Pow(_selectedShip.Bounds.Center.Y - squad.Bounds.Center.Y, 2)) <= (_shipToSquadRange.Width + squad.Image.Width) / 2)
+                    {
+                        squads++;
+                    }
+                }
+            }
+            return squads;
         }
     }
 }
