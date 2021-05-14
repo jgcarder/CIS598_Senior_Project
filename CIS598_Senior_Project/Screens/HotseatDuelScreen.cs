@@ -705,7 +705,7 @@ namespace CIS598_Senior_Project.Screens
                     {
                         _state = GameEnum.Ship_Phase;
                         _selectedShip = null;
-                        buttonSweeper(16);
+                        buttonSweeper(10);
                         _player1Placing = _player1Start;
                     }
                     else
@@ -724,6 +724,7 @@ namespace CIS598_Senior_Project.Screens
                     switch(_shipState)
                     {
                         case ShipState.ActivateShip:
+                            buttonSweeper(22);
                             if(shipActivationsRemaining(_player1.Ships) == 0 && shipActivationsRemaining(_player2.Ships) == 0)
                             {
                                 _state = GameEnum.Squadron_Phase;
@@ -769,15 +770,15 @@ namespace CIS598_Senior_Project.Screens
                             _buttons[24].IsActive = true;
                             break;
                         case ShipState.Navigation: //They use a nav dial
-                            buttonSweeper(20);
+                            buttonSweeper(14);
 
-                            if (_selectedShip.Movement[_selectedShip.Speed + 1, 0] != -1 && _speedDiff - _selectedShip.Speed < 0) _buttons[25].IsActive = true;
-                            if (_selectedShip.Speed > 0 && _selectedShip.Speed - _speedDiff > 0) _buttons[26].IsActive = true;
+                            if (_selectedShip.Movement[_selectedShip.Speed + 1, 0] != -1 && Math.Abs(_speedDiff - _selectedShip.Speed) <= 0) _buttons[25].IsActive = true;
+                            if (_selectedShip.Speed > 0 && Math.Abs(_selectedShip.Speed - _speedDiff) > 0) _buttons[26].IsActive = true;
 
                             _buttons[27].IsActive = true;
                             break;
                         case ShipState.Engineering: //they use an eng dial
-                            buttonSweeper(20);
+                            buttonSweeper(14);
                             _buttons[29].IsActive = true;
                             _buttons[30].IsActive = true;
                             _buttons[31].IsActive = true;
@@ -1024,12 +1025,20 @@ namespace CIS598_Senior_Project.Screens
                                         _targetedShip = null;
                                         _targetedSquadron = null;
                                         _shipState = ShipState.ExecuteManuver;
+                                        _speed1Diff = 0;
+                                        _speed2Diff = 0;
+                                        _speed3Diff = 0;
+                                        _speed4Diff = 0;
                                     }
                                     else
                                     {
                                         if (!areTargetsNearby(0) && !areTargetsNearby(1) && !areTargetsNearby(2) && !areTargetsNearby(3))
                                         {
                                             _shipState = ShipState.ExecuteManuver;
+                                            _speed1Diff = 0;
+                                            _speed2Diff = 0;
+                                            _speed3Diff = 0;
+                                            _speed4Diff = 0;
                                         }
                                         else
                                         {
@@ -1045,6 +1054,10 @@ namespace CIS598_Senior_Project.Screens
                                                 _targetedShip = null;
                                                 _targetedSquadron = null;
                                                 _shipState = ShipState.ExecuteManuver;
+                                                _speed1Diff = 0;
+                                                _speed2Diff = 0;
+                                                _speed3Diff = 0;
+                                                _speed4Diff = 0;
                                                 _numAttackRemaining = 0;
                                             }
                                         }
@@ -1271,40 +1284,11 @@ namespace CIS598_Senior_Project.Screens
                             
                             break;
                         case ShipState.ExecuteManuver: //ship manuver phase 
+                            buttonSweeper(20);
                             setSpeedButtons();
 
                             break;
                     }
-
-
-                    //Taking turns activating ships ~
-                        //Reveal command dial
-                            //spend dial - 1
-                                //greater immediate effect
-                            //convert to token - 5
-                                //use later
-                        //Attack
-                            //Declare target ~ 
-                                //if a squadron they must be within distance 1
-                            //Roll dice
-                                //if squadrin, use anti squadron dice
-                            //Resolve attack effects
-                                //modify dice
-                                    //reroll
-                                    //add
-                                    //change ~
-                                    //spend
-                                    //cancel ~
-                                //Spend Accuracy icons - 4
-                                //Defense spends defense tokens - 4
-                                //Resolve damage
-                                    //if a squadron only hits count
-                                    //if a ship hits and crits count
-                        //Execute manuver
-                            //Determine course
-                                //consult card and buttons for speed - 10
-                            //Move ship
-                                //click move button - 1
                     break;
                 case GameEnum.Squadron_Phase:
                     //activateing and either moving or attacking with them
@@ -1702,10 +1686,10 @@ namespace CIS598_Senior_Project.Screens
                             spriteBatch.DrawString(_galbasic, " <Movement Phase>", new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 19, _game.GraphicsDevice.Viewport.Height - _heightIncrement * 13), Color.Gold);
                             if (_selectedShip != null) drawReducedShipInfo(spriteBatch);
 
-                            if(_selectedShip.Speed > 3) spriteBatch.DrawString(_galbasic, "" + _speed4Diff,  new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 24, 25 * _heightIncrement), Color.Gold);
-                            if (_selectedShip.Speed > 2) spriteBatch.DrawString(_galbasic, "" + _speed3Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 24, 34 * _heightIncrement), Color.Gold);
-                            if (_selectedShip.Speed > 1) spriteBatch.DrawString(_galbasic, "" + _speed2Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 24, 43 * _heightIncrement), Color.Gold);
-                            if (_selectedShip.Speed > 0) spriteBatch.DrawString(_galbasic, "" + _speed1Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 24, 52 * _heightIncrement), Color.Gold);
+                            if(_selectedShip.Speed > 3) spriteBatch.DrawString(_galbasic, "" + _speed4Diff,  new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 12, 24 * _heightIncrement), Color.Gold);
+                            if (_selectedShip.Speed > 2) spriteBatch.DrawString(_galbasic, "" + _speed3Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 12, 33 * _heightIncrement), Color.Gold);
+                            if (_selectedShip.Speed > 1) spriteBatch.DrawString(_galbasic, "" + _speed2Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 12, 42 * _heightIncrement), Color.Gold);
+                            if (_selectedShip.Speed > 0) spriteBatch.DrawString(_galbasic, "" + _speed1Diff, new Vector2(_game.GraphicsDevice.Viewport.Width - _widthIncrement * 12, 51 * _heightIncrement), Color.Gold);
 
                             break;
                     }
@@ -2147,7 +2131,7 @@ namespace CIS598_Senior_Project.Screens
                         _button2.Play();
                         if(_revealedCommand == CommandDialEnum.Navigation)
                         {
-                            _shipState = ShipState.Navigation;
+                            _shipState = ShipState.Navigation; 
                             _buttons[22].IsActive = false;
                             _buttons[23].IsActive = false;
                             _buttons[24].IsActive = false;
@@ -2372,7 +2356,15 @@ namespace CIS598_Senior_Project.Screens
                     {
                         _button3.Play();
                         if (_roundNum > 1) _shipState = ShipState.Attack;
-                        else _shipState = ShipState.ExecuteManuver;
+                        else 
+                        {
+                            _shipState = ShipState.ExecuteManuver;
+                            _speed1Diff = 0;
+                            _speed2Diff = 0;
+                            _speed3Diff = 0;
+                            _speed4Diff = 0;
+                        }
+                        
 
                         buttonSweeper(20);
                     }
@@ -3302,8 +3294,94 @@ namespace CIS598_Senior_Project.Screens
                 case 66:
                     if (_currentMouseState.LeftButton == ButtonState.Pressed && _previousMouseState.LeftButton == ButtonState.Released)
                     {
+                        Vector2 v;
                         _button4.Play();
-
+                        if(_selectedShip.Speed == 1)
+                        {
+                            v = manuver();
+                            if (v != Vector2.Zero)
+                            {
+                                _selectedShip.Position = v;
+                                _selectedShip.Rotation += _speed1Diff * -(MathHelper.PiOver4 / 2);
+                            }
+                            else _selectedShip.Speed = 0;
+                        }
+                        else if(_selectedShip.Speed == 2)
+                        {
+                            v = manuver();
+                            if (v != Vector2.Zero)
+                            {
+                                _selectedShip.Position = v;
+                                _selectedShip.Rotation += _speed1Diff * -(MathHelper.PiOver4 / 2);
+                                v = manuver();
+                                if(v != Vector2.Zero)
+                                {
+                                    _selectedShip.Position = v;
+                                    _selectedShip.Rotation += _speed2Diff * -(MathHelper.PiOver4 / 2);
+                                }
+                                else _selectedShip.Speed = 0;
+                            }
+                            else _selectedShip.Speed = 0;
+                        }
+                        else if (_selectedShip.Speed == 3)
+                        {
+                            v = manuver();
+                            if (v != Vector2.Zero)
+                            {
+                                _selectedShip.Position = v;
+                                _selectedShip.Rotation += _speed1Diff * -(MathHelper.PiOver4 / 2);
+                                v = manuver();
+                                if (v != Vector2.Zero)
+                                {
+                                    _selectedShip.Position = v;
+                                    _selectedShip.Rotation += _speed2Diff * -(MathHelper.PiOver4 / 2);
+                                    v = manuver();
+                                    if(v != Vector2.Zero)
+                                    {
+                                        _selectedShip.Position = v;
+                                        _selectedShip.Rotation += _speed3Diff * -(MathHelper.PiOver4 / 2);
+                                    }
+                                    else _selectedShip.Speed = 0;
+                                }
+                                else _selectedShip.Speed = 0;
+                            }
+                            else _selectedShip.Speed = 0;
+                        }
+                        else if (_selectedShip.Speed == 4)
+                        {
+                            v = manuver();
+                            if (v != Vector2.Zero)
+                            {
+                                _selectedShip.Position = v;
+                                _selectedShip.Rotation += _speed1Diff * -(MathHelper.PiOver4 / 2);
+                                v = manuver();
+                                if (v != Vector2.Zero)
+                                {
+                                    _selectedShip.Position = v;
+                                    _selectedShip.Rotation += _speed2Diff * -(MathHelper.PiOver4 / 2);
+                                    v = manuver();
+                                    if (v != Vector2.Zero)
+                                    {
+                                        _selectedShip.Position = v;
+                                        _selectedShip.Rotation += _speed3Diff * -(MathHelper.PiOver4 / 2);
+                                        v = manuver();
+                                        if(v != Vector2.Zero)
+                                        {
+                                            _selectedShip.Position = v;
+                                            _selectedShip.Rotation += _speed4Diff * -(MathHelper.PiOver4 / 2);
+                                        }
+                                        else _selectedShip.Speed = 0;
+                                    }
+                                    else _selectedShip.Speed = 0;
+                                }
+                                else _selectedShip.Speed = 0;
+                            }
+                            else _selectedShip.Speed = 0;
+                        }
+                        _buttons[66].IsActive = false;
+                        _shipState = ShipState.ActivateShip;
+                        if (_player1Placing) _player1Placing = false;
+                        else _player1Placing = true;
                     }
                     break;
             }
@@ -3615,10 +3693,10 @@ namespace CIS598_Senior_Project.Screens
 
                 spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.Bounds.Center, Color.DarkGoldenrod);
 
-                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.BowBounds.Center, Color.DarkGoldenrod);
-                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.PortBounds.Center, Color.DarkGoldenrod);
-                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.StarboardBounds.Center, Color.DarkGoldenrod);
-                spriteBatch.DrawString(_galbasic, "" + ship.Id, ship.AftBounds.Center, Color.DarkGoldenrod);
+                spriteBatch.DrawString(_galbasic, "1", ship.BowBounds.Center, Color.DarkGoldenrod);
+                spriteBatch.DrawString(_galbasic, "2", ship.PortBounds.Center, Color.DarkGoldenrod);
+                spriteBatch.DrawString(_galbasic, "3", ship.StarboardBounds.Center, Color.DarkGoldenrod);
+                spriteBatch.DrawString(_galbasic, "4", ship.AftBounds.Center, Color.DarkGoldenrod);
             }
             foreach (var ship in _player2.Ships)
             {
@@ -5322,9 +5400,88 @@ namespace CIS598_Senior_Project.Screens
             _buttons[66].IsActive = true;
         }
 
+        /// <summary>
+        /// Calculates the new position of the ship
+        /// </summary>
+        /// <returns>The new position for the ship</returns>
         private Vector2 manuver()
         {
+            int increment = (int)(_selectedShip.Rotation / (MathHelper.PiOver4 / 2));
+            Vector2 v = new Vector2();
 
+            switch(increment)
+            {
+                case 0:
+                    v = new Vector2(_selectedShip.Bounds.Center.X, _selectedShip.Bounds.Center.Y - 125);
+                    if (v.Y < _selectedShip.Image.Height / 2)
+                    {
+                        return Vector2.Zero;
+                    }
+                    break;
+                case 1:
+                    v = new Vector2(_selectedShip.Bounds.Center.X - 68, _selectedShip.Bounds.Center.Y - 105);
+                    if (v.Y < _selectedShip.Image.Height / 2 || v.X < _selectedShip.Image.Width / 2) return Vector2.Zero;
+                    break;
+                case 2:
+                    v = new Vector2(_selectedShip.Bounds.Center.X - 88, _selectedShip.Bounds.Center.Y - 88);
+                    if (v.Y < _selectedShip.Image.Height / 2 || v.X <  _selectedShip.Image.Width / 2) return Vector2.Zero;
+                    break;
+                case 3:
+                    v = new Vector2(_selectedShip.Bounds.Center.X - 105, _selectedShip.Bounds.Center.Y - 68);
+                    if (v.Y < _selectedShip.Image.Height / 2 || v.X < _selectedShip.Image.Width / 2) return Vector2.Zero;
+                    break;
+                case 4:
+                    v = new Vector2(_selectedShip.Bounds.Center.X - 125, _selectedShip.Bounds.Center.Y);
+                    if (v.X < _selectedShip.Image.Height / 2) return Vector2.Zero;
+                    break;
+                case 5:
+                    v = new Vector2(_selectedShip.Bounds.Center.X - 105, _selectedShip.Bounds.Center.Y + 68);
+                    if (v.Y > _game.GraphicsDevice.Viewport.Height - (_selectedShip.Image.Height / 2) || v.X < _selectedShip.Image.Width / 2) return Vector2.Zero;
+                    break;
+                case 6:
+                    v = new Vector2(_selectedShip.Bounds.Center.X - 88, _selectedShip.Bounds.Center.Y + 88);
+                    if (v.Y > _game.GraphicsDevice.Viewport.Height - (_selectedShip.Image.Height / 2) || v.X < _selectedShip.Image.Width / 2) return Vector2.Zero;
+                    break;
+                case 7:
+                    v = new Vector2(_selectedShip.Bounds.Center.X - 68, _selectedShip.Bounds.Center.Y + 105);
+                    if (v.Y > _game.GraphicsDevice.Viewport.Height - (_selectedShip.Image.Height / 2) || v.X < _selectedShip.Image.Width / 2) return Vector2.Zero;
+                    break;
+                case 8:
+                    v = new Vector2(_selectedShip.Bounds.Center.X, _selectedShip.Bounds.Center.Y + 125);
+                    if (v.Y > _game.GraphicsDevice.Viewport.Height - _selectedShip.Image.Height / 2) return Vector2.Zero;
+                    break;
+                case 9:
+                    v = new Vector2(_selectedShip.Bounds.Center.X + 68, _selectedShip.Bounds.Center.Y + 105);
+                    if (v.Y > _game.GraphicsDevice.Viewport.Height - _selectedShip.Image.Height / 2 || v.X > _game.GraphicsDevice.Viewport.Width - (_selectedShip.Image.Width / 2) - (_widthIncrement * 20)) return Vector2.Zero;
+                    break;
+                    break;
+                case 10:
+                    v = new Vector2(_selectedShip.Bounds.Center.X + 88, _selectedShip.Bounds.Center.Y + 88);
+                    if (v.Y > _game.GraphicsDevice.Viewport.Height - _selectedShip.Image.Height / 2 || v.X > _game.GraphicsDevice.Viewport.Width - (_selectedShip.Image.Width / 2) - (_widthIncrement * 20)) return Vector2.Zero;
+                    break;
+                case 11:
+                    v = new Vector2(_selectedShip.Bounds.Center.X + 105, _selectedShip.Bounds.Center.Y + 68);
+                    if (v.Y > _game.GraphicsDevice.Viewport.Height - _selectedShip.Image.Height / 2 || v.X > _game.GraphicsDevice.Viewport.Width - (_selectedShip.Image.Width / 2) - (_widthIncrement * 20)) return Vector2.Zero;
+                    break;
+                case 12:
+                    v = new Vector2(_selectedShip.Bounds.Center.X + 125, _selectedShip.Bounds.Center.Y);
+                    if (v.X > _game.GraphicsDevice.Viewport.Width - (_selectedShip.Image.Height / 2) - (_widthIncrement * 20)) return Vector2.Zero;
+                    break;
+                case 13:
+                    v = new Vector2(_selectedShip.Bounds.Center.X + 105, _selectedShip.Bounds.Center.Y - 68);
+                    if (v.Y < _selectedShip.Image.Height / 2 || v.X > _game.GraphicsDevice.Viewport.Width - (20 * _widthIncrement) - (_selectedShip.Image.Width / 2)) return Vector2.Zero;
+                    break;
+                case 14:
+                    v = new Vector2(_selectedShip.Bounds.Center.X + 88, _selectedShip.Bounds.Center.Y - 88);
+                    if (v.Y < _selectedShip.Image.Height / 2 || v.X > _game.GraphicsDevice.Viewport.Width - (20 * _widthIncrement) - (_selectedShip.Image.Width / 2)) return Vector2.Zero;
+                    break;
+                case 15:
+                    v = new Vector2(_selectedShip.Bounds.Center.X + 68, _selectedShip.Bounds.Center.Y - 105);
+                    if (v.Y < _selectedShip.Image.Height / 2 || v.X > _game.GraphicsDevice.Viewport.Width - (20 * _widthIncrement) - (_selectedShip.Image.Width / 2)) return Vector2.Zero;
+                    break;
+            }
+
+            return v;
         }
     }
 }
