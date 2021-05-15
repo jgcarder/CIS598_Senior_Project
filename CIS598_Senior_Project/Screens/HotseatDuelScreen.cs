@@ -1291,6 +1291,10 @@ namespace CIS598_Senior_Project.Screens
                     }
                     break;
                 case GameEnum.Squadron_Phase:
+                    if(_player1.Squadrons.Count == 0 && _player2.Squadrons.Count == 0)
+                    {
+                        _state = GameEnum.Status_Phase;
+                    }
                     //activateing and either moving or attacking with them
                         //if engaged it cannot move and must attack the other squadron
                         //otherwise move
@@ -1319,6 +1323,12 @@ namespace CIS598_Senior_Project.Screens
                     _roundNum++;
                     if (_player1Start) _player1Start = false;
                     else _player1Start = true;
+
+                    _buttons[16].IsActive = true;
+                    _buttons[17].IsActive = true;
+                    _buttons[18].IsActive = true;
+                    _buttons[19].IsActive = true;
+                    _buttons[20].IsActive = true;
 
                     _state = GameEnum.Command_Phase;
                     break;
@@ -5406,7 +5416,7 @@ namespace CIS598_Senior_Project.Screens
         /// <returns>The new position for the ship</returns>
         private Vector2 manuver()
         {
-            int increment = (int)(_selectedShip.Rotation / (MathHelper.PiOver4 / 2));
+            int increment = Math.Abs((int)(_selectedShip.Rotation / (MathHelper.PiOver4 / 2)));
             Vector2 v = new Vector2();
 
             switch(increment)

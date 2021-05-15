@@ -297,7 +297,7 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         /// <summary>
         /// The ship'd aft bounds
         /// </summary>
-        public override BoundingCircle AftBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 61, Rotation - 3 * MathHelper.PiOver2), 36); } }
+        public override BoundingCircle AftBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 61, Rotation - (3 * MathHelper.PiOver2)), 36); } }
 
         /// <summary>
         /// The list of firing arcs
