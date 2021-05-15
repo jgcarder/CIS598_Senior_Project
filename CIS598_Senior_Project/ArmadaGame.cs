@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: ArmadaGame.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -22,6 +26,9 @@ namespace CIS598_Senior_Project
         private Song _cloneWars;
         private Song _cantinaBand;
 
+        /// <summary>
+        /// Primary Constructor for the game
+        /// </summary>
         public ArmadaGame()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -49,12 +56,18 @@ namespace CIS598_Senior_Project
             AddInitialScreens();
         }
 
+        /// <summary>
+        /// Sets up the initial game screens
+        /// </summary>
         private void AddInitialScreens()
         {
             _screenManager.AddScreen(new BackgroundScreen(), null);
             _screenManager.AddScreen(new MainMenuScreen(this, new List<float>() { 0.2f, 0.2f, 0.5f, 0}), null);
         }
 
+        /// <summary>
+        /// Initializes the base.
+        /// </summary>
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -62,6 +75,9 @@ namespace CIS598_Senior_Project
             base.Initialize();
         }
 
+        /// <summary>
+        /// Loads the content
+        /// </summary>
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -69,6 +85,10 @@ namespace CIS598_Senior_Project
             // TODO: use this.Content to load your game content here
         }
 
+        /// <summary>
+        /// Updates the game
+        /// </summary>
+        /// <param name="gameTime">the game's time</param>
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
@@ -76,6 +96,10 @@ namespace CIS598_Senior_Project
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Draws the game
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);

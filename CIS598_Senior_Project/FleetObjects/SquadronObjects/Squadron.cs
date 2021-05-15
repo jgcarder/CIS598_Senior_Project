@@ -1,4 +1,9 @@
-﻿using System;
+﻿/* File: Squadron.cs
+ * Author: Jackson Carder
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,6 +14,9 @@ using CIS598_Senior_Project.Collisions;
 
 namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 {
+    /// <summary>
+    /// The base class for the squads
+    /// </summary>
     public abstract class Squadron
     {
         public abstract int Hull { get; set; }

@@ -1,4 +1,9 @@
-﻿using System;
+﻿/* File: TIEFighterSquadron.cs
+ * Author: Jackson Carder
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
@@ -9,6 +14,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 {
+    /// <summary>
+    /// The class for the TIE fighters
+    /// </summary>
     public class TIEFighterSquadron : Squadron
     {
         private int _hull;
@@ -55,6 +63,11 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 
         public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 25); } }
 
+        /// <summary>
+        /// The constructor for the squad
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="content"></param>
         public TIEFighterSquadron(int id, ContentManager content)
         {
             _hull = 3;

@@ -1,10 +1,15 @@
-﻿using System;
+﻿/* File: GameScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 
 namespace CIS598_Senior_Project.StateManagement
 {
+    //An inheritable, class used by my screens
     public abstract class GameScreen
     {
 

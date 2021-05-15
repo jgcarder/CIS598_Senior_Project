@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: InputAction.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;

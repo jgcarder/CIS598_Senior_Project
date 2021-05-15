@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: InputState.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -33,7 +37,9 @@ namespace CIS598_Senior_Project.StateManagement
             GamePadWasConnected = new bool[MaxInputs];
         }
 
-        // Reads the latest user input state.
+        /// <summary>
+        /// updates the state
+        /// </summary>
         public void Update()
         {
             for (int i = 0; i < MaxInputs; i++)

@@ -1,16 +1,30 @@
-﻿using System;
+﻿/* File: BlueDie.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CIS598_Senior_Project.FleetObjects.DiceObjects
 {
+    /// <summary>
+    /// The class for the blue varient of Die
+    /// </summary>
     public class BlueDie : Die
     {
         private BlueDieSideEnum _sides;
         private DieTypeEnum _type;
 
+        /// <summary>
+        /// The Die's type
+        /// </summary>
         public DieTypeEnum Type { get { return _type; } }
 
+        /// <summary>
+        /// The blue die constructor
+        /// </summary>
+        /// <param name="type">The type of die it is</param>
         public BlueDie(DieTypeEnum type)
         {
             _type = type;

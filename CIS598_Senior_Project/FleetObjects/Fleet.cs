@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: Fleet.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using CIS598_Senior_Project.FleetObjects.SquadronObjects;
@@ -6,6 +10,9 @@ using CIS598_Senior_Project.FleetObjects.ShipObjects;
 
 namespace CIS598_Senior_Project.FleetObjects
 {
+    /// <summary>
+    /// Class for the fleets
+    /// </summary>
     public class Fleet
     {
         private List<Ship> _ships;
@@ -86,6 +93,10 @@ namespace CIS598_Senior_Project.FleetObjects
             set { _isRebelFleet = value; }
         }
 
+        /// <summary>
+        /// The constructor for the fleet
+        /// </summary>
+        /// <param name="name">the name of the fleet</param>
         public Fleet(string name)
         {
             _ships = new List<Ship>();

@@ -1,4 +1,9 @@
-﻿using CIS598_Senior_Project.FleetObjects.DiceObjects;
+﻿/* File: AWingSquadron.cs
+ * Author: Jackson Carder
+ */
+
+
+using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
@@ -9,6 +14,9 @@ using CIS598_Senior_Project.Collisions;
 
 namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 {
+    /// <summary>
+    /// The awing class
+    /// </summary>
     public class AWingSquadron : Squadron
     {
         private int _hull;
@@ -55,6 +63,11 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
         
         public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 25); } }
 
+        /// <summary>
+        /// The constructor for awings
+        /// </summary>
+        /// <param name="id">the id</param>
+        /// <param name="content">the content loader</param>
         public AWingSquadron(int id, ContentManager content)
         {
             _hull = 4;

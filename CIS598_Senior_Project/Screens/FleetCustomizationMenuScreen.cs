@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: FleetCustomizationMenuScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -12,6 +16,9 @@ using CIS598_Senior_Project.StateManagement;
 
 namespace CIS598_Senior_Project.Screens
 {
+    /// <summary>
+    /// Menu Screen class
+    /// </summary>
     public class FleetCustomizationMenuScreen : GameScreen
     {
         private Game _game;
@@ -42,6 +49,11 @@ namespace CIS598_Senior_Project.Screens
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
+        /// <summary>
+        /// The constructor for the Fleet customization menu
+        /// </summary>
+        /// <param name="game">The game</param>
+        /// <param name="vol">The volume parameters</param>
         public FleetCustomizationMenuScreen(Game game, List<float> vol)
         {
             _game = game;

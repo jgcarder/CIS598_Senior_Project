@@ -9,7 +9,7 @@ using System.Text;
 namespace CIS598_Senior_Project.Screens
 {
     /// <summary>
-    /// An enum to track the state of the game rounds
+    /// An enum to track the state of the game rounds 
     /// </summary>
     public enum GameEnum
     {

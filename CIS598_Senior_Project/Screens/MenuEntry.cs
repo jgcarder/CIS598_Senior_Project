@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: MenuEntry.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -33,17 +37,32 @@ namespace CIS598_Senior_Project.Screens
         }
 
         public event EventHandler<PlayerIndexEventArgs> Selected;
+
+        /// <summary>
+        /// An event handler
+        /// </summary>
+        /// <param name="playerIndex">The controlling player</param>
         protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
         {
             Selected?.Invoke(this, new PlayerIndexEventArgs(playerIndex));
         }
 
+        /// <summary>
+        /// Constructor for the menu entry
+        /// </summary>
+        /// <param name="text">the text to add</param>
         public MenuEntry(string text)
         {
             _text = text;
             _bounds = new Rectangle((int)_position.X - 5, (int)_position.Y - 5, 10 + (10 * _text.Length), 10 + 20);
         }
 
+        /// <summary>
+        /// Updates the entry
+        /// </summary>
+        /// <param name="screen">The screen it's on</param>
+        /// <param name="isSelected">if it has been selected</param>
+        /// <param name="gameTime">The game's time</param>
         public virtual void Update(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
             // When the menu selection changes, entries gradually fade between
@@ -58,7 +77,12 @@ namespace CIS598_Senior_Project.Screens
         }
 
 
-        // This can be overridden to customize the appearance.
+        /// <summary>
+        /// Draws the things
+        /// </summary>
+        /// <param name="screen">The screen its on</param>
+        /// <param name="isSelected">if it is selected</param>
+        /// <param name="gameTime">the game's time</param>
         public virtual void Draw(MenuScreen screen, bool isSelected, GameTime gameTime)
         {
             var color = isSelected ? Color.Yellow : Color.White;
@@ -82,11 +106,21 @@ namespace CIS598_Senior_Project.Screens
                 origin, scale, SpriteEffects.None, 0);
         }
 
+        /// <summary>
+        /// Gets the height of the window
+        /// </summary>
+        /// <param name="screen">The screen its on</param>
+        /// <returns>the height of the screen</returns>
         public virtual int GetHeight(MenuScreen screen)
         {
             return screen.ScreenManager.Font.LineSpacing;
         }
 
+        /// <summary>
+        /// Gets the width of the screen
+        /// </summary>
+        /// <param name="screen">The screen it is on</param>
+        /// <returns>the width</returns>
         public virtual int GetWidth(MenuScreen screen)
         {
             return (int)screen.ScreenManager.Font.MeasureString(Text).X;

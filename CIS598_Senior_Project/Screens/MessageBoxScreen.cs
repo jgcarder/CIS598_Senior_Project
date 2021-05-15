@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: MessageBoxScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -25,8 +29,11 @@ namespace CIS598_Senior_Project.Screens
         public event EventHandler<PlayerIndexEventArgs> Accepted;
         public event EventHandler<PlayerIndexEventArgs> Cancelled;
 
-        // Constructor lets the caller specify whether to include the standard
-        // "A=ok, B=cancel" usage text prompt.
+        /// <summary>
+        /// A constructor
+        /// </summary>
+        /// <param name="message">The message</param>
+        /// <param name="includeUsageText">bool to include text</param>
         public MessageBoxScreen(string message, bool includeUsageText = true)
         {
             const string usageText = "\nSpace, Enter = ok" +
@@ -50,8 +57,12 @@ namespace CIS598_Senior_Project.Screens
                 new[] { Keys.Back, Keys.Escape }, true);
         }
 
-        // Constructor lets the caller specify whether to include the standard
-        // "A=ok, B=cancel" usage text prompt.
+        /// <summary>
+        /// another constructor but this one's packing heat
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="fleet"></param>
+        /// <param name="includeUsageText"></param>
         public MessageBoxScreen(string message, Fleet fleet, bool includeUsageText = true)
         {
             const string usageText = "\nSpace, Enter = ok" +
@@ -87,6 +98,11 @@ namespace CIS598_Senior_Project.Screens
             _gradientTexture = content.Load<Texture2D>("gradient");
         }
 
+        /// <summary>
+        /// Handles input
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
+        /// <param name="input">The player's input</param>
         public override void HandleInput(GameTime gameTime, InputState input)
         {
             PlayerIndex playerIndex;
@@ -109,6 +125,10 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// Draws the game
+        /// </summary>
+        /// <param name="gameTime">gametime duh?</param>
         public override void Draw(GameTime gameTime)
         {
             var spriteBatch = ScreenManager.SpriteBatch;

@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: UpgradeCard.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,6 +11,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 {
+    /// <summary>
+    /// The upgrade card base class
+    /// </summary>
     public abstract class UpgradeCard
     {
 

@@ -1,4 +1,8 @@
-﻿using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
+﻿/* File: VictoryStarDestroyer.cs
+ * Author: Jackson Carder
+ */
+
+using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
 using CIS598_Senior_Project.Collisions;
@@ -11,6 +15,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 {
+    /// <summary>
+    /// class for the VSD ship
+    /// </summary>
     public class VictoryStarDestroyer : Ship
     {
         private int _hull;
@@ -216,6 +223,11 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             get { return _blackAS; }
         }
 
+        /// <summary>
+        /// The constructor for the ship
+        /// </summary>
+        /// <param name="id">The ID</param>
+        /// <param name="content">The content loader</param>
         public VictoryStarDestroyer(int id, ContentManager content)
         {
             Upgrades = new UpgradeCard[8];
@@ -257,11 +269,18 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             CommandDials = new Queue<CommandDialEnum>();
         }
 
+        /// <summary>
+        /// refhreshes the defenses
+        /// </summary>
         public override void RefreshDefense()
         {
             foreach (var token in _defenseTokens) token.Reset();
         }
 
+        /// <summary>
+        /// sets the src dice
+        /// </summary>
+        /// <param name="shipA">the bool for varient</param>
         public override void setHullDice(bool shipA)
         {
             foreach (var arc in Arcs) arc.ClearDice();
@@ -294,6 +313,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// refreshes the whole ship
+        /// </summary>
         public override void refreshShip()
         {
             foreach (var upgrade in Upgrades)

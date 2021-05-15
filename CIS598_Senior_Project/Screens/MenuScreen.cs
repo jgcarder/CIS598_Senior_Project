@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: MenuScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -29,6 +33,10 @@ namespace CIS598_Senior_Project.Screens
 
         protected List<bool> Selected => _selected;
 
+        /// <summary>
+        /// Protected constructor for the menu screen
+        /// </summary>
+        /// <param name="menuTitle">The title of the screen</param>
         protected MenuScreen(string menuTitle)
         {
             _menuTitle = menuTitle;
@@ -50,7 +58,11 @@ namespace CIS598_Senior_Project.Screens
                 new[] { Keys.Back, Keys.Escape }, true);
         }
 
-        // Responds to user input, changing the selected entry and accepting or cancelling the menu.
+        /// <summary>
+        /// handles the input for the screen
+        /// </summary>
+        /// <param name="gameTime">the game's time</param>
+        /// <param name="input">the player input</param>
         public override void HandleInput(GameTime gameTime, InputState input)
         {
             // For input tests we pass in our ControllingPlayer, which may
@@ -82,24 +94,38 @@ namespace CIS598_Senior_Project.Screens
                 OnCancel(playerIndex);
         }
 
+        /// <summary>
+        /// An event handler for a selected entry
+        /// </summary>
+        /// <param name="entryIndex">The entry selected</param>
+        /// <param name="playerIndex">The player who selected it</param>
         protected virtual void OnSelectEntry(int entryIndex, PlayerIndex playerIndex)
         {
             _menuEntries[entryIndex].OnSelectEntry(playerIndex);
         }
 
+        /// <summary>
+        /// when cancel is pressed
+        /// </summary>
+        /// <param name="playerIndex">the pressing player</param>
         protected virtual void OnCancel(PlayerIndex playerIndex)
         {
             ExitScreen();
         }
 
-        // Helper overload makes it easy to use OnCancel as a MenuEntry event handler.
+        /// <summary>
+        /// cancels the screen on twitter
+        /// </summary>
+        /// <param name="sender">A karen sending a hate message</param>
+        /// <param name="e">Of course E for lord farquad</param>
         protected void OnCancel(object sender, PlayerIndexEventArgs e)
         {
             OnCancel(e.PlayerIndex);
         }
 
-        // Allows the screen the chance to position the menu entries. By default,
-        // all menu entries are lined up in a vertical list, centered on the screen.
+        /// <summary>
+        /// Updates locations of entries
+        /// </summary>
         protected virtual void UpdateMenuEntryLocations()
         {
             // Make the menu slide into place during transitions, using a
@@ -131,6 +157,12 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// Updates the screen
+        /// </summary>
+        /// <param name="gameTime">the game's time</param>
+        /// <param name="otherScreenHasFocus">if another screen has focus</param>
+        /// <param name="coveredByOtherScreen">if is covered by another screen</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -159,6 +191,10 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// Draws the game
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
         public override void Draw(GameTime gameTime)
         {
             // make sure our entries are in the right place before we draw them

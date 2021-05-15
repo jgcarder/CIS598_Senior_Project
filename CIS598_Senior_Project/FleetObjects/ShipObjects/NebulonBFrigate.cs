@@ -1,4 +1,8 @@
-﻿using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
+﻿/* File: NebulonBFrigate.cs
+ * Author: Jackson Carder
+ */
+
+using CIS598_Senior_Project.FleetObjects.DefenseTokenObjects;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
 using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
 using CIS598_Senior_Project.Collisions;
@@ -11,6 +15,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 {
+    /// <summary>
+    /// Class for the nebulon B
+    /// </summary>
     public class NebulonBFrigate : Ship
     {
         private int _hull;
@@ -28,8 +35,14 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
         private List<BlackDie> _blackAS;
         private List<DefenseToken> _defenseTokens;
 
+        /// <summary>
+        /// The ID
+        /// </summary>
         public override int Id { get; }
 
+        /// <summary>
+        /// Total points
+        /// </summary>
         public override int PointCost
         {
             get
@@ -48,18 +61,39 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// current hull
+        /// </summary>
         public override int Hull { get { return _hull; } set { _hull = value; } }
 
+        /// <summary>
+        /// max hull
+        /// </summary>
         public override int MaxHull { get { return 5; } }
 
+        /// <summary>
+        /// command points
+        /// </summary>
         public override int Command { get { return _command; } }
 
+        /// <summary>
+        /// Squadron points
+        /// </summary>
         public override int Squadron { get { return _squadron; } }
 
+        /// <summary>
+        /// Engineering points
+        /// </summary>
         public override int Engineering { get { return _engineering; } }
 
+        /// <summary>
+        /// current speed
+        /// </summary>
         public override int Speed { get; set; } = 1;
 
+        /// <summary>
+        /// Number of command tokens possessed
+        /// </summary>
         public override int TokenCount
         {
             get
@@ -74,6 +108,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// Movement table
+        /// </summary>
         public override int[,] Movement
         {
             get
@@ -89,10 +126,19 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// available upgrades
+        /// </summary>
         public override int[] UpgradeTypes { get { return new int[] { 1, 1, 0, 0, 0, 1, 0, 0 }; } }
 
+        /// <summary>
+        /// If the fleet commander is here
+        /// </summary>
         public override bool HasCommander { get; set; } = false;
 
+        /// <summary>
+        /// Ship varient type
+        /// </summary>
         public override bool ShipTypeA
         {
             get { return _shipTypeA; }
@@ -105,6 +151,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// if this ship has an engineering token
+        /// </summary>
         public override bool HasEngineeringToken
         {
             get
@@ -117,6 +166,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// if has a squadron token
+        /// </summary>
         public override bool HasSquadronToken
         {
             get
@@ -129,6 +181,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// if has a nav token
+        /// </summary>
         public override bool HasNavigationToken
         {
             get
@@ -141,6 +196,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// If has a concentrate fire token
+        /// </summary>
         public override bool HasConcentrateFireToken
         {
             get
@@ -153,57 +211,125 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// If has been activated
+        /// </summary>
         public override bool BeenActivated { get; set; } = false;
 
+        /// <summary>
+        /// Name
+        /// </summary>
         public override string Name { get { return "Nebulon-B Frigate"; } }
 
+        /// <summary>
+        /// Queued command dials
+        /// </summary>
         public override Queue<CommandDialEnum> CommandDials { get; set; }
 
+        /// <summary>
+        /// The ship's title
+        /// </summary>
         public override UpgradeCard Title { get; set; }
 
+        /// <summary>
+        /// the commander
+        /// </summary>
         public override UpgradeCard Commander { get; set; }
 
+        /// <summary>
+        /// The ship image
+        /// </summary>
         public override Texture2D Image { get; } //to be set
 
+        /// <summary>
+        /// A possible source for the image
+        /// </summary>
         public override Rectangle Source { get; } //to be set
 
+        /// <summary>
+        /// The ship's rotation
+        /// </summary>
         public override float Rotation { get; set; } = 0; //to be set
 
+        /// <summary>
+        /// The position of the ship
+        /// </summary>
         public override Vector2 Position { get; set; } //to be set
 
+        /// <summary>
+        /// the origin point
+        /// </summary>
         public override Vector2 Origin { get { return new Vector2(51, 72); } }
 
+        /// <summary>
+        /// The main ship bounds
+        /// </summary>
         public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 36); } }
 
+        /// <summary>
+        /// The bow bounds
+        /// </summary>
         public override BoundingCircle BowBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 71, Rotation - MathHelper.PiOver2), 36); } }
 
+        /// <summary>
+        /// The port bounds
+        /// </summary>
         public override BoundingCircle PortBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 50, Rotation - MathHelper.Pi), 36); } }
 
+        /// <summary>
+        /// the starboard bounds
+        /// </summary>
         public override BoundingCircle StarboardBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 50, Rotation), 36); } }
 
+        /// <summary>
+        /// the aft bounds
+        /// </summary>
         public override BoundingCircle AftBounds { get { return new BoundingCircle(CollisionHelper.GetNewCoords(Bounds.Center, 81, Rotation - 3 * MathHelper.PiOver2), 36); } }
 
+        /// <summary>
+        /// The list of firing arcs
+        /// </summary>
         public override FiringArc[] Arcs { get; set; }
 
+        /// <summary>
+        /// the list of upgrades
+        /// </summary>
         public override UpgradeCard[] Upgrades { get; set; }
 
+        /// <summary>
+        /// ship defenses
+        /// </summary>
         public override List<DefenseToken> DefenseTokens { get { return _defenseTokens; } }
 
+        /// <summary>
+        /// red anti squad dice
+        /// </summary>
         public override List<RedDie> RedAS
         {
             get { return _redAS; }
         }
 
+        /// <summary>
+        /// blue anti squad dice
+        /// </summary>
         public override List<BlueDie> BlueAS
         {
             get { return _blueAS; }
         }
 
+        /// <summary>
+        /// black anti squad dice
+        /// </summary>
         public override List<BlackDie> BlackAS
         {
             get { return _blackAS; }
         }
 
+        /// <summary>
+        /// The constructor for the ship
+        /// </summary>
+        /// <param name="id">the id</param>
+        /// <param name="content">the content loader</param>
         public NebulonBFrigate(int id, ContentManager content)
         {
             Upgrades = new UpgradeCard[8];
@@ -247,11 +373,18 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             CommandDials = new Queue<CommandDialEnum>();
         }
 
+        /// <summary>
+        /// Refreshes the defense tokens
+        /// </summary>
         public override void RefreshDefense()
         {
             foreach (var token in _defenseTokens) token.Reset();
         }
 
+        /// <summary>
+        /// Sets up the firing arc dice
+        /// </summary>
+        /// <param name="shipA"></param>
         public override void setHullDice(bool shipA)
         {
             foreach (var arc in Arcs) arc.ClearDice();
@@ -278,6 +411,9 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
             }
         }
 
+        /// <summary>
+        /// refreshes the ship based on the 
+        /// </summary>
         public override void refreshShip()
         {
             foreach (var upgrade in Upgrades)

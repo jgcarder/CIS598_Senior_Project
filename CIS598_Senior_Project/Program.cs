@@ -1,4 +1,7 @@
-﻿using System;
+﻿/* File: Program.cs
+ * Author: None
+ */
+using System;
 
 namespace CIS598_Senior_Project
 {

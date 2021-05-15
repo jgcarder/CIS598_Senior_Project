@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: ScreenManager.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -176,10 +180,17 @@ namespace CIS598_Senior_Project.StateManagement
             SpriteBatch.End();
         }
 
+        /// <summary>
+        /// Deactivates the screen
+        /// </summary>
         public void Deactivate()
         {
         }
 
+        /// <summary>
+        /// Activates the screen
+        /// </summary>
+        /// <returns></returns>
         public bool Activate()
         {
             return false;

@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: GameplayScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -34,6 +38,10 @@ namespace CIS598_Senior_Project.Screens
 
         private Game _game;
 
+        /// <summary>
+        /// The constructor for the old gameplay screen
+        /// </summary>
+        /// <param name="game"></param>
         public GameplayScreen(Game game)
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -44,7 +52,9 @@ namespace CIS598_Senior_Project.Screens
                 new[] { Keys.Back, Keys.Escape }, true);
         }
 
-        // Load graphics content for the game
+        /// <summary>
+        /// Activates the screen
+        /// </summary>
         public override void Activate()
         {
             if (_content == null)
@@ -68,19 +78,28 @@ namespace CIS598_Senior_Project.Screens
             ScreenManager.Game.ResetElapsedTime();
         }
 
-
+        /// <summary>
+        /// Deactivates the screen
+        /// </summary>
         public override void Deactivate()
         {
             base.Deactivate();
         }
 
+        /// <summary>
+        /// Unloads its content
+        /// </summary>
         public override void Unload()
         {
             _content.Unload();
         }
 
-        // This method checks the GameScreen.IsActive property, so the game will
-        // stop updating when the pause menu is active, or if you tab away to a different application.
+        /// <summary>
+        /// Updates the screen
+        /// </summary>
+        /// <param name="gameTime">the game's time</param>
+        /// <param name="otherScreenHasFocus">if another screen has focus</param>
+        /// <param name="coveredByOtherScreen">if another screen covers this one</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, false);
@@ -126,7 +145,11 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
-        // Unlike the Update method, this will only be called when the gameplay screen is active.
+        /// <summary>
+        /// Handles input
+        /// </summary>
+        /// <param name="gameTime">the game's time</param>
+        /// <param name="input">the inputs</param>
         public override void HandleInput(GameTime gameTime, InputState input)
         {
             if (input == null)
@@ -178,6 +201,10 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// Draws the screen
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
         public override void Draw(GameTime gameTime)
         {
             // This game has a blue background. Why? Because!
@@ -208,6 +235,11 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// Catches buttons
+        /// </summary>
+        /// <param name="sender">The button</param>
+        /// <param name="e">and event handler</param>
         private void ButtonCatcher(object sender, ButtonClickedEventArgs e)
         {
             //shit to do here

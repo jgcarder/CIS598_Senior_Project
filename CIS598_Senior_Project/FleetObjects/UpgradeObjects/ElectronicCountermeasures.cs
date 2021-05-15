@@ -1,4 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿/* File: ElectronicCountermeasures.cs
+ * Author.Jackson Carder
+ */
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System;
@@ -37,6 +41,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 
         public override UpgradeTypeEnum CardType { get; }
 
+        /// <summary>
+        /// The constructor
+        /// </summary>
+        /// <param name="content">the content loader</param>
         public ElectronicCountermeasures(ContentManager content)
         {
             CardType = UpgradeTypeEnum.DefensiveRetrofit;

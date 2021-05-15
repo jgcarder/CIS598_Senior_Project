@@ -1,4 +1,9 @@
-﻿using System;
+﻿/* File: BWingSquadron.cs
+ * Author: Jackson Carder
+ */
+
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using CIS598_Senior_Project.FleetObjects.DiceObjects;
@@ -9,6 +14,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 {
+    /// <summary>
+    /// The class for the b wing quadron
+    /// </summary>
     public class BWingSquadron : Squadron
     {
         private int _hull;
@@ -55,6 +63,11 @@ namespace CIS598_Senior_Project.FleetObjects.SquadronObjects
 
         public override BoundingCircle Bounds { get { return new BoundingCircle(new Vector2(Position.X, Position.Y), 25); } }
 
+        /// <summary>
+        /// The Bwing constructor
+        /// </summary>
+        /// <param name="id">the squad ID</param>
+        /// <param name="content">The content loader</param>
         public BWingSquadron(int id, ContentManager content)
         {
             _hull = 5;

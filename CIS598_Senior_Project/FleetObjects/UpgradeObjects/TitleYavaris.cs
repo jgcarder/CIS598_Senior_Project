@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: TitleYavaris.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -39,6 +43,10 @@ namespace CIS598_Senior_Project.FleetObjects.UpgradeObjects
 
         public override UpgradeTypeEnum CardType { get; }
 
+        /// <summary>
+        /// The constructor the card
+        /// </summary>
+        /// <param name="content">the content loader</param>
         public TitleYavaris(ContentManager content)
         {
             CardType = UpgradeTypeEnum.Title;

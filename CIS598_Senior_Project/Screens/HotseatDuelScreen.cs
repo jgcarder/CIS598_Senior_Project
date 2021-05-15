@@ -5454,7 +5454,6 @@ namespace CIS598_Senior_Project.Screens
                     v = new Vector2(_selectedShip.Bounds.Center.X + 68, _selectedShip.Bounds.Center.Y + 105);
                     if (v.Y > _game.GraphicsDevice.Viewport.Height - _selectedShip.Image.Height / 2 || v.X > _game.GraphicsDevice.Viewport.Width - (_selectedShip.Image.Width / 2) - (_widthIncrement * 20)) return Vector2.Zero;
                     break;
-                    break;
                 case 10:
                     v = new Vector2(_selectedShip.Bounds.Center.X + 88, _selectedShip.Bounds.Center.Y + 88);
                     if (v.Y > _game.GraphicsDevice.Viewport.Height - _selectedShip.Image.Height / 2 || v.X > _game.GraphicsDevice.Viewport.Width - (_selectedShip.Image.Width / 2) - (_widthIncrement * 20)) return Vector2.Zero;

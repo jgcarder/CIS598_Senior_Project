@@ -525,7 +525,7 @@ namespace CIS598_Senior_Project
         /// Checks if a fleet name is already in use in the file system
         /// </summary>
         /// <param name="name">The name to check for with bool attached</param>
-        /// <param name="sw">The stream writer that writes to the files</param>
+        /// <param name="sw">The stream writer that writes to the files</param> 
         /// <returns>true if already exists, false if new</returns>
         private static bool recordName(string name, StreamWriter sw, List<string> names)
         {

@@ -17,6 +17,9 @@ using CIS598_Senior_Project.FleetObjects;
 
 namespace CIS598_Senior_Project.Screens
 {
+    /// <summary>
+    /// Class for the fleet selection
+    /// </summary>
     public class DuelFleetSelectionScreen : GameScreen
     {
         private Game _game;

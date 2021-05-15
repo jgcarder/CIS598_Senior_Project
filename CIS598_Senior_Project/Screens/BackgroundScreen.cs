@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: BackgroundScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -8,11 +12,17 @@ using CIS598_Senior_Project.StateManagement;
 
 namespace CIS598_Senior_Project.Screens
 {
+    /// <summary>
+    /// Class for the background
+    /// </summary>
     public class BackgroundScreen : GameScreen
     {
         private ContentManager _content;
         private Texture2D _backgroundTexture;
 
+        /// <summary>
+        /// Background constructor
+        /// </summary>
         public BackgroundScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
@@ -34,6 +44,9 @@ namespace CIS598_Senior_Project.Screens
             _backgroundTexture = _content.Load<Texture2D>("background");
         }
 
+        /// <summary>
+        /// Unloads the screen
+        /// </summary>
         public override void Unload()
         {
             _content.Unload();
@@ -48,6 +61,10 @@ namespace CIS598_Senior_Project.Screens
             base.Update(gameTime, otherScreenHasFocus, false);
         }
 
+        /// <summary>
+        /// Draws the screen
+        /// </summary>
+        /// <param name="gameTime"></param>
         public override void Draw(GameTime gameTime)
         {
             var spriteBatch = ScreenManager.SpriteBatch;

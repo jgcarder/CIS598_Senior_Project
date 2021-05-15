@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: Ship.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -11,6 +15,9 @@ using Microsoft.Xna.Framework.Content;
 
 namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 {
+    /// <summary>
+    /// The base class for the ships
+    /// </summary>
     public abstract class Ship
     {
 
@@ -90,10 +97,20 @@ namespace CIS598_Senior_Project.FleetObjects.ShipObjects
 
         public abstract BoundingCircle AftBounds { get; }
 
+        /// <summary>
+        /// Sets the hull dice
+        /// </summary>
+        /// <param name="shipA">bool of the ship varient</param>
         public abstract void setHullDice(bool shipA);
 
+        /// <summary>
+        /// Resets the defense
+        /// </summary>
         public abstract void RefreshDefense();
 
+        /// <summary>
+        /// Refreshes the ship as a whole
+        /// </summary>
         public abstract void refreshShip();
     }
 }

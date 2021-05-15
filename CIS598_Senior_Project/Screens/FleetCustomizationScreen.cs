@@ -22,8 +22,14 @@ using CIS598_Senior_Project.FleetObjects.UpgradeObjects;
 
 namespace CIS598_Senior_Project.Screens
 {
+    /// <summary>
+    /// Customizes stuff
+    /// </summary>
     public class FleetCustomizationScreen : GameScreen
     {
+        /// <summary>
+        /// Upgrade types
+        /// </summary>
         enum SelectedUpgradeType
         {
             Commander,

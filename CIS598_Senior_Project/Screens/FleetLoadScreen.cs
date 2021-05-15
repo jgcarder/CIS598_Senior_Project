@@ -1104,7 +1104,7 @@ namespace CIS598_Senior_Project.Screens
                 result[3] += fleet.Squadrons.FindAll(x => x.Name == "TIE Bomber Squadron").Count;
             }
 
-            return result;
+            return result; 
         }
     }
 }

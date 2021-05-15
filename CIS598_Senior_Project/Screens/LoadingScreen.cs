@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: LoadingScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -13,7 +17,12 @@ namespace CIS598_Senior_Project.Screens
         private bool _otherScreensAreGone;
         private readonly GameScreen[] _screensToLoad;
 
-        // Constructor is private: loading screens should be activated via the static Load method instead.
+        /// <summary>
+        /// A constructor
+        /// </summary>
+        /// <param name="screenManager">The screen manager</param>
+        /// <param name="loadingIsSlow">Slow loading</param>
+        /// <param name="screensToLoad">Screens to load</param>
         private LoadingScreen(ScreenManager screenManager, bool loadingIsSlow, GameScreen[] screensToLoad)
         {
             _loadingIsSlow = loadingIsSlow;
@@ -22,7 +31,13 @@ namespace CIS598_Senior_Project.Screens
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
         }
 
-        // Activates the loading screen.
+        /// <summary>
+        /// Loads the screen
+        /// </summary>
+        /// <param name="screenManager">The screen manager</param>
+        /// <param name="loadingIsSlow">Is the loading slow</param>
+        /// <param name="controllingPlayer">The controlling player index</param>
+        /// <param name="screensToLoad">the list of screens to load</param>
         public static void Load(ScreenManager screenManager, bool loadingIsSlow, PlayerIndex? controllingPlayer, params GameScreen[] screensToLoad)
         {
             // Tell all the current screens to transition off.
@@ -35,6 +50,12 @@ namespace CIS598_Senior_Project.Screens
             screenManager.AddScreen(loadingScreen, controllingPlayer);
         }
 
+        /// <summary>
+        /// Updates the screen
+        /// </summary>
+        /// <param name="gameTime">The game's time</param>
+        /// <param name="otherScreenHasFocus">if another screen has focus</param>
+        /// <param name="coveredByOtherScreen">if is covered by another screen</param>
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -58,6 +79,10 @@ namespace CIS598_Senior_Project.Screens
             }
         }
 
+        /// <summary>
+        /// Draws the screen
+        /// </summary>
+        /// <param name="gameTime">the game's time</param>
         public override void Draw(GameTime gameTime)
         {
             // If we are the only active screen, that means all the previous screens

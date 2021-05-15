@@ -1,16 +1,30 @@
-﻿using System;
+﻿/* File: BlackDie.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CIS598_Senior_Project.FleetObjects.DiceObjects
 {
+    /// <summary>
+    /// A black die to be rolled when needed
+    /// </summary>
     public class BlackDie : Die
     {
         private BlackDieSideEnum _sides;
         private DieTypeEnum _type;
 
+        /// <summary>
+        /// Die type, idk why I have this here
+        /// </summary>
         public DieTypeEnum Type { get { return _type; } }
 
+        /// <summary>
+        /// Constructor for the die
+        /// </summary>
+        /// <param name="type">The die's type</param>
         public BlackDie(DieTypeEnum type)
         {
             _type = type;

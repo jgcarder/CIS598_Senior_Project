@@ -1,4 +1,8 @@
-﻿using System;
+﻿/* File: OptionsMenuScreen.cs
+ * Author: Jackson Carder
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -58,6 +62,11 @@ namespace CIS598_Senior_Project.Screens
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
+        /// <summary>
+        /// Constructor for the screen
+        /// </summary>
+        /// <param name="game">The game</param>
+        /// <param name="vol">the volume metrics</param>
         public OptionsMenuScreen(Game game, List<float> vol)
         {
             _game = game;
