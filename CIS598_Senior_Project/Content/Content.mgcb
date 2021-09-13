@@ -2189,6 +2189,13 @@
 /processorParam:TextureFormat=Color
 /build:TantiveIVCard.png
 
+#begin TestFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:TestFont.spritefont
+
 #begin TIEAdvanced.png
 /importer:TextureImporter
 /processor:TextureProcessor
